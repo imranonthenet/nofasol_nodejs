@@ -1,0 +1,68 @@
+.thumbnail img {
+  max-height: 150px;
+}
+
+.price {
+  font-weight: bold;
+  font-size: 16px;
+  
+}
+
+.brandlogo {
+  display: block;
+  max-width:230px;
+  max-height:95px;
+  width: auto;
+  height: auto;
+}
+
+.navbar-default {
+  min-height: 100px;
+}
+
+.navbar-nav > li > a {
+  padding-top: 0px;
+  padding-bottom: 0px;
+  line-height: 100px;
+}
+
+@media (max-width: 767px) {
+  .navbar-nav > li > a {
+  line-height: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;}
+}
+
+.dataTables_filter { display: none; }
+
+#custom-search-input{
+  padding: 3px;
+  border: solid 1px #E4E4E4;
+  border-radius: 6px;
+  background-color: #fff;
+}
+
+#custom-search-input input{
+  border: 0;
+  box-shadow: none;
+}
+
+#custom-search-input button{
+  margin: 2px 0 0 0;
+  background: none;
+  box-shadow: none;
+  border: 0;
+  color: #666666;
+  padding: 0 8px 0 10px;
+  border-left: solid 1px #ccc;
+}
+
+#custom-search-input button:hover{
+  border: 0;
+  box-shadow: none;
+  border-left: solid 1px #ccc;
+}
+
+#custom-search-input .glyphicon-search{
+  font-size: 23px;
+}

@@ -1,0 +1,52 @@
+<div class="row">
+    <div class="col-md-12">
+        <h1>Events</h1>
+        {{#if hasErrors}}
+            <div class="alert alert-danger">
+                {{#each messages}}
+                    <p>{{this}}</p>
+                {{/each}}
+            </div>
+        {{/if}}
+
+        <a href="/event/create" class="btn btn-primary">Create Event</a>
+
+        <form action="/event/event-fields" method="POST">
+            
+            
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Event Name</th>
+                    <th>From Date</th>
+                    <th>To Date</th>
+                    <th>Actions</th>
+   
+                </tr>
+                </thead>
+                <tbody>
+                    {{#each events}}
+                        <tr>
+                            <td>{{this.eventName}}</td>
+                            <td>{{formatDate this.fromDate 'short'}}</td>
+                            <td>{{formatDate this.toDate 'short'}}</td>
+                            <td>
+                                <a href="/event/upload/{{this._id}}" class="btn btn-primary" >Import</a>
+                                <a href="/event/registration/{{this._id}}" class="btn btn-primary" >Registration</a>
+                                <a href="/event/edit/{{this._id}}" class="btn btn-primary" >Edit</a>
+                            </td>
+                        </tr>
+
+                    {{/each}}
+                </tbody>
+
+            </table>
+
+        </form>
+    </div>
+
+</div>
+
+      <script>
+
+  </script>

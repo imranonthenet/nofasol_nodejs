@@ -1,0 +1,48 @@
+<div class="row">
+    <div class="col-md-4 col-md-offset-4">
+        <h1>Event Initials</h1>
+        {{#if hasErrors}}
+            <div class="alert alert-danger">
+                {{#each messages}}
+                    <p>{{this}}</p>
+                {{/each}}
+            </div>
+        {{/if}}
+        <form action="/event/edit" method="POST" enctype="multipart/form-data">
+            
+            <input type="hidden" name="eventId" value="{{event._id}}">
+
+            <div class="form-group">
+                <label for="eventName">Event Name</label>
+                <input type="text" id="eventName" name="eventName" class="form-control" value="{{event.eventName}}">
+            </div>
+
+            <div class="form-group">
+                <label for="eventLogo">Event Logo</label>
+                <input type="file" id="filetoupload" name="filetoupload" class="form-control" >
+            </div>
+
+            <div class="form-group">
+                <label for="fromDate">From Date</label>
+                <input type="text" id="fromDate" name="fromDate" class="form-control" value="{{event.fromDate}}">
+            </div>
+            <div class="form-group">
+                <label for="toDate">To Date</label>
+                <input type="text" id="toDate" name="toDate" class="form-control" value="{{event.toDate}}">
+            </div>
+
+            <input type="submit" value="Save" style="width: 100px" class="btn btn-success">&nbsp;
+
+            <a href="/event" style="width: 100px" class="btn btn-default">Cancel</a>&nbsp;
+
+        </form>
+    </div>
+
+</div>
+<div class="row" style="margin-top: 20px">
+    <div class="col-md-6 col-md-offset-4">
+            <a href="/event/event-fields/{{event._id}}" style="width: 150px" class="btn btn-primary">Fields</a>&nbsp;
+            <a href="/event/badge-categories/{{event._id}}" style="width: 150px" class="btn btn-primary">Badge Categories</a>&nbsp;
+            <a href="/event/upload/{{event._id}}" style="width: 150px" class="btn btn-primary">Import</a>&nbsp;
+    </div>
+</div>

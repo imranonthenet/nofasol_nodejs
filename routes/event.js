@@ -856,12 +856,28 @@ router.post('/edit', function (req, res) {
                     if(files.filetoupload.name!=""){
                         var oldpath = files.filetoupload.path;
                         var newpath = path.join(__dirname, '../public/images/') + files.filetoupload.name;
-                        fs.rename(oldpath, newpath, function (err) {
-                            if (err) throw err;
-                
-                            res.redirect('/event/event-fields/' + eventId);
 
-                        });//fs.rename
+
+                        // Read the file
+                        fs.readFile(oldpath, function (err, data) {
+                            if (err) throw err;
+                            console.log('File read!');
+
+                            // Write the file
+                            fs.writeFile(newpath, data, function (err) {
+                                if (err) throw err;
+                                res.redirect('/event/event-fields/' + eventId);
+                                console.log('File written!');
+                            });
+
+                            // Delete the file
+                            fs.unlink(oldpath, function (err) {
+                                if (err) throw err;
+                                console.log('File deleted!');
+                            });
+                        });
+
+
                     }
                     else {
                         res.redirect('/event/event-fields/' + eventId);

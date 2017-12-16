@@ -848,7 +848,11 @@ router.post('/edit', function (req, res) {
 
             Event.findById(eventId, function(err, event){
                 event.eventName = fields.eventName;
-                event.eventLogo = files.filetoupload.name.replace(' ','_');
+                
+                if(files.filetoupload.name!=""){
+                    event.eventLogo = files.filetoupload.name.replace(' ','_');
+                }
+                
                 event.fromDate = moment(fields.fromDate,'DD/MM/YYYY').toISOString();
                 event.toDate = moment(fields.toDate,'DD/MM/YYYY').toISOString();
 
@@ -949,7 +953,7 @@ router.post('/create', function (req, res) {
             res.render('event/create', { scripts: scripts, messages: messages, hasErrors: messages.length > 0, event: event });
             return;
         }
-        
+
         var oldpath = files.filetoupload.path;
         var newpath = path.join(__dirname, '../public/images/') + files.filetoupload.name.replace(' ','_');
 

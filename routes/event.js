@@ -941,32 +941,48 @@ router.post('/create', function (req, res) {
             
         }
         */
-
-        fs.rename(oldpath, newpath, function (err) {
+        // Read the file
+        fs.readFile(oldpath, function (err, data) {
             if (err) throw err;
+            console.log('File read!');
+
+            // Write the file
+            fs.writeFile(newpath, data, function (err) {
+                if (err) throw err;
+
+                //file uploaded, now save form fields data
+                            
+                event.eventName = fields.eventName;
+                event.eventLogo = files.filetoupload.name;
+                event.fromDate = moment(fields.fromDate,'DD/MM/YYYY').toISOString();
+                event.toDate = moment(fields.fromDate,'DD/MM/YYYY').toISOString();;
+
+                event.save(function (err, result) {
+                    if (err)
+                        throw err;
+
+                    res.redirect('/event/event-fields/' + result._id);
+                })//event.save
+
+                console.log('File written!');
+            });
+
+            // Delete the file
+            fs.unlink(oldpath, function (err) {
+                if (err) throw err;
+                console.log('File deleted!');
+            });
+        });
 
 
-            //file uploaded, now save form fields data
-            
-            event.eventName = fields.eventName;
-            event.eventLogo = files.filetoupload.name;
-            event.fromDate = moment(fields.fromDate,'DD/MM/YYYY').toISOString();
-            event.toDate = moment(fields.fromDate,'DD/MM/YYYY').toISOString();;
-
-            
-            
-
-            
-
-            event.save(function (err, result) {
-                if (err)
-                    throw err;
+        //fs.rename(oldpath, newpath, function (err) {
+        //    if (err) throw err;
 
 
-                res.redirect('/event/event-fields/' + result._id);
-            })//event.save
+            //start
+            //end
 
-        });//fs.rename
+        //});//fs.rename
     });//form.parse
 
 

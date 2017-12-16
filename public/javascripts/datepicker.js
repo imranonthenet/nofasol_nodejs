@@ -1,4 +1,4 @@
 $(function() {
-    $( "#fromDate" ).datepicker();
-    $( "#toDate" ).datepicker();
+    $( "#fromDate" ).datepicker({dateFormat: 'dd/mm/yy'});
+    $( "#toDate" ).datepicker({dateFormat: 'dd/mm/yy'});
 });

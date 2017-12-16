@@ -4,6 +4,8 @@ var formidable = require('formidable');
 var fs = require('fs');
 var path = require('path');
 var XLSX = require('xlsx');
+var moment = require('moment');
+
 
 
 var Event = require('../models/event');
@@ -29,6 +31,19 @@ router.get('/badge-categories/:id', function(req,res){
 
 });
 
+router.post('/badge-categories', function(req,res){
+    var eventId=req.session.eventId;
+
+    Event.findById(eventId, function(err,event){
+        if(err) throw err;
+
+        event.setupComplete = true;
+        event.save(function(err, result){
+            res.redirect('/event');
+        });
+    });
+})
+
 router.get('/badge-category-create', function(req,res){
     var messages=[];
 
@@ -47,6 +62,34 @@ router.post('/badge-category-create', function(req,res){
         res.redirect('/event/badge-categories/' + req.session.eventId);
     })
 })
+
+router.get('/badge-category-delete/:id', function(req,res){
+    var messages=[];
+
+    var badgeCategoryId = req.params.id;
+
+    BadgeCategory.findById(badgeCategoryId, function(err, badgeCategory){
+        res.render('event/badge-category-delete', {messages:messages, hasErrors:messages.length>0, badgeCategory:badgeCategory} );
+    });
+
+    
+});
+
+router.post('/badge-category-delete', function(req,res){
+    
+        var badgeCategoryId = req.body.badgeCategoryId;
+    
+        BadgeCategory.findByIdAndRemove(badgeCategoryId, function(err, result){
+            if(err) throw err;
+
+            console.log(`deleted category ${result.desc}`);
+            
+            res.redirect('/event/badge-categories/' + req.session.eventId);
+        })
+
+    
+    })
+
 
 router.get('/badge-category-edit/:id', function(req,res){
     var messages=[];
@@ -327,60 +370,9 @@ router.post('/import', function(req,res){
         return result;
      };
 
-router.get('/edit-registration/:id', function (req, res) {
-    var messages = [];
-    var eventDataId = req.params.id;
-
-
-    EventData.findById(eventDataId, function (err, eventData) {
-
-
-        res.render('event/edit-registration', { messages: messages, hasErrors: messages.length > 0, eventData: eventData });
-    });
-
-
-});
-
-router.post('/edit-registration', function (req, res) {
-    var messages = [];
-    var eventDataId = req.body.eventDataId;
-
-
-    console.log(req.body);
-
-    EventData.findById(eventDataId, function (err, eventData) {
-        if (err)
-            throw err;
-
-        var eventId = req.session.eventId;
-        eventData.fullName = req.body.fullName;
-        eventData.country = req.body.country;
-        eventData.badgeCategory = req.body.badgeCategory;
-
-        //express validation
-        req.checkBody('fullName', 'Full Name should be alphanumeric').isAlpha();
-        req.checkBody('fullName', 'Full Name is required').notEmpty()
-
-        var errors = req.validationErrors();
-
-        if (errors) {
-
-            errors.forEach(function (error) {
-                messages.push(error.msg);
-            });
-            return res.render('event/edit-registration', { messages: messages, hasErrors: messages.length > 0, eventData: eventData });
-
-        }
-
-        eventData.save(function (err, result) {
-            res.redirect('/event/registration/' + eventId);
-        })
-    })
 
 
 
-
-});
 
 
 //express validation
@@ -416,23 +408,166 @@ if(error && error.errors){
 //end model validation
 
 router.get('/register', function (req, res) {
+
     var messages = [];
     var eventId = req.session.eventId;
 
-    Event.findById(eventId, function(err, event){
-        var eventData = new EventData();
-        eventData.event = eventId;
-        res.render('event/register', { messages: messages, hasErrors: messages.length > 0, eventData: eventData, event:event });
+
+    Event.findById(eventId, function (err, event) {
+        var fields=[];
+
+        Object.keys(event.toJSON()).forEach(function(item){
+            
+
+            if(item.indexOf('_showInRegister')>-1 && event[item]==true ){
+                var fieldName = item.substring(0, item.indexOf('_showInRegister') ) ;
+                var fieldLabel = item.substring(0, item.indexOf('_showInRegister') ) + '_label';
+                var fieldType = item.substring(0, item.indexOf('_showInRegister') ) + '_fieldType';
+                var fieldValue = '';//eventData[fieldName] == undefined ? '':eventData[fieldName];
+                var fieldMandatory = item.substring(0, item.indexOf('_showInRegister') ) + '_isMandatory';
+
+                //console.log(`fieldName=${fieldName}, fieldLabel=${fieldLabel}, fieldType=${fieldType}, fieldValue=${fieldValue}`)
+                var field={};
+                field['fieldName']=fieldName;
+                field['fieldLabel']=event[fieldLabel];
+                field['fieldType']=event[fieldType];
+                field['fieldValue']=fieldValue;
+                field['fieldMandatory']=event[fieldMandatory];
+
+                //console.log('field=' + JSON.stringify(field));
+                fields.unshift(field);
+            }
+        });
+
+        var fieldChunks=[];
+        var chunkSize = 2;
+        for(var i=0; i<fields.length; i+=chunkSize){
+            fieldChunks.push(fields.slice(i,i+chunkSize));
+        }
+       
+        BadgeCategory.find({event:eventId}, function(err, badgeCategories){
+
+            //console.log('badgecategories = ' + badgeCategories);
+            res.render('event/register', { messages: messages, hasErrors: messages.length > 0, fields:fieldChunks, badgeCategories:badgeCategories });
+        });
+
+        
     });
 
- 
+
 
 });
+
+router.get('/print-badge/:id', function(req,res){
+    var messages = [];
+    var eventId = req.session.eventId;
+    var eventDataId = req.params.id;
+
+    var query = {event:eventId};
+    var currentDate = moment().format('YYYY-MM-DD HH:mm:ss');
+    var update = {badgePrintDate:currentDate, statusFlag:'Attended'};
+    var options = {new:true};
+
+    EventData.findOneAndUpdate(query, update, options, function(err, eventData){
+        if(err) throw err;
+        
+        res.render('event/print-badge', {layout:'print-layout', messages: messages, hasErrors: messages.length > 0, eventData:eventData});
+    });
+
+  
+});
+
+router.get('/edit-registration/:id', function (req, res) {
+    
+        var messages = [];
+        var eventId = req.session.eventId;
+        var eventDataId = req.params.id;
+    
+
+    
+        EventData.findById(eventDataId, function(err, eventData){
+            if(err) throw err;
+
+            Event.findById(eventId, function (err, event) {
+                var fields=[];
+        
+                Object.keys(event.toJSON()).forEach(function(item){
+                    
+        
+                    if(item.indexOf('_showInRegister')>-1 && event[item]==true ){
+                        var fieldName = item.substring(0, item.indexOf('_showInRegister') ) ;
+                        var fieldLabel = item.substring(0, item.indexOf('_showInRegister') ) + '_label';
+                        var fieldType = item.substring(0, item.indexOf('_showInRegister') ) + '_fieldType';
+                        var fieldValue = eventData[fieldName] == undefined ? '':eventData[fieldName];
+                        var fieldMandatory = item.substring(0, item.indexOf('_showInRegister') ) + '_isMandatory';
+        
+                        //console.log(`fieldName=${fieldName}, fieldLabel=${fieldLabel}, fieldType=${fieldType}, fieldValue=${fieldValue}`)
+                        var field={};
+                        field['fieldName']=fieldName;
+                        field['fieldLabel']=event[fieldLabel];
+                        field['fieldType']=event[fieldType];
+                        field['fieldValue']=fieldValue;
+                        field['fieldMandatory']=event[fieldMandatory];
+        
+                        //console.log('field=' + JSON.stringify(field));
+                        fields.unshift(field);
+                    }
+                })
+
+                var fieldChunks=[];
+                var chunkSize = 2;
+                for(var i=0; i<fields.length; i+=chunkSize){
+                    fieldChunks.push(fields.slice(i,i+chunkSize));
+                }
+               
+                BadgeCategory.find({event:eventId}, function(err, badgeCategories){
+                    
+              
+                    res.render('event/edit-registration', { messages: messages, hasErrors: messages.length > 0, fields:fieldChunks, badgeCategories:badgeCategories, eventDataId:eventDataId });
+                });
+
+        
+                
+            });
+        })
+
+    });
 
 router.post('/register', function (req, res) {
     var messages = [];
     var eventId = req.session.eventId;
 
+    var eventData = new EventData();
+    eventData.event = eventId;
+
+    Event.findById(eventId, function (err, event) {
+        Object.keys(event.toJSON()).forEach(function(item){
+            if(item.indexOf('_showInRegister')>-1 && event[item]==true ){
+                var fieldName = item.substring(0, item.indexOf('_showInRegister') ) ;
+                var fieldLabel = item.substring(0, item.indexOf('_showInRegister') ) + '_label';
+                var fieldType = item.substring(0, item.indexOf('_showInRegister') ) + '_fieldType';
+                var fieldValue = eventData[fieldName] == undefined ? '':eventData[fieldName];
+
+                eventData[fieldName]=req.body[fieldName];
+
+
+            }
+        })
+       
+        eventData.regDate=moment().format('YYYY-MM-DD HH:mm:ss');
+        eventData.regType='Onsite';
+        eventData.statusFlag='Did Not Attend';
+        
+
+        eventData.save(function(err, result){
+            if(err) throw err;
+
+            res.redirect('/event/registration/' + eventId);
+        });
+
+    });
+
+    /*
     Event.findById(eventId, function(err, event){
         var eventData = new EventData();
         eventData.event = eventId;
@@ -459,10 +594,81 @@ router.post('/register', function (req, res) {
             res.redirect('/event/registration/' + eventId);
         })
     })
+    */
+
+
+
+});
+
+router.post('/edit-registration', function (req, res) {
+    var messages = [];
+    var eventId = req.session.eventId;
+    var eventDataId = req.body.eventDataId;
+
+
+    EventData.findById(eventDataId, function(err, eventData){
+        Event.findById(eventId, function (err, event) {
+            Object.keys(event.toJSON()).forEach(function(item){
+                if(item.indexOf('_showInRegister')>-1 && event[item]==true ){
+                    var fieldName = item.substring(0, item.indexOf('_showInRegister') ) ;
+                    var fieldLabel = item.substring(0, item.indexOf('_showInRegister') ) + '_label';
+                    var fieldType = item.substring(0, item.indexOf('_showInRegister') ) + '_fieldType';
+                    var fieldValue = eventData[fieldName] == undefined ? '':eventData[fieldName];
+    
+                    eventData[fieldName]=req.body[fieldName];
+    
+    
+                }
+            });
+
+            eventData.modifiedDate=moment().format('YYYY-MM-DD HH:mm:ss');
+           
+           
+           
+            eventData.save(function(err, result){
+                if(err) throw err;
+    
+                res.redirect('/event/registration/' + eventId);
+            });
+    
+        });
+    });
 
 
 
 
+
+
+});
+
+router.get('/download/:id', function(req,res){
+    var messages = [];
+    
+        var eventId = req.params.id;
+        req.session.eventId = eventId;
+
+    
+        EventData.find({event:eventId}, function(err, eventData){
+            if(err) throw err;
+    
+            var rows=[];
+            eventData.forEach(function(eventData){
+    
+                var row={};
+                var keys = Object.keys(eventData.toJSON());
+                for(var i=keys.length-1; i>0; i--){
+                    if(keys[i]!='__v' && keys[i]!='_id' && keys[i]!='event')
+                    row[keys[i]]=eventData[keys[i]];
+                }
+
+                rows.push(row);
+                
+            });
+            
+            
+            res.xls('data.xlsx', rows);
+           
+        });
 });
 
 router.get('/upload/:id', function (req, res) {
@@ -473,6 +679,9 @@ router.get('/upload/:id', function (req, res) {
     req.session.eventId = eventId;
 
     res.render('event/upload', { messages: messages, hasErrors: messages.length > 0});
+    
+
+    
 })
 
 router.post('/upload', function (req, res) {
@@ -481,6 +690,13 @@ router.post('/upload', function (req, res) {
     
         var form = new formidable.IncomingForm();
         form.parse(req, function (err, fields, files) {
+            if(files.filetoupload.name==''){
+                messages.push('Please select the file to import');
+                res.render('event/upload', { messages: messages, hasErrors: messages.length > 0});
+                return;
+            }
+
+
             var oldpath = files.filetoupload.path;
             var newpath = path.join(__dirname, '../uploads/') + files.filetoupload.name;
             fs.rename(oldpath, newpath, function (err) {
@@ -522,18 +738,18 @@ router.post('/upload', function (req, res) {
                         eventData.fax = data[event.fax_columnInExcel];
                         eventData.email = data[event.email_columnInExcel];
                         eventData.website = data[event.website_columnInExcel];
-                        eventData.address1 = data[event.address1_columnInExcel];
+                         eventData.address1 = data[event.address1_columnInExcel];
                         eventData.address2 = data[event.address2_columnInExcel];
                         eventData.city = data[event.city_columnInExcel];
                         eventData.country = data[event.country_columnInExcel];
                         eventData.poBox = data[event.poBox_columnInExcel];
                         eventData.postalCode = data[event.postalCode_columnInExcel];
                         eventData.badgeCategory = data[event.badgeCategory_columnInExcel];
-                        eventData.regType = data[event.regType_columnInExcel];
-                        eventData.regDate = data[event.regDate_columnInExcel];
+                        eventData.regType = 'Online';//data[event.regType_columnInExcel];
+                        eventData.regDate = moment().format('YYYY-MM-DD HH:mm:ss');//data[event.regDate_columnInExcel];
                         eventData.badgePrintDate = data[event.badgePrintDate_columnInExcel];
                         eventData.modifiedDate = data[event.modifiedDate_columnInExcel];
-                        eventData.statusFlag = data[event.statusFlag_columnInExcel];
+                        eventData.statusFlag = 'Did Not Attend';//data[event.statusFlag_columnInExcel];
                         eventData.backoffice = data[event.backoffice_columnInExcel];
                         eventData.comment1 = data[event.comment1_columnInExcel];
                         eventData.comment2 = data[event.comment2_columnInExcel];
@@ -595,6 +811,9 @@ router.get('/edit/:id', function (req, res) {
     
 })
 
+
+
+
 router.post('/edit', function (req, res) {
     
         var messages = [];
@@ -629,6 +848,43 @@ router.post('/edit', function (req, res) {
 
         });//form.parse
     });
+
+router.get('/delete/:id', function (req, res) {
+    
+        var messages = [];
+        var eventId = req.params.id;
+    
+        Event.findById(eventId, function(err, event){
+            res.render('event/delete', { messages: messages, hasErrors: messages.length > 0, event: event });
+        })
+    
+        
+    });
+
+router.get('/delete-data/:id', function(req,res){
+    var eventId = req.params.id;
+
+    EventData.remove({event:eventId}, function(err, eventData){
+        if(err) throw err;
+
+        res.redirect('/event');
+    });
+});
+
+router.get('/delete-event/:id', function(req,res){
+    var eventId = req.params.id;
+
+    EventData.remove({event:eventId}, function(err, eventData){
+        if(err) throw err;
+        Event.remove({_id:eventId}, function(err, event){
+            if(err) throw err;
+            
+            res.redirect('/event');
+        });
+
+        
+    });
+});
 
 
 router.post('/create', function (req, res) {
@@ -1035,7 +1291,7 @@ router.post('/event-fields', function (req, res) {
 
         event.save(function (err, result) {
             //res.render('event/event-fields', {messages:messages, hasErrors: messages.length>0,  event:event})
-            res.redirect('/event');
+            res.redirect('/event/badge-categories/' + eventId);
         });
     })
 
@@ -1113,14 +1369,37 @@ router.get('/getregistration', function(req,res){
 
         Event.findById(eventId, function (err, event) {
     
+            var searchColumns=[];
+            
+            
+            Object.keys(event.toJSON()).forEach(function(item){
+                if(item.indexOf('_includeInSearch')>-1 && event[item]==true ){
+                    var key = item.substring(0, item.indexOf('_includeInSearch') );
+                    
+                    var regexObj = {};
+                    regexObj[key] = {};
+                    regexObj[key]['$regex']='.*' + search + '.*';
+                    regexObj[key]['$options']='i';
+
+                    //console.log('regex=' + JSON.stringify(regexObj));
+
+                    searchColumns.push(regexObj);
+                }
+            });
+            //console.log(`search columns = ${searchColumns}`);
+
 
     
             EventData
                 .find({ event: eventId, 
+                    /*
                     $or:[  
                         {fullName: { $regex: '.*' + search + '.*', $options:'i' }},
                         {email: { $regex: '.*' + search + '.*', $options:'i' }},
                     ] })
+                    */
+                    $or:searchColumns
+                 })
                 .skip(startIndex)
                 .limit(pageSize)
                 //.populate('event')
@@ -1143,10 +1422,11 @@ router.get('/getregistration', function(req,res){
                                 if(item.indexOf('_showInSearch')>-1 && event[item]==true ){
                                     var key = item.substring(0, item.indexOf('_showInSearch') );
                                
-                                    columns.push(data[key]);
+                                    columns.unshift(data[key]);
                                     //console.log(`key=${key};event=${data[key]}`)
                                 }
-                            })
+                            });
+                            columns.unshift(data._id);
 
                             /*
                             Object.keys(data.toJSON()).forEach(function(item){
@@ -1161,7 +1441,9 @@ router.get('/getregistration', function(req,res){
 
                         });
 
-                          EventData.count().exec(function(err, count){
+                          EventData.find({ event: eventId, 
+                            $or:searchColumns
+                         }).count().exec(function(err, count){
                             var result= {
                                 "draw": draw,
                                 "recordsTotal": count,
@@ -1197,9 +1479,11 @@ router.get('/registration/:id', function (req, res) {
             if(item.indexOf('_showInSearch')>-1 && event[item]==true ){
                 var key = item.substring(0, item.indexOf('_showInSearch') ) + '_label';
            
-                columns.push(event[key]);
+                columns.unshift(event[key]);
             }
         })
+
+        columns.unshift('Key');
        
         res.render('event/registration', { scripts:scripts, messages: messages, event: event, columns:columns });
     });

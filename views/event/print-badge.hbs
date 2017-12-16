@@ -1,0 +1,44 @@
+			<div class="adjuster" style="margin:330px auto; width:315px; border:0px solid #ccc; text-align:left;"> 
+				<div class="row">					
+					<table class="tg" style="width:315px;border:0px solid red; margin-left:10px;">
+					  <tr>
+						<th class="tg-yw4l" colspan="2"><h1 style="margin-bottom:0px; line-height: 12px; ">{{ eventData.companyName  }}</h1>	</th>
+					  </tr>
+					  <tr>
+						<td class="tg-yw4l"><h2 style="margin-bottom:10px; font-size:17px;">{{ eventData.fullName }} </h2></td>
+            
+            <td class="tg-yw4l">
+              <div style="margin-top:10px; z-index:-100; margin-left:0px; float:right;">
+                <img id="barcode"  />
+                <!--<img src="http://hostevery.website/event_hktdc/index.php/home/gen_barcode?code=29824202932262">-->
+              </div>
+            </td>
+
+					  </tr>
+					  <tr>
+						<td class="tg-yw4l" colspan="2"><h3>{{ eventData.country }}</h3></td>
+					  </tr>
+					</table>
+				</div>
+			</div>
+
+
+      <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+      <script src="/javascripts/JsBarcode.all.min.js"></script>
+      <script>
+        $(document).ready(function(){
+          JsBarcode("#barcode", "{{ eventData.barcode }} ", {
+            format: "CODE128",
+            width: 1,
+            height:40,
+            margin: 5,
+            textMargin: 0,
+            fontSize: 10,
+            displayValue: true
+          });
+        });
+      window.print();
+      
+      setTimeout(function(){ window.close(); }, 500);
+      
+      </script>

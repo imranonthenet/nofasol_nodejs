@@ -3,7 +3,8 @@ var InputFieldCodes = require('../models/input-field-codes');
 
 var mongoose = require('mongoose');
 
-mongoose.connect('localhost:27017/events');
+var connString = process.env.MONGODB_URI || 'localhost:27017/events';
+mongoose.connect(connString);
 
 InputFieldCodes.remove({}, function(err){
     var done=0;

@@ -7,7 +7,7 @@ var schema = new Schema({
     
     
 
-    uniqueId: {type:Number},
+    uniqueId: {type:String},
     barcode: {type:String},
     sno: {type:String},
     title: {type:String},
@@ -36,8 +36,8 @@ var schema = new Schema({
     regDate: {type:String},
     badgePrintDate: {type:String},
     modifiedDate: {type:String},
-    statusFlag: {type:Boolean},
-    backoffice: {type:Boolean},
+    statusFlag: {type:String},
+    backoffice: {type:String},
     comment1: {type:String},
     comment2: {type:String},
     comment3: {type:String},

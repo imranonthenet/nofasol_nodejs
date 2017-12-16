@@ -3,7 +3,8 @@ var InputFieldCodes = require('../models/input-field-codes');
 
 var mongoose = require('mongoose');
 
-mongoose.connect('localhost:27017/events');
+var connString = process.env.MONGODB_URI || 'localhost:27017/events';
+mongoose.connect(connString);
 
 var inputfields = [
     new InputField({

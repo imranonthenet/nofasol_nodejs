@@ -1,6 +1,23 @@
+<div class="stepwizard">
+    <div class="stepwizard-row">
+        <div class="stepwizard-step">
+            <button type="button" class="btn btn-primary btn-circle">1</button>
+            <p>Event Initials</p>
+        </div>
+        <div class="stepwizard-step">
+            <button type="button" class="btn btn-default btn-circle" disabled="disabled" >2</button>
+            <p>Event Fields</p>
+        </div>
+        <div class="stepwizard-step">
+            <button type="button" class="btn btn-default btn-circle" disabled="disabled">3</button>
+            <p>Badge Categories</p>
+        </div> 
+    </div>
+</div>
+
 <div class="row">
-    <div class="col-md-4 col-md-offset-4">
-        <h1>Event Initials</h1>
+    <div class="col-md-6 col-md-offset-3">
+        <h4>Step 1 - Event Initials</h4>
         {{#if hasErrors}}
             <div class="alert alert-danger">
                 {{#each messages}}
@@ -24,21 +41,22 @@
 
             <div class="form-group">
                 <label for="fromDate">From Date</label>
-                <input type="text" id="fromDate" name="fromDate" class="form-control" value="{{event.fromDate}}">
+                <input type="text" id="fromDate" name="fromDate" class="form-control" value="{{formatDate event.fromDate 'custom'}}">
             </div>
             <div class="form-group">
                 <label for="toDate">To Date</label>
-                <input type="text" id="toDate" name="toDate" class="form-control" value="{{event.toDate}}">
+                <input type="text" id="toDate" name="toDate" class="form-control" value="{{formatDate event.toDate 'custom'}}">
             </div>
 
-            <input type="submit" value="Save" style="width: 100px" class="btn btn-success">&nbsp;
+            <input type="submit" value="Next" style="width: 100px" class="btn btn-success pull-right">&nbsp;
 
-            <a href="/event" style="width: 100px" class="btn btn-default">Cancel</a>&nbsp;
+            <a href="/event" style="width: 100px" class="btn btn-primary pull-left">Back</a>&nbsp;
 
         </form>
     </div>
 
 </div>
+<!--
 <div class="row" style="margin-top: 20px">
     <div class="col-md-6 col-md-offset-4">
             <a href="/event/event-fields/{{event._id}}" style="width: 150px" class="btn btn-primary">Fields</a>&nbsp;
@@ -46,3 +64,4 @@
             <a href="/event/upload/{{event._id}}" style="width: 150px" class="btn btn-primary">Import</a>&nbsp;
     </div>
 </div>
+-->

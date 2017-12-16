@@ -1,6 +1,23 @@
+<div class="stepwizard">
+    <div class="stepwizard-row">
+        <div class="stepwizard-step">
+            <button type="button" class="btn btn-default btn-circle">1</button>
+            <p>Event Initials</p>
+        </div>
+        <div class="stepwizard-step">
+            <button type="button" class="btn btn-default btn-circle" >2</button>
+            <p>Event Fields</p>
+        </div>
+        <div class="stepwizard-step">
+            <button type="button" class="btn btn-primary btn-circle" >3</button>
+            <p>Badge Categories</p>
+        </div> 
+    </div>
+</div>
+
 <div class="row">
-    <div class="col-md-12">
-        <h1>Badge Categories</h1>
+    <div class="col-md-6 col-md-offset-3">
+        <h4>Step 3 - Badge Categories</h4>
         {{#if hasErrors}}
             <div class="alert alert-danger">
                 {{#each messages}}
@@ -10,9 +27,9 @@
         {{/if}}
 
         <a href="/event/badge-category-create" class="btn btn-primary">Add New</a>&nbsp;
-        <a href="/event/edit/{{session.eventId}}" class="btn btn-default">Back</a>&nbsp;
+        
 
-        <form action="/event/event-fields" method="POST">
+        <form action="/event/badge-categories" method="POST">
             
             
             <table class="table">
@@ -20,7 +37,7 @@
                 <tr>
                     <th>Category</th>
 
-                    <th>Actions</th>
+                    <th></th>
    
                 </tr>
                 </thead>
@@ -31,8 +48,8 @@
 
                             <td>
 
-                                <a href="/event/badge-category-edit/{{this._id}}" class="btn btn-primary" >Edit</a> | 
-                                <a href="/event/badge-category-delete/{{this._id}}" class="btn btn-danger" >Delete</a>
+                                <a href="/event/badge-category-edit/{{this._id}}" style="margin-left: 20px; width:80px" class="btn btn-primary pull-right" >Edit</a>
+                                <a href="/event/badge-category-delete/{{this._id}}" style="width:80px" class="btn btn-danger pull-right" >Delete</a>
                             </td>
                         </tr>
 
@@ -41,11 +58,12 @@
 
             </table>
 
+            <input type="submit" value="Finish" style="width:100px" class="btn btn-success pull-right">
+            <a href="/event/event-fields/{{session.eventId}}" style="width:100px" class="btn btn-primary">Previous</a>
+
         </form>
     </div>
 
 </div>
 
-      <script>
-
-  </script>
+  

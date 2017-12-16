@@ -32,16 +32,34 @@ router.get('/badge-categories/:id', function(req,res){
 });
 
 router.post('/badge-categories', function(req,res){
+    var messages = [];
+
     var eventId=req.session.eventId;
 
-    Event.findById(eventId, function(err,event){
-        if(err) throw err;
+    BadgeCategory.find({event:eventId}).count().exec(function(err, c){
+        console.log(`c=${c}`);
 
-        event.setupComplete = true;
-        event.save(function(err, result){
-            res.redirect('/event');
-        });
+        if(c==0){
+            messages.push('Please add atleast 1 badge category');
+
+            BadgeCategory.find({event:eventId}, function(err, badgecategories){
+                res.render('event/badge-categories', {messages:messages, hasErrors:messages.length>0, badgecategories:badgecategories});
+                return;
+            });
+        }
+        else {
+            Event.findById(eventId, function(err,event){
+                if(err) throw err;
+        
+                event.setupComplete = true;
+                event.save(function(err, result){
+                    res.redirect('/event');
+                });
+            });
+        }
     });
+
+
 })
 
 router.get('/badge-category-create', function(req,res){
@@ -463,7 +481,7 @@ router.get('/print-badge/:id', function(req,res){
     var eventId = req.session.eventId;
     var eventDataId = req.params.id;
 
-    var query = {event:eventId};
+    var query = {_id:eventDataId};
     var currentDate = moment().format('YYYY-MM-DD HH:mm:ss');
     var update = {badgePrintDate:currentDate, statusFlag:'Attended'};
     var options = {new:true};
@@ -790,14 +808,7 @@ router.post('/upload', function (req, res) {
     });
 
 
-router.get('/create', function (req, res) {
-    var scripts = [{ script: '/javascripts/datepicker.js' }];
-    var messages = [];
-    var event = new Event();
 
-
-    res.render('event/create', { scripts: scripts, messages: messages, hasErrors: messages.length > 0, event: event });
-})
 
 router.get('/edit/:id', function (req, res) {
     var scripts = [{ script: '/javascripts/datepicker.js' }];
@@ -809,7 +820,7 @@ router.get('/edit/:id', function (req, res) {
     })
 
     
-})
+});
 
 
 
@@ -886,43 +897,66 @@ router.get('/delete-event/:id', function(req,res){
     });
 });
 
+router.get('/create', function (req, res) {
+    var scripts = [{ script: '/javascripts/datepicker.js' }];
+    var messages = [];
+    var event = new Event();
+
+
+    res.render('event/create', { scripts: scripts, messages: messages, hasErrors: messages.length > 0, event: event });
+});
 
 router.post('/create', function (req, res) {
 
+    var scripts = [{ script: '/javascripts/datepicker.js' }];
     var messages = [];
+    var event = new Event();
 
     var form = new formidable.IncomingForm();
     form.parse(req, function (err, fields, files) {
         
         var oldpath = files.filetoupload.path;
         var newpath = path.join(__dirname, '../public/images/') + files.filetoupload.name;
+
+        if(files.filetoupload.name==''){
+            messages.push('Please select a logo for the event');
+            res.render('event/create', { scripts: scripts, messages: messages, hasErrors: messages.length > 0, event: event });
+            return;
+        }
+
+        /*
+        req.checkBody('eventName','Event Name is required').notEmpty();
+        req.checkBody('fromDate','From Date is required').notEmpty();
+        req.checkBody('toDate','To Date is required').notEmpty();
+        
+        var errors = req.validationErrors();
+      
+        if(errors){
+            
+            errors.forEach(function(error){
+                messages.push(error.msg);
+            });
+            var scripts = [{ script: '/javascripts/datepicker.js' }];
+            return res.render('event/create', {scripts: scripts, messages:messages, hasErrors: messages.length>0, event:event});
+            
+        }
+        */
+
         fs.rename(oldpath, newpath, function (err) {
             if (err) throw err;
 
 
             //file uploaded, now save form fields data
-            var event = new Event();
+            
             event.eventName = fields.eventName;
             event.eventLogo = files.filetoupload.name;
-            event.fromDate = fields.fromDate;
-            event.toDate = fields.toDate;
+            event.fromDate = moment(fields.fromDate,'DD/MM/YYYY').toISOString();
+            event.toDate = moment(fields.fromDate,'DD/MM/YYYY').toISOString();;
 
-            /*
-            req.checkBody('eventName','Event Name should be alphanumeric').isAlpha();
-            req.checkBody('eventName','Event Name is required').notEmpty()
             
-            var errors = req.validationErrors();
-          
-            if(errors){
-                
-                errors.forEach(function(error){
-                    messages.push(error.msg);
-                });
-                var scripts = [{ script: '/javascripts/datepicker.js' }];
-                return res.render('event/create', {scripts: scripts, messages:messages, hasErrors: messages.length>0, event:event});
-                
-            }
-            */
+            
+
+            
 
             event.save(function (err, result) {
                 if (err)

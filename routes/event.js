@@ -848,14 +848,14 @@ router.post('/edit', function (req, res) {
 
             Event.findById(eventId, function(err, event){
                 event.eventName = fields.eventName;
-                event.eventLogo = files.filetoupload.name;
+                event.eventLogo = files.filetoupload.name.replace(' ','_');
                 event.fromDate = moment(fields.fromDate,'DD/MM/YYYY').toISOString();
                 event.toDate = moment(fields.toDate,'DD/MM/YYYY').toISOString();
 
                 event.save(function(err, result){
                     if(files.filetoupload.name!=""){
                         var oldpath = files.filetoupload.path;
-                        var newpath = path.join(__dirname, '../public/images/') + files.filetoupload.name;
+                        var newpath = path.join(__dirname, '../public/images/') + files.filetoupload.name.replace(' ','_');
 
 
                         // Read the file
@@ -944,14 +944,16 @@ router.post('/create', function (req, res) {
     var form = new formidable.IncomingForm();
     form.parse(req, function (err, fields, files) {
         
-        var oldpath = files.filetoupload.path;
-        var newpath = path.join(__dirname, '../public/images/') + files.filetoupload.name;
-
         if(files.filetoupload.name==''){
             messages.push('Please select a logo for the event');
             res.render('event/create', { scripts: scripts, messages: messages, hasErrors: messages.length > 0, event: event });
             return;
         }
+        
+        var oldpath = files.filetoupload.path;
+        var newpath = path.join(__dirname, '../public/images/') + files.filetoupload.name.replace(' ','_');
+
+
 
         /*
         req.checkBody('eventName','Event Name is required').notEmpty();

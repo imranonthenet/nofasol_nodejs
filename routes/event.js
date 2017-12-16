@@ -849,8 +849,8 @@ router.post('/edit', function (req, res) {
             Event.findById(eventId, function(err, event){
                 event.eventName = fields.eventName;
                 event.eventLogo = files.filetoupload.name;
-                event.fromDate = fields.fromDate;
-                event.toDate = fields.toDate;
+                event.fromDate = moment(fields.fromDate,'DD/MM/YYYY').toISOString();
+                event.toDate = moment(fields.toDate,'DD/MM/YYYY').toISOString();
 
                 event.save(function(err, result){
                     if(files.filetoupload.name!=""){
@@ -984,7 +984,7 @@ router.post('/create', function (req, res) {
                 event.eventName = fields.eventName;
                 event.eventLogo = files.filetoupload.name;
                 event.fromDate = moment(fields.fromDate,'DD/MM/YYYY').toISOString();
-                event.toDate = moment(fields.fromDate,'DD/MM/YYYY').toISOString();;
+                event.toDate = moment(fields.toDate,'DD/MM/YYYY').toISOString();
 
                 event.save(function (err, result) {
                     if (err)

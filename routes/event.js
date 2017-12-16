@@ -717,86 +717,99 @@ router.post('/upload', function (req, res) {
 
             var oldpath = files.filetoupload.path;
             var newpath = path.join(__dirname, '../uploads/') + files.filetoupload.name;
-            fs.rename(oldpath, newpath, function (err) {
+
+
+            // Read the file
+            //fs.rename(oldpath, newpath, function (err) { //doesn't work on Heroku
+
+            fs.readFile(oldpath, function (err, data) {
                 if (err) throw err;
-    
-    
-                var workbook = XLSX.readFile(newpath);
-                var sheet_name_list = workbook.SheetNames;
-            
-                var first_sheet_name = workbook.SheetNames[0];
-                var sheet = workbook.Sheets[first_sheet_name];
-                var dataArray = sheet2arr(sheet);
-                console.log(dataArray);
-                console.log('req.session.eventId=' + req.session.eventId);
-    
-                var done=0;
-                var eventId = req.session.eventId;
-                Event.findById(eventId, function(err,event){
-    
-                    dataArray.forEach(function(data){
-                        var eventData = new EventData();
-                        eventData.event = req.session.eventId;
-            
-                        eventData.uniqueId = data[event.uniqueId_columnInExcel];
-                        eventData.barcode = data[event.barcode_columnInExcel];
-                        eventData.sno = data[event.sno_columnInExcel];
-                        eventData.title = data[event.title_columnInExcel];
-                        eventData.firstName = data[event.firstName_columnInExcel];
-                        eventData.middleName = data[event.middleName_columnInExcel];
-                        eventData.lastName = data[event.lastName_columnInExcel];
-                        eventData.fullName = data[event.fullName_columnInExcel];
-                        eventData.jobTitle = data[event.jobTitle_columnInExcel];
-                        eventData.department = data[event.department_columnInExcel];
-                        eventData.companyName = data[event.companyName_columnInExcel];
-                        eventData.mobile1 = data[event.mobile1_columnInExcel];
-                        eventData.mobile2 = data[event.mobile2_columnInExcel];
-                        eventData.tel1 = data[event.tel1_columnInExcel];
-                        eventData.tel2 = data[event.tel2_columnInExcel];
-                        eventData.fax = data[event.fax_columnInExcel];
-                        eventData.email = data[event.email_columnInExcel];
-                        eventData.website = data[event.website_columnInExcel];
-                         eventData.address1 = data[event.address1_columnInExcel];
-                        eventData.address2 = data[event.address2_columnInExcel];
-                        eventData.city = data[event.city_columnInExcel];
-                        eventData.country = data[event.country_columnInExcel];
-                        eventData.poBox = data[event.poBox_columnInExcel];
-                        eventData.postalCode = data[event.postalCode_columnInExcel];
-                        eventData.badgeCategory = data[event.badgeCategory_columnInExcel];
-                        eventData.regType = 'Online';//data[event.regType_columnInExcel];
-                        eventData.regDate = moment().format('YYYY-MM-DD HH:mm:ss');//data[event.regDate_columnInExcel];
-                        eventData.badgePrintDate = data[event.badgePrintDate_columnInExcel];
-                        eventData.modifiedDate = data[event.modifiedDate_columnInExcel];
-                        eventData.statusFlag = 'Did Not Attend';//data[event.statusFlag_columnInExcel];
-                        eventData.backoffice = data[event.backoffice_columnInExcel];
-                        eventData.comment1 = data[event.comment1_columnInExcel];
-                        eventData.comment2 = data[event.comment2_columnInExcel];
-                        eventData.comment3 = data[event.comment3_columnInExcel];
-                        eventData.comment4 = data[event.comment4_columnInExcel];
-                        eventData.comment5 = data[event.comment5_columnInExcel];
-                        eventData.comment6 = data[event.comment6_columnInExcel];
-                        eventData.comment7 = data[event.comment7_columnInExcel];
-                        eventData.comment8 = data[event.comment8_columnInExcel];
-                        eventData.comment9 = data[event.comment9_columnInExcel];
-                        eventData.comment10 = data[event.comment10_columnInExcel];
-            
-                        eventData.save(function(err, result){
-                            if(err)
-                                throw err;
-                                done++;
-                                if(done==dataArray.length){
-                                    console.log('done');
-                                    res.redirect('/event');
-                                }
-                                
-                        })
-                    })
-                });//Event.findById
-    
+                console.log('File read!');
+
+                // Write the file
+                fs.writeFile(newpath, data, function (err) {
+                    if (err) throw err;
+                    var workbook = XLSX.readFile(newpath);
+                    var sheet_name_list = workbook.SheetNames;
+                
+                    var first_sheet_name = workbook.SheetNames[0];
+                    var sheet = workbook.Sheets[first_sheet_name];
+                    var dataArray = sheet2arr(sheet);
+                    console.log(dataArray);
+                    console.log('req.session.eventId=' + req.session.eventId);
         
-      
-    
-            });//fs.rename
+                    var done=0;
+                    var eventId = req.session.eventId;
+                    Event.findById(eventId, function(err,event){
+        
+                        dataArray.forEach(function(data){
+                            var eventData = new EventData();
+                            eventData.event = req.session.eventId;
+                
+                            eventData.uniqueId = data[event.uniqueId_columnInExcel];
+                            eventData.barcode = data[event.barcode_columnInExcel];
+                            eventData.sno = data[event.sno_columnInExcel];
+                            eventData.title = data[event.title_columnInExcel];
+                            eventData.firstName = data[event.firstName_columnInExcel];
+                            eventData.middleName = data[event.middleName_columnInExcel];
+                            eventData.lastName = data[event.lastName_columnInExcel];
+                            eventData.fullName = data[event.fullName_columnInExcel];
+                            eventData.jobTitle = data[event.jobTitle_columnInExcel];
+                            eventData.department = data[event.department_columnInExcel];
+                            eventData.companyName = data[event.companyName_columnInExcel];
+                            eventData.mobile1 = data[event.mobile1_columnInExcel];
+                            eventData.mobile2 = data[event.mobile2_columnInExcel];
+                            eventData.tel1 = data[event.tel1_columnInExcel];
+                            eventData.tel2 = data[event.tel2_columnInExcel];
+                            eventData.fax = data[event.fax_columnInExcel];
+                            eventData.email = data[event.email_columnInExcel];
+                            eventData.website = data[event.website_columnInExcel];
+                             eventData.address1 = data[event.address1_columnInExcel];
+                            eventData.address2 = data[event.address2_columnInExcel];
+                            eventData.city = data[event.city_columnInExcel];
+                            eventData.country = data[event.country_columnInExcel];
+                            eventData.poBox = data[event.poBox_columnInExcel];
+                            eventData.postalCode = data[event.postalCode_columnInExcel];
+                            eventData.badgeCategory = data[event.badgeCategory_columnInExcel];
+                            eventData.regType = 'Online';//data[event.regType_columnInExcel];
+                            eventData.regDate = moment().format('YYYY-MM-DD HH:mm:ss');//data[event.regDate_columnInExcel];
+                            eventData.badgePrintDate = data[event.badgePrintDate_columnInExcel];
+                            eventData.modifiedDate = data[event.modifiedDate_columnInExcel];
+                            eventData.statusFlag = 'Did Not Attend';//data[event.statusFlag_columnInExcel];
+                            eventData.backoffice = data[event.backoffice_columnInExcel];
+                            eventData.comment1 = data[event.comment1_columnInExcel];
+                            eventData.comment2 = data[event.comment2_columnInExcel];
+                            eventData.comment3 = data[event.comment3_columnInExcel];
+                            eventData.comment4 = data[event.comment4_columnInExcel];
+                            eventData.comment5 = data[event.comment5_columnInExcel];
+                            eventData.comment6 = data[event.comment6_columnInExcel];
+                            eventData.comment7 = data[event.comment7_columnInExcel];
+                            eventData.comment8 = data[event.comment8_columnInExcel];
+                            eventData.comment9 = data[event.comment9_columnInExcel];
+                            eventData.comment10 = data[event.comment10_columnInExcel];
+                
+                            eventData.save(function(err, result){
+                                if(err)
+                                    throw err;
+                                    done++;
+                                    if(done==dataArray.length){
+                                        console.log('done');
+                                        res.redirect('/event');
+                                    }
+                                    
+                            })
+                        })
+                    });//Event.findById
+                    console.log('File written!');
+                });
+
+                // Delete the file
+                fs.unlink(oldpath, function (err) {
+                    if (err) throw err;
+                    console.log('File deleted!');
+                });
+            });
+
         });//form.parse
     
     

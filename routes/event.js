@@ -1449,8 +1449,9 @@ router.get('/getregistration', function(req,res){
         var pageSize = parseInt(req.query.length);
         var draw = req.query.draw;
         var search = req.query.search.value;
+        var searchArray = search.split(' ');
 
-        console.log(`search=${search}`);
+        //console.log(`search=${search}`);
 
         Event.findById(eventId, function (err, event) {
     
@@ -1460,15 +1461,13 @@ router.get('/getregistration', function(req,res){
             Object.keys(event.toJSON()).forEach(function(item){
                 if(item.indexOf('_includeInSearch')>-1 && event[item]==true ){
                     var key = item.substring(0, item.indexOf('_includeInSearch') );
-                    
-                    var regexObj = {};
-                    regexObj[key] = {};
-                    regexObj[key]['$regex']='.*' + search + '.*';
-                    regexObj[key]['$options']='i';
 
-                    //console.log('regex=' + JSON.stringify(regexObj));
+                        var regexObj = {};
+                        regexObj[key] = {};
+                        regexObj[key]['$regex']='.*' + searchArray[0] + '.*';
+                        regexObj[key]['$options']='i';
+                        searchColumns.push(regexObj);
 
-                    searchColumns.push(regexObj);
                 }
             });
             //console.log(`search columns = ${searchColumns}`);
@@ -1494,16 +1493,12 @@ router.get('/getregistration', function(req,res){
                         throw err;
     
                         var rows=[];
-                        
-                     
 
                         eventData.forEach(function(data){
                             var columns=[];
 
 
                             Object.keys(event.toJSON()).forEach(function(item){
-                                
-                    
                                 if(item.indexOf('_showInSearch')>-1 && event[item]==true ){
                                     var key = item.substring(0, item.indexOf('_showInSearch') );
                                
@@ -1513,33 +1508,48 @@ router.get('/getregistration', function(req,res){
                             });
                             columns.unshift(data._id);
 
-                            /*
-                            Object.keys(data.toJSON()).forEach(function(item){
-                                if(event[item + '_showInSearch']){
-                                    columns.push(data[item]);
-                                }
-                          
-                            })
-                            */
+                            //if search coloumns more than 1
+                            var includeRow=false;
+                            
+                            console.log(`search array len=${searchArray.length}`);
+                            if(searchArray.length>1){
+                                
 
-                            rows.push(columns);
-
+                                Object.keys(event.toJSON()).forEach(function(item){
+                                    if(item.indexOf('_includeInSearch')>-1 && event[item]==true ){
+                                        var key = item.substring(0, item.indexOf('_includeInSearch') );
+                                            console.log(`searchArray=${searchArray[1]}, datakey=${data[key]}`);
+                                            if(data[key].toUpperCase().indexOf(searchArray[1].toUpperCase())>-1){
+                                                includeRow=true;
+                                            }
+                                    }
+                                });
+                            }
+                            else {
+                                includeRow=true;
+                            }
+                            //end if search columns more than 1
+                            if(includeRow)
+                                rows.push(columns);
                         });
 
-                          EventData.find({ event: eventId, 
-                            $or:searchColumns
-                         }).count().exec(function(err, count){
-                            var result= {
-                                "draw": draw,
-                                "recordsTotal": count,
-                                "recordsFiltered": count,
-                                "data": rows,
-                              };
-    
-                              //console.log(result);
-                              res.json(result);
 
-                          })
+
+
+                        EventData.find({ event: eventId, 
+                            $or:searchColumns
+                        }).count().exec(function(err, count){
+                        var result= {
+                            "draw": draw,
+                            "recordsTotal": count,
+                            "recordsFiltered": count,
+                            "data": rows,
+                            };
+
+                            //console.log(result);
+                            res.json(result);
+
+                        })
 
                         
                    

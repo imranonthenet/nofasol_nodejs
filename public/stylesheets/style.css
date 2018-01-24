@@ -8,23 +8,32 @@
   
 }
 
+.navbar-brand {
+  display: inline-table;
+  vertical-align: middle;
+  max-height:70px;
+}
+
+.navbar-header {
+  display: inline-table;
+  vertical-align: middle;
+  max-height:70px;
+}
+
 .brandlogo {
-  display: block;
-  max-width:230px;
-  max-height:95px;
-  width: auto;
-  height: auto;
+  max-height:70px;
+  max-width: 230px;
 }
 
-.navbar-default {
-  min-height: 100px;
-}
-
+/*
 .navbar-nav > li > a {
   padding-top: 0px;
   padding-bottom: 0px;
-  line-height: 100px;
+  line-height: 100%;
+  vertical-align: middle;
+  display: inline-block;
 }
+*/
 
 @media (max-width: 767px) {
   .navbar-nav > li > a {

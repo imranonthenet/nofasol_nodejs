@@ -47,6 +47,15 @@ var hbs = exphbs.create({
       return new Handlebars.SafeString(results);
     },
 
+    eventOption: function (codes, selectedValue) {
+      var results ='';
+      for(var i=0; i<codes.length; i++){
+        results += '<option value="' + codes[i]._id + '" ' + (mongoose.Types.ObjectId(selectedValue) == mongoose.Types.ObjectId(codes[i]._id) ? 'selected' : '') + '>' + codes[i].eventName + '</option>\n';
+  
+      }
+      return new Handlebars.SafeString(results);
+    },
+
     formField: function(fieldName, fieldLabel, fieldType, fieldValue, fieldMandatory, badgeCategories){
       var results='';
 

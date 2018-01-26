@@ -50,7 +50,7 @@ var hbs = exphbs.create({
     eventOption: function (codes, selectedValue) {
       var results ='';
       for(var i=0; i<codes.length; i++){
-        results += '<option value="' + codes[i]._id + '" ' + (mongoose.Types.ObjectId(selectedValue) == mongoose.Types.ObjectId(codes[i]._id) ? 'selected' : '') + '>' + codes[i].eventName + '</option>\n';
+        results += '<option value="' + codes[i]._id + '" ' + (selectedValue && selectedValue.equals(codes[i]._id) ? 'selected' : '') + '>' + codes[i].eventName + '</option>\n';
   
       }
       return new Handlebars.SafeString(results);
@@ -64,8 +64,9 @@ var hbs = exphbs.create({
 
 
       if(fieldType=='countries'){
-        results+='<select class="form-control" id="country" name="country">';
-      
+        results+='<select class="form-control" id="country" name="country" required>';
+        results+='<option value="">Select Country</option>';
+
         var lookups = new Lookups();
         
         for(var i=0; i<lookups.countries.length; i++){
@@ -78,8 +79,9 @@ var hbs = exphbs.create({
 
       
       else if(fieldType=='badgeCategories'){
-        results+='<select class="form-control" id="badgeCategory" name="badgeCategory">';
-        
+        results+='<select class="form-control" id="badgeCategory" name="badgeCategory" required>';
+        results+='<option value="">Select Badge Category</option>';
+
         for(var i=0; i<badgeCategories.length; i++){
           results += '<option value="' + badgeCategories[i].desc + '" ' + (fieldValue == badgeCategories[i].desc ? 'selected' : '') + '>' + badgeCategories[i].desc + '</option>\n';
     
@@ -88,7 +90,9 @@ var hbs = exphbs.create({
       }
 
       else if(fieldType=='titles'){
-        results+='<select class="form-control" id="title" name="title">';
+        results+='<select class="form-control" id="title" name="title" required>';
+        results+='<option value="">Select Title</option>';
+
         var lookups = new Lookups();
 
         for(var i=0; i<lookups.titles.length; i++){

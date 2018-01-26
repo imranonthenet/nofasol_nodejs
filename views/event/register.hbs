@@ -1,3 +1,8 @@
+<ol class="breadcrumb">
+  <li><a href="/event/registration/{{session.eventId}}">Home</a></li>
+  <li class="active">Register</li>
+</ol>
+
 <div class="row">
     <div class="col-md-8 col-md-offset-2">
         <h1>Register</h1>
@@ -21,8 +26,9 @@
             </div>
             {{/each}}
 
+            <input type="submit" name="printAndSave" class="btn btn-primary" value="Print & Save">&nbsp;
 
-            <input type="submit" class="btn btn-success" value="Save">
+            <input type="submit" name="save" class="btn btn-success" value="Save">
             <a href="/event/registration/{{session.eventId}}" class="btn btn-default">Cancel</a>
         </form>
     </div>

@@ -574,13 +574,26 @@ router.post('/register', function (req, res) {
        
         eventData.regDate=moment().format('YYYY-MM-DD HH:mm:ss');
         eventData.regType='Onsite';
-        eventData.statusFlag='Did Not Attend';
-        
+
+        if(req.body.save){
+            eventData.statusFlag='Did Not Attend';
+        }
+        else if(req.body.printAndSave){ 
+            eventData.badgePrintDate = moment().format('YYYY-MM-DD HH:mm:ss');
+            eventData.statusFlag = 'Attended';
+        }
 
         eventData.save(function(err, result){
             if(err) throw err;
 
-            res.redirect('/event/registration/' + eventId);
+            if(req.body.save){
+                res.redirect('/event/registration/' + eventId);
+            }
+            else if(req.body.printAndSave){    
+                req.session.eventDataIdForPrint = result._id;
+
+                res.redirect('/event/registration/' + eventId);
+            }
         });
 
     });
@@ -618,6 +631,8 @@ router.post('/register', function (req, res) {
 
 });
 
+
+
 router.post('/edit-registration', function (req, res) {
     var messages = [];
     var eventId = req.session.eventId;
@@ -641,12 +656,24 @@ router.post('/edit-registration', function (req, res) {
 
             eventData.modifiedDate=moment().format('YYYY-MM-DD HH:mm:ss');
            
-           
+            if(req.body.printAndSave){ 
+                eventData.badgePrintDate = moment().format('YYYY-MM-DD HH:mm:ss');
+                eventData.statusFlag = 'Attended';
+            }
            
             eventData.save(function(err, result){
                 if(err) throw err;
     
-                res.redirect('/event/registration/' + eventId);
+                if(req.body.save){
+                    res.redirect('/event/registration/' + eventId);
+                }
+                else if(req.body.printAndSave){    
+                    req.session.eventDataIdForPrint = result._id;
+    
+                    res.redirect('/event/registration/' + eventId);
+                }
+
+
             });
     
         });
@@ -996,7 +1023,102 @@ router.post('/create', function (req, res) {
                     if (err)
                         throw err;
 
-                    res.redirect('/event/event-fields/' + result._id);
+                    //event is created, now add default badge categories using the newly generated event id
+                    var categories = [
+                        new BadgeCategory({
+                            code:'Visitor',
+                            desc:'Visitor',
+                            event: result._id
+                        }),
+                        new BadgeCategory({
+                            code:'Delegate',
+                            desc:'Delegate',
+                            event: result._id
+                        }),
+                        new BadgeCategory({
+                            code:'Participant',
+                            desc:'Participant',
+                            event: result._id
+                        }),
+                        new BadgeCategory({
+                            code:'Media',
+                            desc:'Media',
+                            event: result._id
+                        }),
+                        new BadgeCategory({
+                            code:'Press',
+                            desc:'Press',
+                            event: result._id
+                        }),
+                        new BadgeCategory({
+                            code:'Vip',
+                            desc:'Vip',
+                            event: result._id
+                        }),
+                        new BadgeCategory({
+                            code:'Vvip',
+                            desc:'Vvip',
+                            event: result._id
+                        }),
+                        new BadgeCategory({
+                            code:'Exhibitor',
+                            desc:'Exhibitor',
+                            event: result._id
+                        }),
+                        new BadgeCategory({
+                            code:'Sponsor',
+                            desc:'Sponsor',
+                            event: result._id
+                        }),
+                        new BadgeCategory({
+                            code:'Buyer',
+                            desc:'Buyer',
+                            event: result._id
+                        }),
+                        new BadgeCategory({
+                            code:'Host',
+                            desc:'Host',
+                            event: result._id
+                        }),
+                        new BadgeCategory({
+                            code:'Organizer',
+                            desc:'Organizer',
+                            event: result._id
+                        }),
+
+                        new BadgeCategory({
+                            code:'Speaker',
+                            desc:'Speaker',
+                            event: result._id
+                        }),
+                        new BadgeCategory({
+                            code:'Student',
+                            desc:'Student',
+                            event: result._id
+                        }),
+                        new BadgeCategory({
+                            code:'Member',
+                            desc:'Member',
+                            event: result._id
+                        }),
+                    ];
+                    var eventId = result._id;
+                 
+                    var done=0;
+                    for(var i=0; i<categories.length; i++){
+                        categories[i].save(function(err, result){
+                            done++;
+                            if(done===categories.length){
+                                //exit();
+                                res.redirect('/event/event-fields/' + eventId);
+                            }
+                        });
+                    }
+               
+                    //end badge categories
+
+
+                    
                 })//event.save
 
                 console.log('File written!');
@@ -1430,6 +1552,10 @@ router.post('/event-fields', function (req, res) {
 router.get('/', function (req, res) {
     var messages = [];
 
+    if(req.user.role=='user')
+        return res.redirect('/event/registration/' + req.user.event);
+
+
     Event.find({}, function (err, result) {
         if (err)
             throw err;
@@ -1450,6 +1576,17 @@ router.get('/getregistration', function(req,res){
         var draw = req.query.draw;
         var search = req.query.search.value;
         var searchArray = search.split(' ');
+
+        if(search==''){
+            var result= {
+                "draw": draw,
+                "recordsTotal": 0,
+                "recordsFiltered": 0,
+                "data": [],
+                };
+            
+                return res.json(result);
+        }
 
         //console.log(`search=${search}`);
 
@@ -1519,7 +1656,7 @@ router.get('/getregistration', function(req,res){
                                     if(item.indexOf('_includeInSearch')>-1 && event[item]==true ){
                                         var key = item.substring(0, item.indexOf('_includeInSearch') );
                                             console.log(`searchArray=${searchArray[1]}, datakey=${data[key]}`);
-                                            if(data[key].toUpperCase().indexOf(searchArray[1].toUpperCase())>-1){
+                                            if(data[key] && searchArray[1] &&  data[key].toUpperCase().indexOf(searchArray[1].toUpperCase())>-1){
                                                 includeRow=true;
                                             }
                                     }
@@ -1579,8 +1716,17 @@ router.get('/registration/:id', function (req, res) {
         })
 
         columns.unshift('Key');
-       
-        res.render('event/registration', { scripts:scripts, messages: messages, event: event, columns:columns });
+        var eventDataIdForPrint='';
+
+        if(req.session.eventDataIdForPrint){
+            scripts = [{ script: '/javascripts/printbadge.js' }];
+            eventDataIdForPrint = req.session.eventDataIdForPrint;
+            delete req.session.eventDataIdForPrint;
+        }
+      
+
+        res.render('event/registration', { eventDataIdForPrint:eventDataIdForPrint, scripts:scripts, messages: messages, event: event, columns:columns });
+
     });
     
 

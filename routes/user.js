@@ -11,7 +11,10 @@ router.use(csrfProtection);
 
 router.get('/', function(req,res){
     var messages=[];
-    User.find({}, function(err, data){
+    
+    User.find({role:'user'})
+    .populate('event') 
+    .exec(function(err, data){
         if(err) throw err;
 
         res.render('user/index', {messages: messages, users:data});
@@ -69,12 +72,35 @@ router.get('/', function(req,res){
         userdata.event = req.body.event;
 
         userdata.save(function(err, result){
-            res.redirect('/');
+            res.redirect('/user');
         });
 
         
     });
   });  
+
+  router.get('/delete/:id', function(req,res){
+    var messages=[];
+
+    var userId = req.params.id;
+    User.findById(userId, function(err, userdata){
+        if(err) throw err;
+
+        res.render('user/delete', {csrfToken: req.csrfToken(), messages: messages, hasErrors: messages.length>0, user:userdata});
+
+    });
+  });
+
+  router.post('/delete', function(req,res){
+    var messages=[];
+
+    var userId = req.body.userId;
+
+    User.findByIdAndRemove(userId, function(err, result){
+        console.log(`deleted user ${result.name}`);
+        res.redirect('/user')
+    });
+  }); 
 
 router.get('/profile', isLoggedIn ,function(req,res,next){
     res.render('user/profile');

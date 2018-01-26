@@ -1,6 +1,11 @@
+<ol class="breadcrumb">
+  <li><a href="/event/registration/{{session.eventId}}">Home</a></li>
+  <li class="active">Edit Registration</li>
+</ol>
+
 <div class="row">
     <div class="col-md-8 col-md-offset-2">
-        <h1>Register</h1>
+        <h1>Edit Registration</h1>
         {{#if hasErrors}}
             <div class="alert alert-danger">
                 {{#each messages}}
@@ -21,8 +26,11 @@
             </div>
             {{/each}}
 
+            <input type="submit" name="printAndSave" class="btn btn-primary" value="Print & Save">&nbsp;
 
-            <input type="submit" class="btn btn-success" value="Save">
+            <input type="submit" name="save" class="btn btn-success" value="Save">
+
+        
             <a href="/event/registration/{{session.eventId}}" class="btn btn-default">Cancel</a>
         </form>
     </div>

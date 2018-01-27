@@ -11,6 +11,7 @@ var moment = require('moment');
 var Event = require('../models/event');
 var EventData = require('../models/event-data');
 var BadgeCategory = require('../models/badge-category');
+var Sequence = require('../models/sequence');
 
 
 router.use(function(req,res,next){
@@ -481,16 +482,40 @@ router.get('/print-badge/:id', function(req,res){
     var eventId = req.session.eventId;
     var eventDataId = req.params.id;
 
-    var query = {_id:eventDataId};
-    var currentDate = moment().format('YYYY-MM-DD HH:mm:ss');
-    var update = {badgePrintDate:currentDate, statusFlag:'Attended'};
-    var options = {new:true};
-
-    EventData.findOneAndUpdate(query, update, options, function(err, eventData){
+    EventData.findById(eventDataId, function(err,result){
         if(err) throw err;
+
+        if(result.barcode==''){
+            Sequence.findOneAndUpdate({name:'barcode'}, {$inc:{value:1}}, {new:true}, function(err, seq){
+                var query = {_id:eventDataId};
+                var currentDate = moment().format('YYYY-MM-DD HH:mm:ss');
+                var update = {badgePrintDate:currentDate, statusFlag:'Attended', barcode:seq.value};
+                var options = {new:true};
+            
+                EventData.findOneAndUpdate(query, update, options, function(err, eventData){
+                    if(err) throw err;
+                    
+                    res.render('event/print-badge', {layout:'print-layout', messages: messages, hasErrors: messages.length > 0, eventData:eventData});
+                });
+            });
+        }
+        else {
+            var query = {_id:eventDataId};
+            var currentDate = moment().format('YYYY-MM-DD HH:mm:ss');
+            var update = {badgePrintDate:currentDate, statusFlag:'Attended'};
+            var options = {new:true};
         
-        res.render('event/print-badge', {layout:'print-layout', messages: messages, hasErrors: messages.length > 0, eventData:eventData});
+            EventData.findOneAndUpdate(query, update, options, function(err, eventData){
+                if(err) throw err;
+                
+                res.render('event/print-badge', {layout:'print-layout', messages: messages, hasErrors: messages.length > 0, eventData:eventData});
+            });
+        }
     });
+
+
+
+
 
   
 });

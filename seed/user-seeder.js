@@ -17,7 +17,7 @@ var users = [
 ];
 
 
-User.remove({}, function(err){
+User.remove({email:'admin@admin.com'}, function(err){
     var done=0;
     for(var i=0; i<users.length; i++){
         users[i].save(function(err, result){

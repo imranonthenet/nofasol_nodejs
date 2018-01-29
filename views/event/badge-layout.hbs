@@ -1,0 +1,151 @@
+<div class="stepwizard">
+    <div class="stepwizard-row">
+        <div class="stepwizard-step">
+            <button type="button" class="btn btn-default btn-circle">1</button>
+            <p>Event Initials</p>
+        </div>
+        <div class="stepwizard-step">
+            <button type="button" class="btn btn-default btn-circle" >2</button>
+            <p>Event Fields</p>
+        </div>
+        <div class="stepwizard-step">
+            <button type="button" class="btn btn-default btn-circle">3</button>
+            <p>Badge Categories</p>
+        </div> 
+        <div class="stepwizard-step">
+            <button type="button" class="btn btn-primary btn-circle" disabled="disabled">3</button>
+            <p>Badge Layout</p>
+        </div>         
+    </div>
+</div>
+
+<div class="row">
+    
+    <div class="col-md-4">
+        <h4>Step 4 - Badge Layout</h4>
+        <div class="form-group">
+            <label>Font</label>
+            <select id="fontFamily" class="form-control">
+                <option value="Arial" selected="selected">Arial</option>
+                <option value="Calibri">Calibri</option>
+                <option value="Comic Sans MS">Comic Sans MS</option>
+                <option value="Courier New">Courier New</option>
+                <option value="Georgia">Georgia</option>
+                <option value="Impact">Impact</option>
+                <option value="Tahoma">Tahoma</option>
+                <option value="Times New Roman">Times New Roman</option>
+                <option value="Verdana">Verdana</option>
+                <option value="Arabic Typesetting">Arabic Typesetting</option>
+                <option value="Simplified Arabic">Simplified Arabic</option>
+                <option value="Traditional Arabic">Traditional Arabic</option>
+
+
+            </select>
+        </div>
+    </div>
+    <div class="col-md-8">
+        
+        {{#if hasErrors}}
+            <div class="alert alert-danger">
+                {{#each messages}}
+                    <p>{{this}}</p>
+                {{/each}}
+            </div>
+        {{/if}}
+        <form id="form1" action="/event/badge-layout" method="POST">
+        <input type="hidden" name="fullName_top" id="fullName_top">
+        <input type="hidden" name="fullName_left" id="fullName_left">
+        <input type="hidden" name="fullName_width" id="fullName_width">
+
+
+        <!-- A5 paper size -->
+        <!--
+            Equivalent A5 paper dimensions in pixels at 300 DPI and 72 DPI respectively are: 
+            1748 pixels x 2480 pixels (print resolution) 
+            420 pixels x 595 pixels (screen resolution)
+        -->
+        <canvas id="badgeCanvas" width="400" height="400" style="border: 1px solid black;"></canvas>
+        <img id="barcode" >
+
+            <a href="/event/badge-categories/{{session.eventId}}" style="width:100px" class="btn btn-primary">Previous</a>&nbsp;&nbsp;        
+            <input type="button" onclick="submitForm()" value="Finish" style="width: 100px" class="btn btn-success ">
+            
+        </form>
+    </div>
+
+</div>
+
+
+<script src="/library/jquery-3.3.1.min.js"></script>
+<script src="/library/fabric.min.js"></script>
+<script src="/library/JsBarcode.all.min.js"></script>
+
+<script>
+
+var canvas = new fabric.Canvas('badgeCanvas');
+
+canvas.on('mouse:down', function(options) {
+  if (options.target) {
+    console.log('an object was clicked! ', options.target.left);
+    $('#fontFamily').val(options.target.fontFamily);
+  }
+});
+
+
+$('#fontFamily').on('change', function(){
+    if(canvas.getActiveObject()){
+        canvas.getActiveObject().set("fontFamily", this.value);
+        canvas.renderAll();
+    }
+    else {
+        alert('Please select an item on the canvas first');
+    }
+});
+
+var submitForm = function(){
+    alert(txtFullName.top);
+    $('#fullName_top').val(txtFullName.top);
+    $('#fullName_left').val(txtFullName.left);
+    $('#fullName_width').val(txtFullName.width);
+    $('#form1').submit();
+};
+
+$(document).ready(function(){
+    JsBarcode("#barcode", "19299259221626", {
+    format: "CODE128",
+    width: 1,
+    height:40,
+    margin: 5,
+    textMargin: 0,
+    fontSize: 10,
+    displayValue: true
+    });
+
+    {{#if showBarcode}}
+        var imgElement = document.getElementById('barcode');
+        var imgInstance = new fabric.Image(imgElement, {
+        left: 100,
+        top: 100,
+        angle: 0,
+        opacity: 1
+        });
+        canvas.add(imgInstance);
+    {{/if}}
+
+    {{#each fields}}
+    var {{this.fieldName}} = new fabric.Textbox('{{this.fieldLabel}}', {
+        left: 10,
+        top: {{@index}} * 50,
+        width: 400,
+        angle: 0,
+        opacity: 1,
+        fontFamily: 'Arial'
+        });
+
+    canvas.add({{this.fieldName}}); 
+    {{/each}}
+
+});
+
+      
+</script>

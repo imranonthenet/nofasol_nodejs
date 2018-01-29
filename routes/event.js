@@ -49,19 +49,77 @@ router.post('/badge-categories', function(req,res){
             });
         }
         else {
-            Event.findById(eventId, function(err,event){
-                if(err) throw err;
-        
-                event.setupComplete = true;
-                event.save(function(err, result){
-                    res.redirect('/event');
-                });
-            });
+            res.redirect('/event/badge-layout');
         }
     });
 
 
 })
+
+router.get('/badge-layout', function(req,res){
+    var messages=[];
+    //var scripts = [{ script: '/library/fabric.min.js' },{script:'/javascripts/badgelayout.js'}];
+    var eventId=req.session.eventId;
+
+    Event.findById(eventId, function (err, event) {
+        var fields=[];
+        var showBarcode=false;
+
+        Object.keys(event.toJSON()).forEach(function(item){
+            
+
+            if(item.indexOf('_showInPrint')>-1 && event[item]==true ){
+                var fieldName = item.substring(0, item.indexOf('_showInPrint') ) ;
+                var fieldLabel = item.substring(0, item.indexOf('_showInPrint') ) + '_label';
+                var fieldType = item.substring(0, item.indexOf('_showInPrint') ) + '_fieldType';
+                var fieldValue = '';//eventData[fieldName] == undefined ? '':eventData[fieldName];
+                var fieldMandatory = item.substring(0, item.indexOf('_showInPrint') ) + '_isMandatory';
+
+                //console.log(`fieldName=${fieldName}, fieldLabel=${fieldLabel}, fieldType=${fieldType}, fieldValue=${fieldValue}`)
+                var field={};
+                field['fieldName']=fieldName;
+                field['fieldLabel']=event[fieldLabel];
+                field['fieldType']=event[fieldType];
+                field['fieldValue']=fieldValue;
+                field['fieldMandatory']=event[fieldMandatory];
+
+                if(fieldName=='barcode'){
+                    showBarcode=true;
+                } else {
+                    //console.log('field=' + JSON.stringify(field));
+                    fields.unshift(field);
+                }
+            }
+        });
+        res.render('event/badge-layout', {messages:messages, hasErrors:messages.length>0, fields:fields, showBarcode:showBarcode});
+
+        
+    });
+
+    
+});
+
+router.post('/badge-layout', function(req,res){
+    var messages = [];
+    var eventId=req.session.eventId;
+
+    console.log(`top=${req.body.fullName_top},left=${req.body.fullName_left},width=${req.body.fullName_width}`);
+
+
+    Event.findById(eventId, function(err,event){
+        if(err) throw err;
+
+        event.fullName_top=req.body.fullName_top;
+        event.fullName_left=req.body.fullName_left;
+        event.fullName_width=req.body.fullName_width;
+
+        event.setupComplete = true;
+        event.save(function(err, result){
+            res.redirect('/event');
+        });
+    });
+});
+
 
 router.get('/badge-category-create', function(req,res){
     var messages=[];
@@ -482,40 +540,46 @@ router.get('/print-badge/:id', function(req,res){
     var eventId = req.session.eventId;
     var eventDataId = req.params.id;
 
-    EventData.findById(eventDataId, function(err,result){
-        if(err) throw err;
+    //var scripts = [{script:'/javascripts/badgeprint.js'}];
+    Event.findById(eventId, function(err,event){
 
-        if(result.barcode==''){
-            Sequence.findOneAndUpdate({name:'barcode'}, {$inc:{value:1}}, {new:true}, function(err, seq){
-                if(!seq){
-                    seq = new Sequence ({name:'barcode', value:'19299259221626'});
-                }
-
+        EventData.findById(eventDataId, function(err,result){
+            if(err) throw err;
+    
+            if(result.barcode==''){
+                Sequence.findOneAndUpdate({name:'barcode'}, {$inc:{value:1}}, {new:true}, function(err, seq){
+                    if(!seq){
+                        seq = new Sequence ({name:'barcode', value:'19299259221626'});
+                    }
+    
+                    var query = {_id:eventDataId};
+                    var currentDate = moment().format('YYYY-MM-DD HH:mm:ss');
+                    var update = {badgePrintDate:currentDate, statusFlag:'Attended', barcode:seq.value};
+                    var options = {new:true};
+                
+                    EventData.findOneAndUpdate(query, update, options, function(err, eventData){
+                        if(err) throw err;
+                        
+                        res.render('event/print-badge', {layout:'print-layout', messages: messages, hasErrors: messages.length > 0, eventData:eventData, event:event});
+                    });
+                });
+            }
+            else {
                 var query = {_id:eventDataId};
                 var currentDate = moment().format('YYYY-MM-DD HH:mm:ss');
-                var update = {badgePrintDate:currentDate, statusFlag:'Attended', barcode:seq.value};
+                var update = {badgePrintDate:currentDate, statusFlag:'Attended'};
                 var options = {new:true};
             
                 EventData.findOneAndUpdate(query, update, options, function(err, eventData){
                     if(err) throw err;
                     
-                    res.render('event/print-badge', {layout:'print-layout', messages: messages, hasErrors: messages.length > 0, eventData:eventData});
+                    res.render('event/print-badge', {layout:'print-layout', messages: messages, hasErrors: messages.length > 0, eventData:eventData, event:event});
                 });
-            });
-        }
-        else {
-            var query = {_id:eventDataId};
-            var currentDate = moment().format('YYYY-MM-DD HH:mm:ss');
-            var update = {badgePrintDate:currentDate, statusFlag:'Attended'};
-            var options = {new:true};
-        
-            EventData.findOneAndUpdate(query, update, options, function(err, eventData){
-                if(err) throw err;
-                
-                res.render('event/print-badge', {layout:'print-layout', messages: messages, hasErrors: messages.length > 0, eventData:eventData});
-            });
-        }
+            }
+        });
     });
+
+
 
 
 

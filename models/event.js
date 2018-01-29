@@ -25,6 +25,8 @@ var schema = new Schema({
     barcode_showInRegister: {type:Boolean, default:false},
     barcode_showInPrint: {type:Boolean, default:true},
     barcode_columnInExcel: {type:String, default:'B'},
+    barcode_top: {type:Number, default:0},
+    barcode_left: {type:Number, default:0},
 
     sno_fieldType: {type:String, default:'text'},
     sno_label: {type:String, default:'SNo'},
@@ -79,6 +81,8 @@ var schema = new Schema({
     fullName_showInRegister: {type:Boolean, default:true},
     fullName_showInPrint: {type:Boolean, default:true},
     fullName_columnInExcel: {type:String, default:'H'},
+    fullName_top: {type:Number, default:0},
+    fullName_left: {type:Number, default:0},
 
     jobTitle_fieldType: {type:String, default:'text'},
     jobTitle_label: {type:String, default:'Job Title'},
@@ -106,6 +110,8 @@ var schema = new Schema({
     companyName_showInRegister: {type:Boolean, default:true},
     companyName_showInPrint: {type:Boolean, default:true},
     companyName_columnInExcel: {type:String, default:'K'},
+    companyName_top: {type:Number, default:0},
+    companyName_left: {type:Number, default:0},
 
     mobile1_fieldType: {type:String, default:'text'},
     mobile1_label: {type:String, default:'Mobile'},

@@ -109,9 +109,18 @@ router.post('/badge-layout', function(req,res){
     Event.findById(eventId, function(err,event){
         if(err) throw err;
 
-        event.fullName_top=req.body.fullName_top;
-        event.fullName_left=req.body.fullName_left;
-        event.fullName_width=req.body.fullName_width;
+        Object.keys(event.toJSON()).forEach(function(item){
+            
+
+            if(item.indexOf('_showInPrint')>-1 && event[item]==true ){
+                var fieldName = item.substring(0, item.indexOf('_showInPrint') ) ;
+
+                event[fieldName + '_top']=req.body[fieldName + '_top'];
+                event[fieldName + '_left']=req.body[fieldName + '_left'];
+                event[fieldName + '_width']=req.body[fieldName + '_width'];
+            }
+        });
+
 
         event.setupComplete = true;
         event.save(function(err, result){

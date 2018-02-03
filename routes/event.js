@@ -64,16 +64,30 @@ router.get('/badge-layout', function(req,res){
     Event.findById(eventId, function (err, event) {
         var fields=[];
         var showBarcode=false;
+        var barcodeTop = 10;
+        var barcodeLeft = 10;
+        var fieldIndex = 0;
 
         Object.keys(event.toJSON()).forEach(function(item){
             
 
             if(item.indexOf('_showInPrint')>-1 && event[item]==true ){
+                fieldIndex = fieldIndex + 1;
+
                 var fieldName = item.substring(0, item.indexOf('_showInPrint') ) ;
                 var fieldLabel = item.substring(0, item.indexOf('_showInPrint') ) + '_label';
                 var fieldType = item.substring(0, item.indexOf('_showInPrint') ) + '_fieldType';
                 var fieldValue = '';//eventData[fieldName] == undefined ? '':eventData[fieldName];
                 var fieldMandatory = item.substring(0, item.indexOf('_showInPrint') ) + '_isMandatory';
+                var fieldTop = item.substring(0, item.indexOf('_showInPrint') ) + '_top';
+            
+                var fieldLeft = item.substring(0, item.indexOf('_showInPrint') ) + '_left';
+                var fieldWidth = item.substring(0, item.indexOf('_showInPrint') ) + '_width';
+                var fieldFontFamily = item.substring(0, item.indexOf('_showInPrint') ) + '_fontFamily';
+                var fieldFontSize = item.substring(0, item.indexOf('_showInPrint') ) + '_fontSize';
+                var fieldFontWeight = item.substring(0, item.indexOf('_showInPrint') ) + '_fontWeight';
+                var fieldFontStyle = item.substring(0, item.indexOf('_showInPrint') ) + '_fontStyle';
+
 
                 //console.log(`fieldName=${fieldName}, fieldLabel=${fieldLabel}, fieldType=${fieldType}, fieldValue=${fieldValue}`)
                 var field={};
@@ -83,15 +97,120 @@ router.get('/badge-layout', function(req,res){
                 field['fieldValue']=fieldValue;
                 field['fieldMandatory']=event[fieldMandatory];
 
+                if(event[fieldTop]==10){
+                    var fieldTopValue = fieldIndex * 20;
+                    event[fieldTop] = fieldTopValue.toString();
+                }
+                
+                field['fieldTop']=event[fieldTop];
+                field['fieldLeft']=event[fieldLeft];
+                field['fieldWidth']=event[fieldWidth];
+                field['fieldFontFamily']=event[fieldFontFamily];
+                field['fieldFontSize']=event[fieldFontSize];
+                field['fieldFontWeight']=event[fieldFontWeight];
+                field['fieldFontStyle']=event[fieldFontStyle];
+
                 if(fieldName=='barcode'){
                     showBarcode=true;
+                    barcodeLeft=event[fieldLeft];
+                    barcodeTop=event[fieldTop];
+
                 } else {
                     //console.log('field=' + JSON.stringify(field));
                     fields.unshift(field);
                 }
             }
         });
-        res.render('event/badge-layout', {messages:messages, hasErrors:messages.length>0, fields:fields, showBarcode:showBarcode});
+
+        var eventIdForPrint='';
+        var scripts=[];
+        if(req.session.eventIdForPrint){
+            scripts = [{ script: '/javascripts/printbadgelayout.js' }];
+            eventIdForPrint = req.session.eventIdForPrint;
+            delete req.session.eventIdForPrint;
+        }
+      
+
+        res.render('event/badge-layout', {eventIdForPrint:eventIdForPrint, scripts:scripts, messages:messages, hasErrors:messages.length>0, fields:fields, 
+            showBarcode:showBarcode, barcodeLeft:barcodeLeft, barcodeTop:barcodeTop});
+
+        
+    });
+
+    
+});
+
+
+
+router.get('/print-badge-layout/:id', function(req,res){
+    var messages=[];
+    //var scripts = [{ script: '/library/fabric.min.js' },{script:'/javascripts/badgelayout.js'}];
+    var eventId=req.params.id;
+
+    Event.findById(eventId, function (err, event) {
+        var fields=[];
+        var showBarcode=false;
+        var barcodeTop = 10;
+        var barcodeLeft = 10;
+        var fieldIndex = 0;
+
+        Object.keys(event.toJSON()).forEach(function(item){
+            
+
+            if(item.indexOf('_showInPrint')>-1 && event[item]==true ){
+                fieldIndex = fieldIndex + 1;
+
+                var fieldName = item.substring(0, item.indexOf('_showInPrint') ) ;
+                var fieldLabel = item.substring(0, item.indexOf('_showInPrint') ) + '_label';
+                var fieldType = item.substring(0, item.indexOf('_showInPrint') ) + '_fieldType';
+                var fieldValue = '';//eventData[fieldName] == undefined ? '':eventData[fieldName];
+                var fieldMandatory = item.substring(0, item.indexOf('_showInPrint') ) + '_isMandatory';
+                var fieldTop = item.substring(0, item.indexOf('_showInPrint') ) + '_top';
+            
+                var fieldLeft = item.substring(0, item.indexOf('_showInPrint') ) + '_left';
+                var fieldWidth = item.substring(0, item.indexOf('_showInPrint') ) + '_width';
+                var fieldFontFamily = item.substring(0, item.indexOf('_showInPrint') ) + '_fontFamily';
+                var fieldFontSize = item.substring(0, item.indexOf('_showInPrint') ) + '_fontSize';
+                var fieldFontWeight = item.substring(0, item.indexOf('_showInPrint') ) + '_fontWeight';
+                var fieldFontStyle = item.substring(0, item.indexOf('_showInPrint') ) + '_fontStyle';
+
+
+                //console.log(`fieldName=${fieldName}, fieldLabel=${fieldLabel}, fieldType=${fieldType}, fieldValue=${fieldValue}`)
+                var field={};
+                field['fieldName']=fieldName;
+                field['fieldLabel']=event[fieldLabel];
+                field['fieldType']=event[fieldType];
+                field['fieldValue']=fieldValue;
+                field['fieldMandatory']=event[fieldMandatory];
+
+                if(event[fieldTop]==10){
+                    var fieldTopValue = fieldIndex * 20;
+                    event[fieldTop] = fieldTopValue.toString();
+                }
+                
+                field['fieldTop']=event[fieldTop];
+                field['fieldLeft']=event[fieldLeft];
+                field['fieldWidth']=event[fieldWidth];
+                field['fieldFontFamily']=event[fieldFontFamily];
+                field['fieldFontSize']=event[fieldFontSize];
+                field['fieldFontWeight']=event[fieldFontWeight];
+                field['fieldFontStyle']=event[fieldFontStyle];
+
+                if(fieldName=='barcode'){
+                    showBarcode=true;
+                    barcodeLeft=event[fieldLeft];
+                    barcodeTop=event[fieldTop];
+
+                } else {
+                    //console.log('field=' + JSON.stringify(field));
+                    fields.unshift(field);
+                }
+            }
+        });
+
+
+        res.render('event/print-badge-layout', {layout:'print-layout', messages:messages, hasErrors:messages.length>0, fields:fields, 
+            showBarcode:showBarcode, barcodeLeft:barcodeLeft, barcodeTop:barcodeTop});
 
         
     });
@@ -117,14 +236,29 @@ router.post('/badge-layout', function(req,res){
 
                 event[fieldName + '_top']=req.body[fieldName + '_top'];
                 event[fieldName + '_left']=req.body[fieldName + '_left'];
-                event[fieldName + '_width']=req.body[fieldName + '_width'];
+
+                if(fieldName!='barcode'){
+                    event[fieldName + '_width']=req.body[fieldName + '_width'];
+                    event[fieldName + '_fontFamily']=req.body[fieldName + '_fontFamily'];
+                    event[fieldName + '_fontSize']=req.body[fieldName + '_fontSize'];
+                    event[fieldName + '_fontWeight']=req.body[fieldName + '_fontWeight'];
+                    event[fieldName + '_fontStyle']=req.body[fieldName + '_fontStyle'];
+                }
+                
             }
         });
 
 
         event.setupComplete = true;
         event.save(function(err, result){
-            res.redirect('/event');
+            
+            if(req.body.action == 'testprint'){
+                req.session.eventIdForPrint = eventId;
+                res.redirect('/event/badge-layout');
+            }
+            else if(req.body.action=='finish'){
+                res.redirect('/event');
+            }
         });
     });
 });
@@ -552,9 +686,60 @@ router.get('/print-badge/:id', function(req,res){
     //var scripts = [{script:'/javascripts/badgeprint.js'}];
     Event.findById(eventId, function(err,event){
 
+        var fields=[];
+        var showBarcode=false;
+        var barcodeTop = 10;
+        var barcodeLeft = 10;
+       
         EventData.findById(eventDataId, function(err,result){
             if(err) throw err;
     
+            Object.keys(event.toJSON()).forEach(function(item){
+            
+
+                if(item.indexOf('_showInPrint')>-1 && event[item]==true ){
+                    var fieldName = item.substring(0, item.indexOf('_showInPrint') ) ;
+                    var fieldLabel = item.substring(0, item.indexOf('_showInPrint') ) + '_label';
+                    var fieldType = item.substring(0, item.indexOf('_showInPrint') ) + '_fieldType';
+                    var fieldValue = result[fieldName] == undefined ? '':result[fieldName];
+                    var fieldMandatory = item.substring(0, item.indexOf('_showInPrint') ) + '_isMandatory';
+                    var fieldTop = item.substring(0, item.indexOf('_showInPrint') ) + '_top';
+                    var fieldLeft = item.substring(0, item.indexOf('_showInPrint') ) + '_left';
+                    var fieldWidth = item.substring(0, item.indexOf('_showInPrint') ) + '_width';
+                    var fieldFontFamily = item.substring(0, item.indexOf('_showInPrint') ) + '_fontFamily';
+                    var fieldFontSize = item.substring(0, item.indexOf('_showInPrint') ) + '_fontSize';
+                    var fieldFontWeight = item.substring(0, item.indexOf('_showInPrint') ) + '_fontWeight';
+                    var fieldFontStyle = item.substring(0, item.indexOf('_showInPrint') ) + '_fontStyle';
+    
+    
+                    //console.log(`fieldName=${fieldName}, fieldLabel=${fieldLabel}, fieldType=${fieldType}, fieldValue=${fieldValue}`)
+                    var field={};
+                    field['fieldName']=fieldName;
+                    field['fieldLabel']=event[fieldLabel];
+                    field['fieldType']=event[fieldType];
+                    field['fieldValue']=fieldValue;
+                    field['fieldMandatory']=event[fieldMandatory];
+                    field['fieldTop']=event[fieldTop];
+                    field['fieldLeft']=event[fieldLeft];
+                    field['fieldWidth']=event[fieldWidth];
+                    field['fieldFontFamily']=event[fieldFontFamily];
+                    field['fieldFontSize']=event[fieldFontSize];
+                    field['fieldFontWeight']=event[fieldFontWeight];
+                    field['fieldFontStyle']=event[fieldFontStyle];
+    
+                    if(fieldName=='barcode'){
+                        showBarcode=true;
+                        barcodeLeft=event[fieldLeft];
+                        barcodeTop=event[fieldTop];
+    
+                    } else {
+                        //console.log('field=' + JSON.stringify(field));
+                        fields.unshift(field);
+                    }
+                }
+            });
+
+
             if(result.barcode==''){
                 Sequence.findOneAndUpdate({name:'barcode'}, {$inc:{value:1}}, {new:true}, function(err, seq){
                     if(!seq){
@@ -569,7 +754,8 @@ router.get('/print-badge/:id', function(req,res){
                     EventData.findOneAndUpdate(query, update, options, function(err, eventData){
                         if(err) throw err;
                         
-                        res.render('event/print-badge', {layout:'print-layout', messages: messages, hasErrors: messages.length > 0, eventData:eventData, event:event});
+                        res.render('event/print-badge', {layout:'print-layout', messages: messages, hasErrors: messages.length > 0,  
+                            fields:fields, showBarcode:showBarcode, barcodeLeft:barcodeLeft, barcodeTop:barcodeTop, barcode:eventData.barcode});
                     });
                 });
             }
@@ -582,7 +768,8 @@ router.get('/print-badge/:id', function(req,res){
                 EventData.findOneAndUpdate(query, update, options, function(err, eventData){
                     if(err) throw err;
                     
-                    res.render('event/print-badge', {layout:'print-layout', messages: messages, hasErrors: messages.length > 0, eventData:eventData, event:event});
+                    res.render('event/print-badge', {layout:'print-layout', messages: messages, hasErrors: messages.length > 0,  
+                        fields:fields, showBarcode:showBarcode, barcodeLeft:barcodeLeft, barcodeTop:barcodeTop, barcode:eventData.barcode});
                 });
             }
         });

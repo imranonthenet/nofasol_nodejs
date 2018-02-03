@@ -13,18 +13,19 @@
             <p>Badge Categories</p>
         </div> 
         <div class="stepwizard-step">
-            <button type="button" class="btn btn-primary btn-circle" disabled="disabled">3</button>
+            <button type="button" class="btn btn-primary btn-circle" >4</button>
             <p>Badge Layout</p>
         </div>         
     </div>
 </div>
 
 <div class="row">
-    
+    <form id="form1" action="/event/badge-layout" method="POST">
+
     <div class="col-md-4">
         <h4>Step 4 - Badge Layout</h4>
         <div class="form-group">
-            <label>Font</label>
+            <label>Font Family</label>
             <select id="fontFamily" class="form-control">
                 <option value="Arial" selected="selected">Arial</option>
                 <option value="Calibri">Calibri</option>
@@ -38,10 +39,47 @@
                 <option value="Arabic Typesetting">Arabic Typesetting</option>
                 <option value="Simplified Arabic">Simplified Arabic</option>
                 <option value="Traditional Arabic">Traditional Arabic</option>
-
-
             </select>
         </div>
+
+        <div class="form-group">
+            <label>Font Size</label>
+            <select id="fontSize" class="form-control">
+                <option value="11" selected="selected">11</option>
+                <option value="12">12</option>
+                <option value="14">14</option>
+                <option value="16">16</option>
+                <option value="18">18</option>
+                <option value="20">20</option>
+                <option value="22">22</option>
+                <option value="24">24</option>
+                <option value="26">26</option>
+                <option value="28">28</option>
+                <option value="36">36</option>
+                <option value="48">48</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Font Weight</label>
+            <select id="fontWeight" class="form-control">
+                <option value="normal" selected="selected">normal</option>
+                <option value="bold">bold</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Font Style</label>
+            <select id="fontStyle" class="form-control">
+                <option value="normal" selected="selected">normal</option>
+                <option value="italic">italic</option>
+            </select>
+        </div>
+
+        <a href="/event/badge-categories/{{session.eventId}}" style="width:100px" class="btn btn-primary">Previous</a>&nbsp;&nbsp; 
+        <input type="button" onclick="testPrint()" value="Test Print" style="width: 100px" class="btn btn-info ">&nbsp;&nbsp;       
+        <input type="button" onclick="finish()" value="Finish" style="width: 100px" class="btn btn-success">
+
     </div>
     <div class="col-md-8">
         
@@ -52,12 +90,18 @@
                 {{/each}}
             </div>
         {{/if}}
-        <form id="form1" action="/event/badge-layout" method="POST">
+        
+        <input type="hidden" name="eventIdForPrint" id="eventIdForPrint" value="{{eventIdForPrint}}">
+        <input type="hidden" name="action" id="action" >
+
         {{#each fields}}
         <input type="hidden" name="{{this.fieldName}}_top" id="{{this.fieldName}}_top">
         <input type="hidden" name="{{this.fieldName}}_left" id="{{this.fieldName}}_left">
         <input type="hidden" name="{{this.fieldName}}_width" id="{{this.fieldName}}_width">
         <input type="hidden" name="{{this.fieldName}}_fontFamily" id="{{this.fieldName}}_fontFamily">
+        <input type="hidden" name="{{this.fieldName}}_fontSize" id="{{this.fieldName}}_fontSize">
+        <input type="hidden" name="{{this.fieldName}}_fontWeight" id="{{this.fieldName}}_fontWeight">
+        <input type="hidden" name="{{this.fieldName}}_fontStyle" id="{{this.fieldName}}_fontStyle">
         {{/each}}
 
         <!-- A5 paper size -->
@@ -74,12 +118,11 @@
         <input type="hidden" name="barcode_left" id="barcode_left">
         {{/if}}
 
-            <a href="/event/badge-categories/{{session.eventId}}" style="width:100px" class="btn btn-primary">Previous</a>&nbsp;&nbsp;        
-            <input type="button" onclick="submitForm()" value="Finish" style="width: 100px" class="btn btn-success ">
-            
-        </form>
-    </div>
 
+            
+        
+    </div>
+    </form>
 </div>
 
 
@@ -89,13 +132,21 @@
 
 <script>
 
+    {{#if session.eventIdForPrint}}
+        window.open('/event/print-badge-layout/', '_blank', '');
+    {{/if}}
+
 var fields = [];
 var canvas = new fabric.Canvas('badgeCanvas');
+
 
 canvas.on('mouse:down', function(options) {
   if (options.target) {
     console.log('an object was clicked! ', options.target.left);
     $('#fontFamily').val(options.target.fontFamily);
+    $('#fontSize').val(options.target.fontSize);
+    $('#fontWeight').val(options.target.fontWeight);
+    $('#fontStyle').val(options.target.fontStyle);
   }
 });
 
@@ -111,6 +162,49 @@ $('#fontFamily').on('change', function(){
     }
 });
 
+$('#fontSize').on('change', function(){
+    if(canvas.getActiveObject()){
+        
+        canvas.getActiveObject().set("fontSize", this.value);
+        canvas.renderAll();
+    }
+    else {
+        alert('Please select an item on the canvas first');
+    }
+});
+
+$('#fontWeight').on('change', function(){
+    if(canvas.getActiveObject()){
+        
+        canvas.getActiveObject().set("fontWeight", this.value);
+        canvas.renderAll();
+    }
+    else {
+        alert('Please select an item on the canvas first');
+    }
+});
+
+$('#fontStyle').on('change', function(){
+    if(canvas.getActiveObject()){
+        
+        canvas.getActiveObject().set("fontStyle", this.value);
+        canvas.renderAll();
+    }
+    else {
+        alert('Please select an item on the canvas first');
+    }
+});
+
+var finish = function() {
+    $('#action').val('finish');
+    submitForm();
+}
+
+var testPrint = function(){
+    $('#action').val('testprint');
+    submitForm();
+}
+
 var submitForm = function(){
     
     //$('#fullName_top').val(txtFullName.top);
@@ -124,6 +218,9 @@ var submitForm = function(){
         if(fields[i]!='barcode'){
             $('#' + fields[i] + '_width').val(canvas.item(i).width);
             $('#' + fields[i] + '_fontFamily').val(canvas.item(i).fontFamily);
+            $('#' + fields[i] + '_fontSize').val(canvas.item(i).fontSize);
+            $('#' + fields[i] + '_fontWeight').val(canvas.item(i).fontWeight);
+            $('#' + fields[i] + '_fontStyle').val(canvas.item(i).fontStyle);
         }
     }
 
@@ -131,6 +228,9 @@ var submitForm = function(){
 };
 
 $(document).ready(function(){
+
+
+
     /*
     JsBarcode("#barcode", "19299259221626", {
     format: "CODE128",
@@ -149,12 +249,15 @@ $(document).ready(function(){
     topIndex = {{@index}};
 
     var {{this.fieldName}} = new fabric.Textbox('{{this.fieldLabel}}', {
-        left: 10,
-        top: topIndex * 50,
-        width: 400,
+        left: {{this.fieldLeft}},
+        top: {{this.fieldTop}},
+        width: {{this.fieldWidth}},
         angle: 0,
         opacity: 1,
-        fontFamily: 'Arial'
+        fontFamily: '{{this.fieldFontFamily}}',
+        fontSize: {{this.fieldFontSize}},
+        fontWeight: '{{this.fieldFontWeight}}',
+        fontStyle: '{{this.fieldFontStyle}}'
         });
 
     canvas.add({{this.fieldName}}); 
@@ -166,8 +269,8 @@ $(document).ready(function(){
         topIndex = topIndex + 100;
         var imgElement = document.getElementById('barcode');
         var imgInstance = new fabric.Image(imgElement, {
-        left: 10,
-        top: topIndex,
+        left: {{barcodeLeft}},
+        top: {{barcodeTop}},
         angle: 0,
         opacity: 1
         });

@@ -5,6 +5,7 @@
 
     <div class="col-md-8">
 
+
         <!-- A5 paper size -->
         <!--
             Equivalent A5 paper dimensions in pixels at 300 DPI and 72 DPI respectively are: 
@@ -14,12 +15,10 @@
         <canvas id="badgeCanvas" width="400" height="400" ></canvas>
         
         {{#if showBarcode}}
-          <img id="barcode" style="display: none" >
-
+        <img id="barcode" src="/images/barcode.png" style="display: none" >
         {{/if}}
 
-          
-      
+
     </div>
 
 </div>
@@ -34,27 +33,27 @@
 var fields = [];
 var canvas = new fabric.Canvas('badgeCanvas');
 
-    {{#if showBarcode}}
-      JsBarcode("#barcode", "{{barcode}}", {
-      format: "CODE128",
-      width: 1,
-      height:40,
-      margin: 5,
-      textMargin: 0,
-      fontSize: 10,
-      displayValue: true
-      });
-    {{/if}}
+
 
 $(document).ready(function(){
-
+    /*
+    JsBarcode("#barcode", "19299259221626", {
+    format: "CODE128",
+    width: 1,
+    height:40,
+    margin: 5,
+    textMargin: 0,
+    fontSize: 10,
+    displayValue: true
+    });
+    */
     
     var topIndex=0;
 
     {{#each fields}}
     topIndex = {{@index}};
-    
-    var {{this.fieldName}} = new fabric.Textbox('{{this.fieldValue}}', {
+
+    var {{this.fieldName}} = new fabric.Textbox('{{this.fieldLabel}}', {
         left: {{this.fieldLeft}},
         top: {{this.fieldTop}},
         width: {{this.fieldWidth}},
@@ -84,9 +83,7 @@ $(document).ready(function(){
         fields.push('barcode');
     {{/if}}
 
-      //window.print();
-      
-      //setTimeout(function(){ window.close(); }, 500);
+    window.print();
 });
 
       

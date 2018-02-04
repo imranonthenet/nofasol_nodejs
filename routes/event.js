@@ -87,6 +87,7 @@ router.get('/badge-layout', function(req,res){
                 var fieldFontSize = item.substring(0, item.indexOf('_showInPrint') ) + '_fontSize';
                 var fieldFontWeight = item.substring(0, item.indexOf('_showInPrint') ) + '_fontWeight';
                 var fieldFontStyle = item.substring(0, item.indexOf('_showInPrint') ) + '_fontStyle';
+                var fieldTextAlign = item.substring(0, item.indexOf('_showInPrint') ) + '_textAlign';
 
 
                 //console.log(`fieldName=${fieldName}, fieldLabel=${fieldLabel}, fieldType=${fieldType}, fieldValue=${fieldValue}`)
@@ -109,6 +110,7 @@ router.get('/badge-layout', function(req,res){
                 field['fieldFontSize']=event[fieldFontSize];
                 field['fieldFontWeight']=event[fieldFontWeight];
                 field['fieldFontStyle']=event[fieldFontStyle];
+                field['fieldTextAlign']=event[fieldTextAlign];
 
                 if(fieldName=='barcode'){
                     showBarcode=true;
@@ -173,6 +175,7 @@ router.get('/print-badge-layout/:id', function(req,res){
                 var fieldFontSize = item.substring(0, item.indexOf('_showInPrint') ) + '_fontSize';
                 var fieldFontWeight = item.substring(0, item.indexOf('_showInPrint') ) + '_fontWeight';
                 var fieldFontStyle = item.substring(0, item.indexOf('_showInPrint') ) + '_fontStyle';
+                var fieldTextAlign = item.substring(0, item.indexOf('_showInPrint') ) + '_textAlign';
 
 
                 //console.log(`fieldName=${fieldName}, fieldLabel=${fieldLabel}, fieldType=${fieldType}, fieldValue=${fieldValue}`)
@@ -195,6 +198,7 @@ router.get('/print-badge-layout/:id', function(req,res){
                 field['fieldFontSize']=event[fieldFontSize];
                 field['fieldFontWeight']=event[fieldFontWeight];
                 field['fieldFontStyle']=event[fieldFontStyle];
+                field['fieldTextAlign']=event[fieldTextAlign];
 
                 if(fieldName=='barcode'){
                     showBarcode=true;
@@ -243,6 +247,7 @@ router.post('/badge-layout', function(req,res){
                     event[fieldName + '_fontSize']=req.body[fieldName + '_fontSize'];
                     event[fieldName + '_fontWeight']=req.body[fieldName + '_fontWeight'];
                     event[fieldName + '_fontStyle']=req.body[fieldName + '_fontStyle'];
+                    event[fieldName + '_textAlign']=req.body[fieldName + '_textAlign'];
                 }
                 
             }
@@ -710,7 +715,8 @@ router.get('/print-badge/:id', function(req,res){
                     var fieldFontSize = item.substring(0, item.indexOf('_showInPrint') ) + '_fontSize';
                     var fieldFontWeight = item.substring(0, item.indexOf('_showInPrint') ) + '_fontWeight';
                     var fieldFontStyle = item.substring(0, item.indexOf('_showInPrint') ) + '_fontStyle';
-    
+                    var fieldTextAlign = item.substring(0, item.indexOf('_showInPrint') ) + '_textAlign';
+
     
                     //console.log(`fieldName=${fieldName}, fieldLabel=${fieldLabel}, fieldType=${fieldType}, fieldValue=${fieldValue}`)
                     var field={};
@@ -726,6 +732,7 @@ router.get('/print-badge/:id', function(req,res){
                     field['fieldFontSize']=event[fieldFontSize];
                     field['fieldFontWeight']=event[fieldFontWeight];
                     field['fieldFontStyle']=event[fieldFontStyle];
+                    field['fieldTextAlign']=event[fieldTextAlign];
     
                     if(fieldName=='barcode'){
                         showBarcode=true;

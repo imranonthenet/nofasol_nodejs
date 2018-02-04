@@ -62,7 +62,8 @@ $(document).ready(function(){
         fontFamily: '{{this.fieldFontFamily}}',
         fontSize: {{this.fieldFontSize}},
         fontWeight: '{{this.fieldFontWeight}}',
-        fontStyle: '{{this.fieldFontStyle}}'
+        fontStyle: '{{this.fieldFontStyle}}',
+        textAlign: '{{this.fieldTextAlign}}'
         });
 
     canvas.add({{this.fieldName}}); 
@@ -84,6 +85,8 @@ $(document).ready(function(){
     {{/if}}
 
     window.print();
+      
+    setTimeout(function(){ window.close(); }, 500);
 });
 
       

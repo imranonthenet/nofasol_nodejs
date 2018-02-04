@@ -1,3 +1,8 @@
+<ol class="breadcrumb">
+  <li><a href="/event">Home</a></li>
+  <li class="active">Event Setup</li>
+</ol>
+
 <div class="stepwizard">
     <div class="stepwizard-row">
         <div class="stepwizard-step">
@@ -36,6 +41,10 @@
                 <option value="Tahoma">Tahoma</option>
                 <option value="Times New Roman">Times New Roman</option>
                 <option value="Verdana">Verdana</option>
+                <option value="Helvetica">Helvetica</option>
+                <option value="Lucida Sans">Lucida Sans</option>
+                <option value="Broadway">Broadway</option>
+                <option value="Cooper Black">Cooper Black</option>
                 <option value="Arabic Typesetting">Arabic Typesetting</option>
                 <option value="Simplified Arabic">Simplified Arabic</option>
                 <option value="Traditional Arabic">Traditional Arabic</option>
@@ -76,6 +85,15 @@
             </select>
         </div>
 
+        <div class="form-group">
+            <label>Text Align</label>
+            <select id="textAlign" class="form-control">
+                <option value="left" selected="selected">left</option>
+                <option value="center">center</option>
+                <option value="right">right</option>
+            </select>
+        </div>
+
         <a href="/event/badge-categories/{{session.eventId}}" style="width:100px" class="btn btn-primary">Previous</a>&nbsp;&nbsp; 
         <input type="button" onclick="testPrint()" value="Test Print" style="width: 100px" class="btn btn-info ">&nbsp;&nbsp;       
         <input type="button" onclick="finish()" value="Finish" style="width: 100px" class="btn btn-success">
@@ -102,6 +120,7 @@
         <input type="hidden" name="{{this.fieldName}}_fontSize" id="{{this.fieldName}}_fontSize">
         <input type="hidden" name="{{this.fieldName}}_fontWeight" id="{{this.fieldName}}_fontWeight">
         <input type="hidden" name="{{this.fieldName}}_fontStyle" id="{{this.fieldName}}_fontStyle">
+        <input type="hidden" name="{{this.fieldName}}_textAlign" id="{{this.fieldName}}_textAlign">
         {{/each}}
 
         <!-- A5 paper size -->
@@ -147,6 +166,7 @@ canvas.on('mouse:down', function(options) {
     $('#fontSize').val(options.target.fontSize);
     $('#fontWeight').val(options.target.fontWeight);
     $('#fontStyle').val(options.target.fontStyle);
+    $('#textAlign').val(options.target.textAlign);
   }
 });
 
@@ -195,6 +215,17 @@ $('#fontStyle').on('change', function(){
     }
 });
 
+$('#textAlign').on('change', function(){
+    if(canvas.getActiveObject()){
+        
+        canvas.getActiveObject().set("textAlign", this.value);
+        canvas.renderAll();
+    }
+    else {
+        alert('Please select an item on the canvas first');
+    }
+});
+
 var finish = function() {
     $('#action').val('finish');
     submitForm();
@@ -221,6 +252,7 @@ var submitForm = function(){
             $('#' + fields[i] + '_fontSize').val(canvas.item(i).fontSize);
             $('#' + fields[i] + '_fontWeight').val(canvas.item(i).fontWeight);
             $('#' + fields[i] + '_fontStyle').val(canvas.item(i).fontStyle);
+            $('#' + fields[i] + '_textAlign').val(canvas.item(i).textAlign);
         }
     }
 
@@ -257,7 +289,8 @@ $(document).ready(function(){
         fontFamily: '{{this.fieldFontFamily}}',
         fontSize: {{this.fieldFontSize}},
         fontWeight: '{{this.fieldFontWeight}}',
-        fontStyle: '{{this.fieldFontStyle}}'
+        fontStyle: '{{this.fieldFontStyle}}',
+        textAlign: '{{this.fieldTextAlign}}'
         });
 
     canvas.add({{this.fieldName}}); 

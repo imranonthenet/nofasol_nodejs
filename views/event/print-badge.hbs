@@ -63,7 +63,8 @@ $(document).ready(function(){
         fontFamily: '{{this.fieldFontFamily}}',
         fontSize: {{this.fieldFontSize}},
         fontWeight: '{{this.fieldFontWeight}}',
-        fontStyle: '{{this.fieldFontStyle}}'
+        fontStyle: '{{this.fieldFontStyle}}',
+        textAlign: '{{this.fieldTextAlign}}'
         });
 
     canvas.add({{this.fieldName}}); 
@@ -84,9 +85,9 @@ $(document).ready(function(){
         fields.push('barcode');
     {{/if}}
 
-      //window.print();
+      window.print();
       
-      //setTimeout(function(){ window.close(); }, 500);
+      setTimeout(function(){ window.close(); }, 500);
 });
 
       

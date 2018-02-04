@@ -21,8 +21,9 @@ $(document).ready(function() {
 
 
 
-    $('#customSearchTextBox').on('keyup', function () {
-        customDataTable.search(this.value).draw();
+    $('#customSearchTextBox').on('keyup', function (event) {
+        if(event.which != 32 && event.which !=37 && event.which != 39)
+            customDataTable.search(this.value).draw();
     });
 
     

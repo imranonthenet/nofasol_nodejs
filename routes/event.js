@@ -1945,6 +1945,10 @@ router.get('/getregistration', function(req,res){
                             var includeRow=false;
                             
                             console.log(`search array len=${searchArray.length}`);
+                            if(searchArray.length==1){
+                                includeRow=true;                                    
+                            }
+
                             if(searchArray.length>1){
                                 
 
@@ -1958,9 +1962,48 @@ router.get('/getregistration', function(req,res){
                                     }
                                 });
                             }
-                            else {
-                                includeRow=true;
-                            }
+
+                            if(searchArray.length>2){
+                                
+
+                                Object.keys(event.toJSON()).forEach(function(item){
+                                    if(item.indexOf('_includeInSearch')>-1 && event[item]==true ){
+                                        var key = item.substring(0, item.indexOf('_includeInSearch') );
+                                            console.log(`searchArray=${searchArray[2]}, datakey=${data[key]}`);
+                                            if(data[key] && searchArray[2] &&  data[key].toUpperCase().indexOf(searchArray[2].toUpperCase())>-1){
+                                                includeRow=true;
+                                            }
+                                    }
+                                });
+                            }    
+
+                            if(searchArray.length>3){
+                                
+
+                                Object.keys(event.toJSON()).forEach(function(item){
+                                    if(item.indexOf('_includeInSearch')>-1 && event[item]==true ){
+                                        var key = item.substring(0, item.indexOf('_includeInSearch') );
+                                            console.log(`searchArray=${searchArray[3]}, datakey=${data[key]}`);
+                                            if(data[key] && searchArray[3] &&  data[key].toUpperCase().indexOf(searchArray[3].toUpperCase())>-1){
+                                                includeRow=true;
+                                            }
+                                    }
+                                });
+                            }                         
+
+                            if(searchArray.length>4){
+                                
+
+                                Object.keys(event.toJSON()).forEach(function(item){
+                                    if(item.indexOf('_includeInSearch')>-1 && event[item]==true ){
+                                        var key = item.substring(0, item.indexOf('_includeInSearch') );
+                                            console.log(`searchArray=${searchArray[4]}, datakey=${data[key]}`);
+                                            if(data[key] && searchArray[4] &&  data[key].toUpperCase().indexOf(searchArray[4].toUpperCase())>-1){
+                                                includeRow=true;
+                                            }
+                                    }
+                                });
+                            }                             
                             //end if search columns more than 1
                             if(includeRow)
                                 rows.push(columns);

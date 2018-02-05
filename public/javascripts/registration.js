@@ -19,13 +19,50 @@ $(document).ready(function() {
       
     } );
 
+/*
+You can do something like this:
+$('#searchString').keyup(function(e) {
+    clearTimeout($.data(this, 'timer'));
+    if (e.keyCode == 13)
+      search(true);
+    else
+      $(this).data('timer', setTimeout(search, 500));
+});
+function search(force) {
+    var existingString = $("#searchString").val();
+    if (!force && existingString.length < 3) return; //wasn't enter, not > 2 char
+    $.get('/Tracker/Search/' + existingString, function(data) {
+        $('div#results').html(data);
+        $('#results').show();
+    });
+}
 
+What this does is perform a search (on keyup, better than keypress for these situations) 
+after 500ms by storing a timer on the #searchString element's .data() collection. 
+Every keyup it clears that timer, and if the key was enter, searches immediately, 
+if it wasn't sets a another 500ms timeout before auto-searching.
+*/
 
+    $('#customSearchTextBox').on('keyup', function (e) {
+        clearTimeout($.data(this, 'timer'));
+        if (e.keyCode == 13){
+          search(true);
+        }
+        else
+          $(this).data('timer', setTimeout(search, 500));
+    });
+    function search(force) {
+        var existingString = $("#customSearchTextBox").val();
+        if (!force && existingString.length < 3) return; //wasn't enter, not > 2 char
+        
+        customDataTable.search(existingString).draw();
+    }
+    /*
     $('#customSearchTextBox').on('keyup', function (event) {
         if(event.which != 32 && event.which !=37 && event.which != 39)
             customDataTable.search(this.value).draw();
     });
-
+    */
     
     $('#datatable tbody').on( 'click', 'tr', function () {
         if ( $(this).hasClass('selected') ) {

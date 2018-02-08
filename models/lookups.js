@@ -1,4 +1,78 @@
 module.exports = function Lookups(){
+    this.badgeCategories = [
+        {
+            code:'Visitor',
+            desc:'Visitor',
+            
+        },
+        {
+            code:'Delegate',
+            desc:'Delegate',
+        
+        },
+        {
+            code:'Participant',
+            desc:'Participant',
+
+        },
+        {
+            code:'Media',
+            desc:'Media',
+
+        },
+        {
+            code:'Press',
+            desc:'Press',
+
+        },
+        {
+            code:'Vip',
+            desc:'Vip',
+
+        },
+        {
+            code:'Vvip',
+            desc:'Vvip',
+        },
+        {
+            code:'Exhibitor',
+            desc:'Exhibitor',
+        },
+        {
+            code:'Sponsor',
+            desc:'Sponsor',
+
+        },
+        {
+            code:'Buyer',
+            desc:'Buyer',
+
+        },
+        {
+            code:'Host',
+            desc:'Host',
+
+        },
+        {
+            code:'Organizer',
+            desc:'Organizer',
+
+        },
+
+        {
+            code:'Speaker',
+            desc:'Speaker',
+
+        },
+        {
+            code:'Student',
+            desc:'Student',
+        },
+        {
+            code:'Member',
+            desc:'Member',
+        },
+    ];
 
     this.titles=['Mr.','Ms.','Mrs.','Dr.','Col.','Eng.','Professor','HE','HH'];
 

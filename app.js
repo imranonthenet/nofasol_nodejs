@@ -56,6 +56,23 @@ var hbs = exphbs.create({
       return new Handlebars.SafeString(results);
     },
 
+    badgeCategoryOption: function (selectedValues) {
+      var lookups = new Lookups();
+
+      var results ='';
+      for(var i=0; i<lookups.badgeCategories.length; i++){
+        var isChecked = '';
+        for(var j=0; j<selectedValues.length; j++){
+          if(selectedValues[j].equals(lookups.badgeCategories[i]))
+            isChecked='checked';
+        }
+
+        results += '<tr><td><input type="checkbox"  name="badgeCategory_' + lookups.badgeCategories[i].code + '" ' + isChecked + '>' + lookups.badgeCategories[i].desc + '</td></tr>\n';
+  
+      }
+      return new Handlebars.SafeString(results);
+    },
+
     formField: function(fieldName, fieldLabel, fieldType, fieldValue, fieldMandatory, badgeCategories){
       var results='';
 

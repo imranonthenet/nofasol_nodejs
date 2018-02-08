@@ -51,18 +51,8 @@
                 </tr>
                 </thead>
                 <tbody>
-                    {{#each badgecategories}}
-                        <tr>
-                            <td>{{this.desc}}</td>
+                    {{badgeCategoryOption badgecategories}}
 
-                            <td>
-
-                                <a href="/event/badge-category-edit/{{this._id}}" style="margin-left: 20px; width:80px" class="btn btn-primary pull-right" >Edit</a>
-                                <a href="/event/badge-category-delete/{{this._id}}" style="width:80px" class="btn btn-danger pull-right" >Delete</a>
-                            </td>
-                        </tr>
-
-                    {{/each}}
                 </tbody>
 
             </table>

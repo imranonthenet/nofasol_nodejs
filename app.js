@@ -63,11 +63,11 @@ var hbs = exphbs.create({
       for(var i=0; i<lookups.badgeCategories.length; i++){
         var isChecked = '';
         for(var j=0; j<selectedValues.length; j++){
-          if(selectedValues[j].equals(lookups.badgeCategories[i]))
+          if(selectedValues[j].code == lookups.badgeCategories[i].code)
             isChecked='checked';
         }
 
-        results += '<tr><td><input type="checkbox"  name="badgeCategory_' + lookups.badgeCategories[i].code + '" ' + isChecked + '>' + lookups.badgeCategories[i].desc + '</td></tr>\n';
+        results += '<tr><td><input type="checkbox"  name="' + lookups.badgeCategories[i].code + '_badgeCategory" ' + isChecked + '>' + lookups.badgeCategories[i].desc + '</td></tr>\n';
   
       }
       return new Handlebars.SafeString(results);

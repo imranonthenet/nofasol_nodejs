@@ -36,7 +36,42 @@ router.post('/badge-categories', function(req,res){
     var messages = [];
 
     var eventId=req.session.eventId;
+    var selectedItems=[];
+    
 
+    for(var key in req.body) {
+        
+          //do something with e.g. req.body[key]
+          if(key.indexOf('_badgeCategory') > -1){
+            //console.log(`${key}=${req.body[key]}`);
+            var item=key.substring(0,key.indexOf('_badgeCategory'));
+         
+            selectedItems.push(new BadgeCategory({event:eventId, code:item, desc:item}));
+            
+          }
+          
+      }
+
+        
+    BadgeCategory.remove({event:eventId}, function(err){
+        var done=0;
+        for(var i=0; i<selectedItems.length; i++){
+            selectedItems[i].save(function(err, result){
+                done++;
+                if(done===selectedItems.length){
+                    console.info('%d items were successfully stored.', selectedItems.length);
+                    res.redirect('/event/badge-layout');
+                    //res.render('event/badge-categories', {messages:messages, hasErrors:messages.length>0, badgecategories:selectedItems});
+                }
+            });
+        }
+    });        
+
+
+
+   
+////////////////////////////////////
+    /*
     BadgeCategory.find({event:eventId}).count().exec(function(err, c){
         console.log(`c=${c}`);
 
@@ -52,7 +87,7 @@ router.post('/badge-categories', function(req,res){
             res.redirect('/event/badge-layout');
         }
     });
-
+    */
 
 })
 

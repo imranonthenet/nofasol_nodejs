@@ -67,7 +67,14 @@ var hbs = exphbs.create({
             isChecked='checked';
         }
 
-        results += '<tr><td><input type="checkbox"  name="' + lookups.badgeCategories[i].code + '_badgeCategory" ' + isChecked + '>' + lookups.badgeCategories[i].desc + '</td></tr>\n';
+        var oddEven = i % 2 == 0 ? 'even':'odd';
+
+        results += '<tr class="' + oddEven + '">';
+        results += '<td class="col-xs-3">' + lookups.badgeCategories[i].desc + '</td>';
+        results += '<td class="col-xs-9"><input type="checkbox" class="form-control" name="' + lookups.badgeCategories[i].code + '_badgeCategory" ' + isChecked + '></td>';
+        results += '</tr>';
+
+        //results += '<tr><td><input type="checkbox"  name="' + lookups.badgeCategories[i].code + '_badgeCategory" ' + isChecked + '> &nbsp;' + lookups.badgeCategories[i].desc + '</td></tr>\n';
   
       }
       return new Handlebars.SafeString(results);

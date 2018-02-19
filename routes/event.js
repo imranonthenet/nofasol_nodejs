@@ -1676,7 +1676,7 @@ router.post('/event-fields', function (req, res) {
         event.uniqueId_showInSearch = req.body['uniqueId_showInSearch'] ? true : false;
         event.uniqueId_showInRegister = req.body['uniqueId_showInRegister'] ? true : false;
         event.uniqueId_showInPrint = req.body['uniqueId_showInPrint'] ? true : false;
-        event.uniqueId_includeInSearch = req.body['uniqueId_showInPrint'] ? true : false;
+        event.uniqueId_includeInSearch = req.body['uniqueId_includeInSearch'] ? true : false;
         event.uniqueId_columnInExcel = req.body['uniqueId_columnInExcel'];
 
         event.barcode_label = req.body['barcode_label'];
@@ -1684,7 +1684,7 @@ router.post('/event-fields', function (req, res) {
         event.barcode_showInSearch = req.body['barcode_showInSearch'] ? true : false;
         event.barcode_showInRegister = req.body['barcode_showInRegister'] ? true : false;
         event.barcode_showInPrint = req.body['barcode_showInPrint'] ? true : false;
-        event.barcode_includeInSearch = req.body['barcode_showInPrint'] ? true : false;
+        event.barcode_includeInSearch = req.body['barcode_includeInSearch'] ? true : false;
         event.barcode_columnInExcel = req.body['barcode_columnInExcel'];
       
         event.sno_label = req.body['sno_label'];
@@ -1692,7 +1692,7 @@ router.post('/event-fields', function (req, res) {
         event.sno_showInSearch = req.body['sno_showInSearch'] ? true : false;
         event.sno_showInRegister = req.body['sno_showInRegister'] ? true : false;
         event.sno_showInPrint = req.body['sno_showInPrint'] ? true : false;
-        event.sno_includeInSearch = req.body['sno_showInPrint'] ? true : false;
+        event.sno_includeInSearch = req.body['sno_includeInSearch'] ? true : false;
         event.sno_columnInExcel = req.body['sno_columnInExcel'];
 
         event.title_label = req.body['title_label'];
@@ -1700,7 +1700,7 @@ router.post('/event-fields', function (req, res) {
         event.title_showInSearch = req.body['title_showInSearch'] ? true : false;
         event.title_showInRegister = req.body['title_showInRegister'] ? true : false;
         event.title_showInPrint = req.body['title_showInPrint'] ? true : false;
-        event.title_includeInSearch = req.body['title_showInPrint'] ? true : false;
+        event.title_includeInSearch = req.body['title_includeInSearch'] ? true : false;
         event.title_columnInExcel = req.body['title_columnInExcel'];
 
 
@@ -1709,7 +1709,7 @@ router.post('/event-fields', function (req, res) {
         event.firstName_showInSearch = req.body['firstName_showInSearch'] ? true : false;
         event.firstName_showInRegister = req.body['firstName_showInRegister'] ? true : false;
         event.firstName_showInPrint = req.body['firstName_showInPrint'] ? true : false;
-        event.firstName_includeInSearch = req.body['firstName_showInPrint'] ? true : false;
+        event.firstName_includeInSearch = req.body['firstName_includeInSearch'] ? true : false;
         event.firstName_columnInExcel = req.body['firstName_columnInExcel'];
 
         event.middleName_label = req.body['middleName_label'];
@@ -1717,7 +1717,7 @@ router.post('/event-fields', function (req, res) {
         event.middleName_showInSearch = req.body['middleName_showInSearch'] ? true : false;
         event.middleName_showInRegister = req.body['middleName_showInRegister'] ? true : false;
         event.middleName_showInPrint = req.body['middleName_showInPrint'] ? true : false;
-        event.middleName_includeInSearch = req.body['middleName_showInPrint'] ? true : false;
+        event.middleName_includeInSearch = req.body['middleName_includeInSearch'] ? true : false;
         event.middleName_columnInExcel = req.body['middleName_columnInExcel'];
 
         event.lastName_label = req.body['lastName_label'];
@@ -1725,7 +1725,7 @@ router.post('/event-fields', function (req, res) {
         event.lastName_showInSearch = req.body['lastName_showInSearch'] ? true : false;
         event.lastName_showInRegister = req.body['lastName_showInRegister'] ? true : false;
         event.lastName_showInPrint = req.body['lastName_showInPrint'] ? true : false;
-        event.lastName_includeInSearch = req.body['lastName_showInPrint'] ? true : false;
+        event.lastName_includeInSearch = req.body['lastName_includeInSearch'] ? true : false;
         event.lastName_columnInExcel = req.body['lastName_columnInExcel'];
 
         event.fullName_label = req.body['fullName_label'];
@@ -1733,7 +1733,7 @@ router.post('/event-fields', function (req, res) {
         event.fullName_showInSearch = req.body['fullName_showInSearch'] ? true : false;
         event.fullName_showInRegister = req.body['fullName_showInRegister'] ? true : false;
         event.fullName_showInPrint = req.body['fullName_showInPrint'] ? true : false;
-        event.fullName_includeInSearch = req.body['fullName_showInPrint'] ? true : false;
+        event.fullName_includeInSearch = req.body['fullName_includeInSearch'] ? true : false;
         event.fullName_columnInExcel = req.body['fullName_columnInExcel'];
 
         event.jobTitle_label = req.body['jobTitle_label'];
@@ -1741,7 +1741,7 @@ router.post('/event-fields', function (req, res) {
         event.jobTitle_showInSearch = req.body['jobTitle_showInSearch'] ? true : false;
         event.jobTitle_showInRegister = req.body['jobTitle_showInRegister'] ? true : false;
         event.jobTitle_showInPrint = req.body['jobTitle_showInPrint'] ? true : false;
-        event.jobTitle_includeInSearch = req.body['jobTitle_showInPrint'] ? true : false;
+        event.jobTitle_includeInSearch = req.body['jobTitle_includeInSearch'] ? true : false;
         event.jobTitle_columnInExcel = req.body['jobTitle_columnInExcel'];
 
         event.department_label = req.body['department_label'];
@@ -1749,7 +1749,7 @@ router.post('/event-fields', function (req, res) {
         event.department_showInSearch = req.body['department_showInSearch'] ? true : false;
         event.department_showInRegister = req.body['department_showInRegister'] ? true : false;
         event.department_showInPrint = req.body['department_showInPrint'] ? true : false;
-        event.department_includeInSearch = req.body['department_showInPrint'] ? true : false;
+        event.department_includeInSearch = req.body['department_includeInSearch'] ? true : false;
         event.department_columnInExcel = req.body['department_columnInExcel'];
 
 
@@ -1758,7 +1758,7 @@ router.post('/event-fields', function (req, res) {
         event.companyName_showInSearch = req.body['companyName_showInSearch'] ? true : false;
         event.companyName_showInRegister = req.body['companyName_showInRegister'] ? true : false;
         event.companyName_showInPrint = req.body['companyName_showInPrint'] ? true : false;
-        event.companyName_includeInSearch = req.body['companyName_showInPrint'] ? true : false;
+        event.companyName_includeInSearch = req.body['companyName_includeInSearch'] ? true : false;
         event.companyName_columnInExcel = req.body['companyName_columnInExcel'];
 
 
@@ -1767,7 +1767,7 @@ router.post('/event-fields', function (req, res) {
         event.mobile1_showInSearch = req.body['mobile1_showInSearch'] ? true : false;
         event.mobile1_showInRegister = req.body['mobile1_showInRegister'] ? true : false;
         event.mobile1_showInPrint = req.body['mobile1_showInPrint'] ? true : false;
-        event.mobile1_includeInSearch = req.body['mobile1_showInPrint'] ? true : false;
+        event.mobile1_includeInSearch = req.body['mobile1_includeInSearch'] ? true : false;
         event.mobile1_columnInExcel = req.body['mobile1_columnInExcel'];
 
         event.mobile2_label = req.body['mobile2_label'];
@@ -1775,7 +1775,7 @@ router.post('/event-fields', function (req, res) {
         event.mobile2_showInSearch = req.body['mobile2_showInSearch'] ? true : false;
         event.mobile2_showInRegister = req.body['mobile2_showInRegister'] ? true : false;
         event.mobile2_showInPrint = req.body['mobile2_showInPrint'] ? true : false;
-        event.mobile2_includeInSearch = req.body['mobile2_showInPrint'] ? true : false;
+        event.mobile2_includeInSearch = req.body['mobile2_includeInSearch'] ? true : false;
         event.mobile2_columnInExcel = req.body['mobile2_columnInExcel'];
 
         event.tel1_label = req.body['tel1_label'];
@@ -1783,7 +1783,7 @@ router.post('/event-fields', function (req, res) {
         event.tel1_showInSearch = req.body['tel1_showInSearch'] ? true : false;
         event.tel1_showInRegister = req.body['tel1_showInRegister'] ? true : false;
         event.tel1_showInPrint = req.body['tel1_showInPrint'] ? true : false;
-        event.tel1_includeInSearch = req.body['tel1_showInPrint'] ? true : false;
+        event.tel1_includeInSearch = req.body['tel1_includeInSearch'] ? true : false;
         event.tel1_columnInExcel = req.body['tel1_columnInExcel'];
 
         event.tel2_label = req.body['tel2_label'];
@@ -1791,7 +1791,7 @@ router.post('/event-fields', function (req, res) {
         event.tel2_showInSearch = req.body['tel2_showInSearch'] ? true : false;
         event.tel2_showInRegister = req.body['tel2_showInRegister'] ? true : false;
         event.tel2_showInPrint = req.body['tel2_showInPrint'] ? true : false;
-        event.tel2_includeInSearch = req.body['tel2_showInPrint'] ? true : false;
+        event.tel2_includeInSearch = req.body['tel2_includeInSearch'] ? true : false;
         event.tel2_columnInExcel = req.body['tel2_columnInExcel'];
 
         event.fax_label = req.body['fax_label'];
@@ -1799,7 +1799,7 @@ router.post('/event-fields', function (req, res) {
         event.fax_showInSearch = req.body['fax_showInSearch'] ? true : false;
         event.fax_showInRegister = req.body['fax_showInRegister'] ? true : false;
         event.fax_showInPrint = req.body['fax_showInPrint'] ? true : false;
-        event.fax_includeInSearch = req.body['fax_showInPrint'] ? true : false;
+        event.fax_includeInSearch = req.body['fax_includeInSearch'] ? true : false;
         event.fax_columnInExcel = req.body['fax_columnInExcel'];
 
         event.email_label = req.body['email_label'];
@@ -1807,7 +1807,7 @@ router.post('/event-fields', function (req, res) {
         event.email_showInSearch = req.body['email_showInSearch'] ? true : false;
         event.email_showInRegister = req.body['email_showInRegister'] ? true : false;
         event.email_showInPrint = req.body['email_showInPrint'] ? true : false;
-        event.email_includeInSearch = req.body['email_showInPrint'] ? true : false;
+        event.email_includeInSearch = req.body['email_includeInSearch'] ? true : false;
         event.email_columnInExcel = req.body['email_columnInExcel'];
 
         event.website_label = req.body['website_label'];
@@ -1815,7 +1815,7 @@ router.post('/event-fields', function (req, res) {
         event.website_showInSearch = req.body['website_showInSearch'] ? true : false;
         event.website_showInRegister = req.body['website_showInRegister'] ? true : false;
         event.website_showInPrint = req.body['website_showInPrint'] ? true : false;
-        event.website_includeInSearch = req.body['website_showInPrint'] ? true : false;
+        event.website_includeInSearch = req.body['website_includeInSearch'] ? true : false;
         event.website_columnInExcel = req.body['website_columnInExcel'];
 
         event.address1_label = req.body['address1_label'];
@@ -1823,7 +1823,7 @@ router.post('/event-fields', function (req, res) {
         event.address1_showInSearch = req.body['address1_showInSearch'] ? true : false;
         event.address1_showInRegister = req.body['address1_showInRegister'] ? true : false;
         event.address1_showInPrint = req.body['address1_showInPrint'] ? true : false;
-        event.address1_includeInSearch = req.body['address1_showInPrint'] ? true : false;
+        event.address1_includeInSearch = req.body['address1_includeInSearch'] ? true : false;
         event.address1_columnInExcel = req.body['address1_columnInExcel'];
 
         event.address2_label = req.body['address2_label'];
@@ -1831,7 +1831,7 @@ router.post('/event-fields', function (req, res) {
         event.address2_showInSearch = req.body['address2_showInSearch'] ? true : false;
         event.address2_showInRegister = req.body['address2_showInRegister'] ? true : false;
         event.address2_showInPrint = req.body['address2_showInPrint'] ? true : false;
-        event.address2_includeInSearch = req.body['address2_showInPrint'] ? true : false;
+        event.address2_includeInSearch = req.body['address2_includeInSearch'] ? true : false;
         event.address2_columnInExcel = req.body['address2_columnInExcel'];
 
         event.city_label = req.body['city_label'];
@@ -1839,7 +1839,7 @@ router.post('/event-fields', function (req, res) {
         event.city_showInSearch = req.body['city_showInSearch'] ? true : false;
         event.city_showInRegister = req.body['city_showInRegister'] ? true : false;
         event.city_showInPrint = req.body['city_showInPrint'] ? true : false;
-        event.city_includeInSearch = req.body['city_showInPrint'] ? true : false;
+        event.city_includeInSearch = req.body['city_includeInSearch'] ? true : false;
         event.city_columnInExcel = req.body['city_columnInExcel'];
 
         event.country_label = req.body['country_label'];
@@ -1847,7 +1847,7 @@ router.post('/event-fields', function (req, res) {
         event.country_showInSearch = req.body['country_showInSearch'] ? true : false;
         event.country_showInRegister = req.body['country_showInRegister'] ? true : false;
         event.country_showInPrint = req.body['country_showInPrint'] ? true : false;
-        event.country_includeInSearch = req.body['country_showInPrint'] ? true : false;
+        event.country_includeInSearch = req.body['country_includeInSearch'] ? true : false;
         event.country_columnInExcel = req.body['country_columnInExcel'];
 
         event.poBox_label = req.body['poBox_label'];
@@ -1855,7 +1855,7 @@ router.post('/event-fields', function (req, res) {
         event.poBox_showInSearch = req.body['poBox_showInSearch'] ? true : false;
         event.poBox_showInRegister = req.body['poBox_showInRegister'] ? true : false;
         event.poBox_showInPrint = req.body['poBox_showInPrint'] ? true : false;
-        event.poBox_includeInSearch = req.body['poBox_showInPrint'] ? true : false;
+        event.poBox_includeInSearch = req.body['poBox_includeInSearch'] ? true : false;
         event.poBox_columnInExcel = req.body['poBox_columnInExcel'];
 
         event.postalCode_label = req.body['postalCode_label'];
@@ -1863,7 +1863,7 @@ router.post('/event-fields', function (req, res) {
         event.postalCode_showInSearch = req.body['postalCode_showInSearch'] ? true : false;
         event.postalCode_showInRegister = req.body['postalCode_showInRegister'] ? true : false;
         event.postalCode_showInPrint = req.body['postalCode_showInPrint'] ? true : false;
-        event.postalCode_includeInSearch = req.body['postalCode_showInPrint'] ? true : false;
+        event.postalCode_includeInSearch = req.body['postalCode_includeInSearch'] ? true : false;
         event.postalCode_columnInExcel = req.body['postalCode_columnInExcel'];
 
         event.badgeCategory_label = req.body['badgeCategory_label'];
@@ -1871,7 +1871,7 @@ router.post('/event-fields', function (req, res) {
         event.badgeCategory_showInSearch = req.body['badgeCategory_showInSearch'] ? true : false;
         event.badgeCategory_showInRegister = req.body['badgeCategory_showInRegister'] ? true : false;
         event.badgeCategory_showInPrint = req.body['badgeCategory_showInPrint'] ? true : false;
-        event.badgeCategory_includeInSearch = req.body['badgeCategory_showInPrint'] ? true : false;
+        event.badgeCategory_includeInSearch = req.body['badgeCategory_includeInSearch'] ? true : false;
         event.badgeCategory_columnInExcel = req.body['badgeCategory_columnInExcel'];
 
 
@@ -1880,7 +1880,7 @@ router.post('/event-fields', function (req, res) {
         event.regType_showInSearch = req.body['regType_showInSearch'] ? true : false;
         event.regType_showInRegister = req.body['regType_showInRegister'] ? true : false;
         event.regType_showInPrint = req.body['regType_showInPrint'] ? true : false;
-        event.regType_includeInSearch = req.body['regType_showInPrint'] ? true : false;
+        event.regType_includeInSearch = req.body['regType_includeInSearch'] ? true : false;
         event.regType_columnInExcel = req.body['regType_columnInExcel'];
 
         event.regDate_label = req.body['regDate_label'];
@@ -1888,7 +1888,7 @@ router.post('/event-fields', function (req, res) {
         event.regDate_showInSearch = req.body['regDate_showInSearch'] ? true : false;
         event.regDate_showInRegister = req.body['regDate_showInRegister'] ? true : false;
         event.regDate_showInPrint = req.body['regDate_showInPrint'] ? true : false;
-        event.regDate_includeInSearch = req.body['regDate_showInPrint'] ? true : false;
+        event.regDate_includeInSearch = req.body['regDate_includeInSearch'] ? true : false;
         event.regDate_columnInExcel = req.body['regDate_columnInExcel'];
 
         event.badgePrintDate_label = req.body['badgePrintDate_label'];
@@ -1896,7 +1896,7 @@ router.post('/event-fields', function (req, res) {
         event.badgePrintDate_showInSearch = req.body['badgePrintDate_showInSearch'] ? true : false;
         event.badgePrintDate_showInRegister = req.body['badgePrintDate_showInRegister'] ? true : false;
         event.badgePrintDate_showInPrint = req.body['badgePrintDate_showInPrint'] ? true : false;
-        event.badgePrintDate_includeInSearch = req.body['badgePrintDate_showInPrint'] ? true : false;
+        event.badgePrintDate_includeInSearch = req.body['badgePrintDate_includeInSearch'] ? true : false;
         event.badgePrintDate_columnInExcel = req.body['badgePrintDate_columnInExcel'];
 
         event.modifiedDate_label = req.body['modifiedDate_label'];
@@ -1904,7 +1904,7 @@ router.post('/event-fields', function (req, res) {
         event.modifiedDate_showInSearch = req.body['modifiedDate_showInSearch'] ? true : false;
         event.modifiedDate_showInRegister = req.body['modifiedDate_showInRegister'] ? true : false;
         event.modifiedDate_showInPrint = req.body['modifiedDate_showInPrint'] ? true : false;
-        event.modifiedDate_includeInSearch = req.body['modifiedDate_showInPrint'] ? true : false;
+        event.modifiedDate_includeInSearch = req.body['modifiedDate_includeInSearch'] ? true : false;
         event.modifiedDate_columnInExcel = req.body['modifiedDate_columnInExcel'];
 
         event.statusFlag_label = req.body['statusFlag_label'];
@@ -1912,7 +1912,7 @@ router.post('/event-fields', function (req, res) {
         event.statusFlag_showInSearch = req.body['statusFlag_showInSearch'] ? true : false;
         event.statusFlag_showInRegister = req.body['statusFlag_showInRegister'] ? true : false;
         event.statusFlag_showInPrint = req.body['statusFlag_showInPrint'] ? true : false;
-        event.statusFlag_includeInSearch = req.body['statusFlag_showInPrint'] ? true : false;
+        event.statusFlag_includeInSearch = req.body['statusFlag_includeInSearch'] ? true : false;
         event.statusFlag_columnInExcel = req.body['statusFlag_columnInExcel'];
 
 
@@ -1921,7 +1921,7 @@ router.post('/event-fields', function (req, res) {
         event.backoffice_showInSearch = req.body['backoffice_showInSearch'] ? true : false;
         event.backoffice_showInRegister = req.body['backoffice_showInRegister'] ? true : false;
         event.backoffice_showInPrint = req.body['backoffice_showInPrint'] ? true : false;
-        event.backoffice_includeInSearch = req.body['backoffice_showInPrint'] ? true : false;
+        event.backoffice_includeInSearch = req.body['backoffice_includeInSearch'] ? true : false;
         event.backoffice_columnInExcel = req.body['backoffice_columnInExcel'];
 
 
@@ -1930,7 +1930,7 @@ router.post('/event-fields', function (req, res) {
         event.comment1_showInSearch = req.body['comment1_showInSearch'] ? true : false;
         event.comment1_showInRegister = req.body['comment1_showInRegister'] ? true : false;
         event.comment1_showInPrint = req.body['comment1_showInPrint'] ? true : false;
-        event.comment1_includeInSearch = req.body['comment1_showInPrint'] ? true : false;
+        event.comment1_includeInSearch = req.body['comment1_includeInSearch'] ? true : false;
         event.comment1_columnInExcel = req.body['comment1_columnInExcel'];
 
         event.comment2_label = req.body['comment2_label'];
@@ -1938,7 +1938,7 @@ router.post('/event-fields', function (req, res) {
         event.comment2_showInSearch = req.body['comment2_showInSearch'] ? true : false;
         event.comment2_showInRegister = req.body['comment2_showInRegister'] ? true : false;
         event.comment2_showInPrint = req.body['comment2_showInPrint'] ? true : false;
-        event.comment2_includeInSearch = req.body['comment2_showInPrint'] ? true : false;
+        event.comment2_includeInSearch = req.body['comment2_includeInSearch'] ? true : false;
         event.comment2_columnInExcel = req.body['comment2_columnInExcel'];
 
         event.comment3_label = req.body['comment3_label'];
@@ -1946,7 +1946,7 @@ router.post('/event-fields', function (req, res) {
         event.comment3_showInSearch = req.body['comment3_showInSearch'] ? true : false;
         event.comment3_showInRegister = req.body['comment3_showInRegister'] ? true : false;
         event.comment3_showInPrint = req.body['comment3_showInPrint'] ? true : false;
-        event.comment3_includeInSearch = req.body['comment3_showInPrint'] ? true : false;
+        event.comment3_includeInSearch = req.body['comment3_includeInSearch'] ? true : false;
         event.comment3_columnInExcel = req.body['comment3_columnInExcel'];
 
         event.comment4_label = req.body['comment4_label'];
@@ -1954,7 +1954,7 @@ router.post('/event-fields', function (req, res) {
         event.comment4_showInSearch = req.body['comment4_showInSearch'] ? true : false;
         event.comment4_showInRegister = req.body['comment4_showInRegister'] ? true : false;
         event.comment4_showInPrint = req.body['comment4_showInPrint'] ? true : false;
-        event.comment4_includeInSearch = req.body['comment4_showInPrint'] ? true : false;
+        event.comment4_includeInSearch = req.body['comment4_includeInSearch'] ? true : false;
         event.comment4_columnInExcel = req.body['comment4_columnInExcel'];
 
 
@@ -1963,7 +1963,7 @@ router.post('/event-fields', function (req, res) {
         event.comment5_showInSearch = req.body['comment5_showInSearch'] ? true : false;
         event.comment5_showInRegister = req.body['comment5_showInRegister'] ? true : false;
         event.comment5_showInPrint = req.body['comment5_showInPrint'] ? true : false;
-        event.comment5_includeInSearch= req.body['comment5_showInPrint'] ? true : false;
+        event.comment5_includeInSearch= req.body['comment5_includeInSearch'] ? true : false;
         event.comment5_columnInExcel = req.body['comment5_columnInExcel'];
 
         event.comment6_label = req.body['comment6_label'];
@@ -1971,7 +1971,7 @@ router.post('/event-fields', function (req, res) {
         event.comment6_showInSearch = req.body['comment6_showInSearch'] ? true : false;
         event.comment6_showInRegister = req.body['comment6_showInRegister'] ? true : false;
         event.comment6_showInPrint = req.body['comment6_showInPrint'] ? true : false;
-        event.comment6_includeInSearch = req.body['comment6_showInPrint'] ? true : false;
+        event.comment6_includeInSearch = req.body['comment6_includeInSearch'] ? true : false;
         event.comment6_columnInExcel = req.body['comment6_columnInExcel'];
 
         event.comment7_label = req.body['comment7_label'];
@@ -1979,7 +1979,7 @@ router.post('/event-fields', function (req, res) {
         event.comment7_showInSearch = req.body['comment7_showInSearch'] ? true : false;
         event.comment7_showInRegister = req.body['comment7_showInRegister'] ? true : false;
         event.comment7_showInPrint = req.body['comment7_showInPrint'] ? true : false;
-        event.comment7_includeInSearch = req.body['comment7_showInPrint'] ? true : false;
+        event.comment7_includeInSearch = req.body['comment7_includeInSearch'] ? true : false;
         event.comment7_columnInExcel = req.body['comment7_columnInExcel'];
 
         event.comment8_label = req.body['comment8_label'];
@@ -1987,7 +1987,7 @@ router.post('/event-fields', function (req, res) {
         event.comment8_showInSearch = req.body['comment8_showInSearch'] ? true : false;
         event.comment8_showInRegister = req.body['comment8_showInRegister'] ? true : false;
         event.comment8_showInPrint = req.body['comment8_showInPrint'] ? true : false;
-        event.comment8_includeInSearch = req.body['comment8_showInPrint'] ? true : false;
+        event.comment8_includeInSearch = req.body['comment8_includeInSearch'] ? true : false;
         event.comment8_columnInExcel = req.body['comment8_columnInExcel'];
 
         event.comment9_label = req.body['comment9_label'];
@@ -1995,7 +1995,7 @@ router.post('/event-fields', function (req, res) {
         event.comment9_showInSearch = req.body['comment9_showInSearch'] ? true : false;
         event.comment9_showInRegister = req.body['comment9_showInRegister'] ? true : false;
         event.comment9_showInPrint = req.body['comment9_showInPrint'] ? true : false;
-        event.comment9_includeInSearch = req.body['comment9_showInPrint'] ? true : false;
+        event.comment9_includeInSearch = req.body['comment9_includeInSearch'] ? true : false;
         event.comment9_columnInExcel = req.body['comment9_columnInExcel'];
 
         event.comment10_label = req.body['comment10_label'];
@@ -2003,7 +2003,7 @@ router.post('/event-fields', function (req, res) {
         event.comment10_showInSearch = req.body['comment10_showInSearch'] ? true : false;
         event.comment10_showInRegister = req.body['comment10_showInRegister'] ? true : false;
         event.comment10_showInPrint = req.body['comment10_showInPrint'] ? true : false;
-        event.comment10_includeInSearch = req.body['comment10_showInPrint'] ? true : false;
+        event.comment10_includeInSearch = req.body['comment10_includeInSearch'] ? true : false;
         event.comment10_columnInExcel = req.body['comment10_columnInExcel'];
 
         event.save(function (err, result) {

@@ -1023,6 +1023,38 @@ router.get('/download/:id', function(req,res){
         var eventId = req.params.id;
         req.session.eventId = eventId;
 
+    
+        EventData.find({event:eventId}, function(err, eventData){
+            if(err) throw err;
+    
+            var rows=[];
+            eventData.forEach(function(eventData){
+    
+                var row={};
+                var keys = Object.keys(eventData.toJSON());
+                for(var i=keys.length-1; i>0; i--){
+                    if(keys[i]!='__v' && keys[i]!='_id' && keys[i]!='event')
+                    row[keys[i]]=eventData[keys[i]];
+                }
+
+                rows.push(row);
+                
+            });
+            
+            
+            res.xls('data.xlsx', rows);
+           
+        });
+});
+
+
+
+router.get('/download2/:id', function(req,res){
+    var messages = [];
+    
+        var eventId = req.params.id;
+        req.session.eventId = eventId;
+
         const excel = require('node-excel-export');
         // You can define styles as json object 
         // More info: https://github.com/protobi/js-xlsx#cell-styles 

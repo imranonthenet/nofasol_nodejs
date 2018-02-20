@@ -44,6 +44,10 @@ if it wasn't sets a another 500ms timeout before auto-searching.
 */
 
     $('#customSearchTextBox').on('keyup', function (e) {
+        //skip space key, left arrow and right arrow
+        //if(event.which == 32 || event.which ==37 || event.which == 39)
+          //  return;
+
         clearTimeout($.data(this, 'timer'));
         if (e.keyCode == 13){
           search(true);
@@ -53,9 +57,15 @@ if it wasn't sets a another 500ms timeout before auto-searching.
     });
     function search(force) {
         var existingString = $("#customSearchTextBox").val();
-        if (!force && existingString.length < 3) return; //wasn't enter, not > 2 char
+        var previousString = $("#previousSearchValue").val();
+
+        if(previousString.trim().toUpperCase() != existingString.trim().toUpperCase())
+        //if (!force && existingString.length < 3) return; //wasn't enter, not > 2 char
         
-        customDataTable.search(existingString).draw();
+        if(previousString.trim().toUpperCase() != existingString.trim().toUpperCase()){
+            $("#previousSearchValue").val(existingString);
+            customDataTable.search(existingString).draw();
+        }
     }
     /*
     $('#customSearchTextBox').on('keyup', function (event) {

@@ -2158,6 +2158,7 @@ router.get('/getregistration', function(req,res){
                             //if search coloumns more than 1
                             var includeRow=false;
                             
+                            /*
                             console.log(`search array len=${searchArray.length}`);
                             if(searchArray.length==1){
                                 includeRow=true;                                    
@@ -2176,7 +2177,27 @@ router.get('/getregistration', function(req,res){
                                     }
                                 });
                             }
+                            */
+                            var eventKeys = Object.keys(event.toJSON());
+                            for(var i=0; i < searchArray.length; i++){
+                                if(searchArray[i]=='') continue;
 
+                                includeRow=false;
+
+                                for(var j=0; j < eventKeys.length; j++){
+                                    var item = eventKeys[j];
+
+                                    if(item.indexOf('_includeInSearch')>-1 && event[item]==true ){
+                                        var key = item.substring(0, item.indexOf('_includeInSearch') );
+                                            console.log(`searchArray=${searchArray[i]}, datakey=${data[key]}`);
+                                            if(data[key] && searchArray[i] &&  data[key].toUpperCase().indexOf(searchArray[i].toUpperCase())>-1){
+                                                includeRow=true;
+                                            }
+                                        
+                                    }
+                                }
+
+                            }
 
                        
                            

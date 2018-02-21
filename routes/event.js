@@ -382,215 +382,7 @@ router.post('/badge-category-edit', function(req,res){
 
 })
 
-router.get('/import/:id', function(req,res){
-    var scripts = [{ script: '/javascripts/upload.js' }];
-    var messages = [];
-    var eventId = req.params.id;
-    req.session.eventId = eventId;
 
-    Event.findById(eventId, function(err, event){
-        res.render('event/import', { scripts: scripts, messages: messages, hasErrors: messages.length > 0, event: event });
-    })
-
-    
-
-})
-
-router.post('/import', function(req,res){
-    var filename='';
-
-      // create an incoming form object
-      var form = new formidable.IncomingForm();
-    
-      // specify that we want to allow the user to upload multiple files in a single request
-      form.multiples = true;
-    
-      // store all uploads in the /uploads directory
-      form.uploadDir = path.join(__dirname, '../uploads');
-    
-      // every time a file has been uploaded successfully,
-      // rename it to it's orignal name
-      form.on('file', function(field, file) {
-          console.log('form.on.file');
-          filename = path.join(form.uploadDir, file.name);
-
-        fs.rename(file.path, filename);
-        
-      });
-    
-      // log any errors that occur
-      form.on('error', function(err) {
-        console.log('An error has occured: \n' + err);
-      });
-    
-      // once all the files have been uploaded, send a response to the client
-      form.on('end', function() {
-
-        //read excel sheet and convert all rows into array of JSON objects
-        console.log('reading filename ' + filename);
-
-            var workbook = XLSX.readFile(filename);
-            var sheet_name_list = workbook.SheetNames;
-
-            var first_sheet_name = workbook.SheetNames[0];
-            var sheet = workbook.Sheets[first_sheet_name];
-            var dataArray = sheet2arr(sheet);
-            console.log(dataArray);
-            console.log('req.session.eventId=' + req.session.eventId);
-
-            var done=0;
-            var eventId = req.session.eventId;
-            Event.findById(eventId, function(err,event){
-
-                dataArray.forEach(function(data){
-                    var eventData = new EventData();
-                    eventData.event = req.session.eventId;
-        
-                    eventData.uniqueId = data[event.uniqueId_columnInExcel];
-                    eventData.barcode = data[event.barcode_columnInExcel];
-                    eventData.sno = data[event.sno_columnInExcel];
-                    eventData.title = data[event.title_columnInExcel];
-                    eventData.firstName = data[event.firstName_columnInExcel];
-                    eventData.middleName = data[event.middleName_columnInExcel];
-                    eventData.lastName = data[event.lastName_columnInExcel];
-                    eventData.fullName = data[event.fullName_columnInExcel];
-                    eventData.jobTitle = data[event.jobTitle_columnInExcel];
-                    eventData.department = data[event.department_columnInExcel];
-                    eventData.companyName = data[event.companyName_columnInExcel];
-                    eventData.mobile1 = data[event.mobile1_columnInExcel];
-                    eventData.mobile2 = data[event.mobile2_columnInExcel];
-                    eventData.tel1 = data[event.tel1_columnInExcel];
-                    eventData.tel2 = data[event.tel2_columnInExcel];
-                    eventData.fax = data[event.fax_columnInExcel];
-                    eventData.email = data[event.email_columnInExcel];
-                    eventData.website = data[event.website_columnInExcel];
-                    eventData.address1 = data[event.address1_columnInExcel];
-                    eventData.address2 = data[event.address2_columnInExcel];
-                    eventData.city = data[event.city_columnInExcel];
-                    eventData.country = data[event.country_columnInExcel];
-                    eventData.poBox = data[event.poBox_columnInExcel];
-                    eventData.postalCode = data[event.postalCode_columnInExcel];
-                    eventData.badgeCategory = data[event.badgeCategory_columnInExcel];
-                    eventData.regType = data[event.regType_columnInExcel];
-                    eventData.regDate = data[event.regDate_columnInExcel];
-                    eventData.badgePrintDate = data[event.badgePrintDate_columnInExcel];
-                    eventData.modifiedDate = data[event.modifiedDate_columnInExcel];
-                    eventData.statusFlag = data[event.statusFlag_columnInExcel];
-                    eventData.backoffice = data[event.backoffice_columnInExcel];
-                    eventData.comment1 = data[event.comment1_columnInExcel];
-                    eventData.comment2 = data[event.comment2_columnInExcel];
-                    eventData.comment3 = data[event.comment3_columnInExcel];
-                    eventData.comment4 = data[event.comment4_columnInExcel];
-                    eventData.comment5 = data[event.comment5_columnInExcel];
-                    eventData.comment6 = data[event.comment6_columnInExcel];
-                    eventData.comment7 = data[event.comment7_columnInExcel];
-                    eventData.comment8 = data[event.comment8_columnInExcel];
-                    eventData.comment9 = data[event.comment9_columnInExcel];
-                    eventData.comment10 = data[event.comment10_columnInExcel];
-        
-                    eventData.save(function(err, result){
-                        if(err)
-                            throw err;
-                            done++;
-                            if(done==dataArray.length){
-                                console.log('done');
-                                res.setHeader('Content-Type', 'application/json');
-                                res.send(JSON.stringify({ result:'success' }));
-                            }
-                            
-                    })
-                })
-            });//Event.findById
-
-           
-            
-
-
-        
-      });
-    
-      // parse the incoming request containing the form data
-      form.parse(req);
-    
-    });
-
-    var insertData = function(filename, req, res){
-        
-        //read excel sheet and convert all rows into array of JSON objects
-        console.log('reading filename ' + filename);
-    
-        var workbook = XLSX.readFile(filename);
-        var sheet_name_list = workbook.SheetNames;
-    
-        var first_sheet_name = workbook.SheetNames[0];
-        var sheet = workbook.Sheets[first_sheet_name];
-        var data = sheet2arr(sheet);
-        console.log(data);
-    
-        var eventData = new EventData();
-        eventData.event = req.session.eventId;
-
-        eventData.uniqueId = data.uniqueId;
-        eventData.barcode = data.barcode;
-        eventData.sno = data.sno;
-        eventData.title = data.title;
-        eventData.firstName = data.firstName;
-        eventData.middleName = data.middleName;
-        eventData.lastName = data.lastName;
-        eventData.fullName = data.fullName;
-        eventData.jobTitle = data.jobTitle;
-        eventData.department = data.department;
-        eventData.companyName = data.companyName;
-        eventData.mobile1 = data.mobile1;
-        eventData.mobile2 = data.mobile2;
-        eventData.tel1 = data.tel1;
-        eventData.tel2 = data.tel2;
-        eventData.fax = data.fax;
-        eventData.email = data.email;
-        eventData.website = data.website;
-        eventData.address1 = data.address1;
-        eventData.address2 = data.address2;
-        eventData.city = data.city;
-        eventData.country = data.country;
-        eventData.poBox = data.poBox;
-        eventData.postalCode = data.postalCode;
-        eventData.badgeCategory = data.badgeCategory;
-        eventData.regType = data.regType;
-        eventData.regDate = data.regDate;
-        eventData.badgePrintDate = data.badgePrintDate;
-        eventData.modifiedDate = data.modifiedDate;
-        eventData.statusFlag = data.statusFlag;
-        eventData.backoffice = data.backoffice;
-        eventData.comment1 = data.comment1;
-        eventData.comment2 = data.comment2;
-        eventData.comment3 = data.comment3;
-        eventData.comment4 = data.comment4;
-        eventData.comment5 = data.comment5;
-        eventData.comment6 = data.comment6;
-        eventData.comment7 = data.comment7;
-        eventData.comment8 = data.comment8;
-        eventData.comment9 = data.comment9;
-        eventData.comment10 = data.comment10;
-
-        eventData.save(function(err, result){
-            if(err)
-                throw err;
-
-            res.redirect('/');
-        })
-        //insert into mongodb database
-        /*
-        mongodb.connect(config.mongo_url, function(err, db){
-            var collection = db.collection('visitors');
-            collection.insertMany(data, function(err, results){
-                if(err) throw err;
-                console.log('Number of documents inserted: ' + results.insertedCount);
-                db.close();
-            });
-    
-        });
-        */
-    }
 
     var sheet2arr = function(sheet){
         var headers = ['A','B','C','D','E','F','G','H','I',
@@ -1018,6 +810,8 @@ router.post('/edit-registration', function (req, res) {
 });
 
 router.get('/download/:id', function(req,res){
+
+    /*
     var messages = [];
     
         var eventId = req.params.id;
@@ -1045,6 +839,28 @@ router.get('/download/:id', function(req,res){
             res.xls('data.xlsx', rows);
            
         });
+        */
+
+
+        var kue = require('kue');
+        var queue = kue.createQueue({
+            redis: process.env.REDIS_URL
+          });
+
+          let job = queue.create('myQueue', {
+            from: 'process1',
+            type: 'testMessage',
+            data: {
+              msg: 'Hello world!'
+            }
+          }).save((err) => {
+           if (err) throw err;
+           console.log(`Job ${job.id} saved to the queue.`);
+          });
+
+          
+
+        res.redirect('/event');
 });
 
 

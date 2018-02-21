@@ -810,7 +810,7 @@ router.post('/edit-registration', function (req, res) {
 });
 
 router.get('/download/:id', function(req,res){
-
+    var eventId = req.params.id;
     /*
     var messages = [];
     
@@ -851,7 +851,8 @@ router.get('/download/:id', function(req,res){
             from: 'process1',
             type: 'testMessage',
             data: {
-              msg: 'Hello world!'
+              msg: 'Hello world!',
+              eventId: eventId
             }
           }).save((err) => {
            if (err) throw err;
@@ -890,10 +891,33 @@ function processMessage(data, callback) {
         callback();
     }
   }
-  
+
   function handleTestMessage(data, callback) {
-    console.log(`Process1 wants me to say: "${data.msg}"`);
-    callback();
+
+    EventData.find({event:data.eventId}, function(err, eventData){
+        if(err) throw err;
+
+        var rows=[];
+        eventData.forEach(function(eventData){
+
+            var row={};
+            var keys = Object.keys(eventData.toJSON());
+            for(var i=keys.length-1; i>0; i--){
+                if(keys[i]!='__v' && keys[i]!='_id' && keys[i]!='event')
+                row[keys[i]]=eventData[keys[i]];
+            }
+
+            rows.push(row);
+            
+        });
+        
+        
+        console.log(`Process1 wants me to say: "${data.eventId}"`);
+        callback();
+       
+    });
+
+ 
   }
 
 

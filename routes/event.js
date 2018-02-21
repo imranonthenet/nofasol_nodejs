@@ -894,7 +894,7 @@ function processMessage(data, callback) {
 
 function handleTestMessage(data, callback) {
 
-    EventData.find({event:eventId}, function(err, eventData){
+    EventData.find({event:data.eventId}, function(err, eventData){
         if(err) throw err;
 
         var rows=[];

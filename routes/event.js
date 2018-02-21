@@ -12,7 +12,7 @@ var Event = require('../models/event');
 var EventData = require('../models/event-data');
 var BadgeCategory = require('../models/badge-category');
 var Sequence = require('../models/sequence');
-
+var ExportFile = require('../models/export-file');
 
 router.use(function(req,res,next){
     if(!req.isAuthenticated()){
@@ -892,9 +892,9 @@ function processMessage(data, callback) {
     }
   }
 
-  function handleTestMessage(data, callback) {
+function handleTestMessage(data, callback) {
 
-    EventData.find({event:data.eventId}, function(err, eventData){
+    EventData.find({event:eventId}, function(err, eventData){
         if(err) throw err;
 
         var rows=[];
@@ -912,13 +912,29 @@ function processMessage(data, callback) {
         });
         
         
-        console.log(`Process1 wants me to say: "${data.eventId}"`);
-        callback();
-       
+        //res.xls('data.xlsx', rows);
+        Event.find({event:data.eventId}, function(err, event){
+            if(err) throw err;
+
+            var ef = new ExportFile();
+            ef.event=event._id;
+            ef.filename=event.eventName + '.xlsx';
+            ef.creationDate=moment().format('YYYY-MM-DD HH:mm:ss');
+            ef.rowCount = rows.length;
+
+            ef.save(function(err, result){
+
+                console.log(`Process1 wants me to say: "${data.eventId}"`);
+                callback();
+            });
+
+        });
     });
 
+};
+
  
-  }
+  
 
 
 
@@ -2173,6 +2189,21 @@ router.get('/registration/:id', function (req, res) {
 
 
 
-})
+});
+
+router.get('/export-file', function(req,res){
+    var messages=[];
+    
+    ExportFile.find({}, function(err, data){
+        if(err) throw err;
+
+        res.render('event/export-file',{messages:messages, files:data});
+    });
+
+
+
+  });
+
+
 
 module.exports = router;

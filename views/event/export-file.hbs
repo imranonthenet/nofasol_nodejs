@@ -1,6 +1,6 @@
 <ol class="breadcrumb">
   <li><a href="/event">Home</a></li>
-  <li class="active">Manage Users</li>
+  <li class="active">Exported Files</li>
 </ol>
 
 <div class="row">
@@ -21,18 +21,18 @@
             <table class="table">
                 <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Username</th>
-                    <th>Event</th>
+                    <th>Filename</th>
+                    <th>Creation Date</th>
+                    <th>Row Count</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
-                    {{#each users}}
+                    {{#each files}}
                         <tr>
-                            <td>{{this.name}}</td>
-                            <td>{{this.email}}</td>
-                            <td>{{this.event.eventName}}</td>
+                            <td>{{this.filename}}</td>
+                            <td>{{this.creationDate}}</td>
+                            <td>{{this.rowCount}}</td>
                             <td>
                                 <a href="/user/edit/{{this._id}}" class="btn btn-primary" >Edit</a>
                                 <a href="/user/delete/{{this._id}}" class="btn btn-danger" >Delete</a>

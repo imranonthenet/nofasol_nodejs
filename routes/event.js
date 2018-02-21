@@ -858,10 +858,43 @@ router.get('/download/:id', function(req,res){
            console.log(`Job ${job.id} saved to the queue.`);
           });
 
-          
+          queue.on('job complete', (id, result) => {
+            kue.Job.get(id, (err, job) => {
+              if (err) throw err;
+              job.remove((err) => {
+                if (err) throw err;
+                console.log(`Removed completed job ${job.id}`);
+              });
+            });
+          });
+
+          queue.process('myQueue', function(job, done){
+            processMessage(job.data, done);
+          });
 
         res.redirect('/event');
 });
+
+function processMessage(data, callback) {
+    switch (data.from) {
+      case 'process1':
+        switch (data.type) {
+          case 'testMessage':
+            handleTestMessage(data.data, callback);
+            break;
+          default:
+            callback();
+        }
+        break;
+      default:
+        callback();
+    }
+  }
+  
+  function handleTestMessage(data, callback) {
+    console.log(`Process1 wants me to say: "${data.msg}"`);
+    callback();
+  }
 
 
 

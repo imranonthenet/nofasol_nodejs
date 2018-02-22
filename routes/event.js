@@ -842,7 +842,8 @@ router.get('/download/:id', function(req,res){
         });
         */
 
-        ExportFile.remove({event:eventId}, function(err){
+        ExportFile.remove({}, function(err){
+            if(err) throw err;
 
             var ef = new ExportFile();
             ef.event=eventId;

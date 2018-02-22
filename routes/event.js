@@ -917,23 +917,44 @@ function processJob(data, callback) {
 
 function handleExportJob(data, callback) {
 
+    //excel stuff starts
+    var xl = require('excel4node');
+    var wb = new xl.Workbook();
+    var ws = wb.addWorksheet('Sheet 1');
+    var style = wb.createStyle({
+        font: {
+            color: '#FF0800',
+            size: 12
+        },
+        numberFormat: '$#,##0.00; ($#,##0.00); -'
+    });
+    //excel stuff ends
+
     EventData.find({event:data.eventId}, function(err, eventData){
         if(err) throw err;
 
-        var rows=[];
+        //var rows=[];
+        var rows=0;
         eventData.forEach(function(eventData){
 
             var row={};
             var keys = Object.keys(eventData.toJSON());
             for(var i=keys.length-1; i>0; i--){
-                if(keys[i]!='__v' && keys[i]!='_id' && keys[i]!='event')
-                row[keys[i]]=eventData[keys[i]];
-            }
+                if(keys[i]!='__v' && keys[i]!='_id' && keys[i]!='event'){
+                    //row[keys[i]]=eventData[keys[i]];
+                    ws.cell(rows,i).string(eventData[keys[i]]).style(style);
+                }
 
-            rows.push(row);
+            }
+            rows++;
+            //rows.push(row);
+
+             
             
+
         });
-        
+        var filename = path.join(__dirname, '../public/uploads') + 'Excel.xlsx';
+        wb.write(filename);
         
         //res.xls('data.xlsx', rows);
         Event.find({event:data.eventId}, function(err, event){
@@ -941,7 +962,7 @@ function handleExportJob(data, callback) {
 
             var query = {_id:data.exportFileId};
             var currentDate = moment().format('YYYY-MM-DD HH:mm:ss');
-            var update = {isCompleted:true, rowCount:rows.length};
+            var update = {isCompleted:true, rowCount:rows};
             var options = {new:true};
         
             ExportFile.findOneAndUpdate(query, update, options, function(err, eventData){

@@ -2221,7 +2221,7 @@ router.get('/export-file', function(req,res){
     var messages=[];
    
     
-    ExportFile.findOne({event:req.session.exportFileId}, function(err, data){
+    ExportFile.findOne({_id:req.session.exportFileId}, function(err, data){
         if(err) throw err;
         var autorefresh=true;
 

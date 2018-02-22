@@ -842,7 +842,7 @@ router.get('/download/:id', function(req,res){
         });
         */
 
-        ExportFile.remove({}, function(err){
+        ExportFile.remove({event:eventId}, function(err){
             if(err) throw err;
 
             var ef = new ExportFile();
@@ -853,7 +853,9 @@ router.get('/download/:id', function(req,res){
             ef.isCompleted = false;
     
             ef.save(function(err, result){
-    
+                req.session.exportFileId=result._id;
+
+
                 var kue = require('kue');
                 var queue = kue.createQueue({
                     redis: process.env.REDIS_URL
@@ -864,7 +866,8 @@ router.get('/download/:id', function(req,res){
                     type: 'testMessage',
                     data: {
                       msg: 'Hello world!',
-                      eventId: eventId
+                      eventId: eventId,
+                      exportFileId: result._id
                     }
                   }).save((err) => {
                    if (err) throw err;
@@ -936,7 +939,7 @@ function handleExportJob(data, callback) {
         Event.find({event:data.eventId}, function(err, event){
             if(err) throw err;
 
-            var query = {event:data.eventId};
+            var query = {_id:data.exportFileId};
             var currentDate = moment().format('YYYY-MM-DD HH:mm:ss');
             var update = {isCompleted:true, rowCount:rows.length};
             var options = {new:true};
@@ -2218,7 +2221,7 @@ router.get('/export-file', function(req,res){
     var messages=[];
    
     
-    ExportFile.findOne({event:req.session.eventId}, function(err, data){
+    ExportFile.findOne({event:req.session.exportFileId}, function(err, data){
         if(err) throw err;
         var autorefresh=true;
 

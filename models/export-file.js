@@ -9,4 +9,4 @@ var ExportFileSchema = new Schema({
     isCompleted: {type:Boolean, required:true}
 });
 
-module.exports = mongoose.model('ExportFile',ExportFileSchema);
+module.exports = mongoose.model('Exports',ExportFileSchema);

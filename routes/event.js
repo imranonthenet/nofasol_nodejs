@@ -843,13 +843,13 @@ router.get('/download/:id', function(req,res){
         */
 
         ExportFile.remove({event:eventId}, function(err){
-            
+
             var ef = new ExportFile();
             ef.event=eventId;
             ef.filename='report.xlsx';
             ef.creationDate=moment().format('YYYY-MM-DD HH:mm:ss');
             ef.rowCount = 0;
-            ef.status='Processing';
+            ef.isCompleted = false;
     
             ef.save(function(err, result){
     
@@ -937,7 +937,7 @@ function handleExportJob(data, callback) {
 
             var query = {event:data.eventId};
             var currentDate = moment().format('YYYY-MM-DD HH:mm:ss');
-            var update = {status:'Completed', rowCount:rows.length};
+            var update = {isCompleted:true, rowCount:rows.length};
             var options = {new:true};
         
             ExportFile.findOneAndUpdate(query, update, options, function(err, eventData){
@@ -2217,8 +2217,16 @@ router.get('/export-file', function(req,res){
     var messages=[];
    
     
-    ExportFile.find({event:req.session.eventId}, function(err, data){
+    ExportFile.findOne({event:req.session.eventId}, function(err, data){
         if(err) throw err;
+        var autorefresh=true;
+
+        if(data.isCompleted){
+            autorefresh=false;
+        }
+        else {
+            messages.push('This page will auto refresh after 5 seconds with updated Status')
+        }
 
         res.render('event/export-file',{messages:messages, files:data, autorefresh:true});
     });

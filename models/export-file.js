@@ -6,7 +6,7 @@ var ExportFileSchema = new Schema({
     filename: {type: String, required: true},
     creationDate: {type:Date, required:true},
     rowCount: {type:Number, required:true},
-    status:{type:String, required: true}
+    isCompleted: {type:Boolean, required:true}
 });
 
 module.exports = mongoose.model('ExportFile',ExportFileSchema);

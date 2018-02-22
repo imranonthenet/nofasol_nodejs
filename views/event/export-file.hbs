@@ -1,6 +1,6 @@
 <ol class="breadcrumb">
   <li><a href="/event">Home</a></li>
-  <li class="active">Exported Files</li>
+  <li class="active">Export File</li>
 </ol>
 
 <div class="row">
@@ -14,10 +14,7 @@
             </div>
         {{/if}}
 
-        <a href="/user/create" class="btn btn-primary">Create User</a>
-
-            
-            
+  
             <table class="table">
                 <thead>
                 <tr>
@@ -34,10 +31,12 @@
                             <td>{{this.filename}}</td>
                             <td>{{formatDate this.creationDate 'custom2'}}</td>
                             <td>{{this.rowCount}}</td>
-                            <td>{{this.status}}</td>
+                            <td>{{#if this.isCompleted}}Completed{{else}}Processing{{/if}}</td>
                             <td>
-                                <a href="/user/edit/{{this._id}}" class="btn btn-primary" >Download</a>
-                                <a href="/user/delete/{{this._id}}" class="btn btn-danger" >Delete</a>
+                                {{#if this.isCompleted}}
+                                    <a href="/user/edit/{{this._id}}" class="btn btn-primary" >Download</a>
+                                    <a href="/user/delete/{{this._id}}" class="btn btn-danger" >Delete</a>
+                                {{/if}}
                             </td>
                         </tr>
 

@@ -843,7 +843,7 @@ router.get('/download/:id', function(req,res){
         */
 
         var ef = new ExportFile();
-        ef.event=event._id;
+        ef.event=eventId;
         ef.filename='report.xlsx';
         ef.creationDate=moment().format('YYYY-MM-DD HH:mm:ss');
         ef.rowCount = 0;

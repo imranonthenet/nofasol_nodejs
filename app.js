@@ -140,7 +140,8 @@ var hbs = exphbs.create({
       var DateFormats = {
         short: "DD MMMM - YYYY",
         long: "dddd DD.MM.YYYY HH:mm",
-        custom: "DD/MM/YYYY"
+        custom: "DD/MM/YYYY",
+        custom2: "DD/MM/YYYY HH:mm",
       };
 
       format = DateFormats[format] || format;

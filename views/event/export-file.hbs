@@ -24,6 +24,7 @@
                     <th>Filename</th>
                     <th>Creation Date</th>
                     <th>Row Count</th>
+                    <th>Status</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
@@ -31,10 +32,11 @@
                     {{#each files}}
                         <tr>
                             <td>{{this.filename}}</td>
-                            <td>{{this.creationDate}}</td>
+                            <td>{{formatDate this.creationDate 'custom2'}}</td>
                             <td>{{this.rowCount}}</td>
+                            <td>{{this.status}}</td>
                             <td>
-                                <a href="/user/edit/{{this._id}}" class="btn btn-primary" >Edit</a>
+                                <a href="/user/edit/{{this._id}}" class="btn btn-primary" >Download</a>
                                 <a href="/user/delete/{{this._id}}" class="btn btn-danger" >Delete</a>
                             </td>
                         </tr>

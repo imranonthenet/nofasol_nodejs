@@ -2210,11 +2210,12 @@ router.get('/registration/:id', function (req, res) {
 
 router.get('/export-file', function(req,res){
     var messages=[];
+    var meta='<meta http-equiv="refresh" content="5">';
     
     ExportFile.find({event:req.session.eventId}, function(err, data){
         if(err) throw err;
 
-        res.render('event/export-file',{messages:messages, files:data});
+        res.render('event/export-file',{messages:messages, files:data, meta:meta});
     });
 
 

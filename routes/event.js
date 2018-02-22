@@ -811,6 +811,7 @@ router.post('/edit-registration', function (req, res) {
 
 router.get('/download/:id', function(req,res){
     var eventId = req.params.id;
+    req.session.eventId = eventId;
     /*
     var messages = [];
     
@@ -841,47 +842,60 @@ router.get('/download/:id', function(req,res){
         });
         */
 
+        var ef = new ExportFile();
+        ef.event=event._id;
+        ef.filename='report.xlsx';
+        ef.creationDate=moment().format('YYYY-MM-DD HH:mm:ss');
+        ef.rowCount = 0;
+        ef.status='Processing';
 
-        var kue = require('kue');
-        var queue = kue.createQueue({
-            redis: process.env.REDIS_URL
-          });
+        ef.save(function(err, result){
 
-          let job = queue.create('myQueue', {
-            from: 'process1',
-            type: 'testMessage',
-            data: {
-              msg: 'Hello world!',
-              eventId: eventId
-            }
-          }).save((err) => {
-           if (err) throw err;
-           console.log(`Job ${job.id} saved to the queue.`);
-          });
-
-          queue.on('job complete', (id, result) => {
-            kue.Job.get(id, (err, job) => {
-              if (err) throw err;
-              job.remove((err) => {
-                if (err) throw err;
-                console.log(`Removed completed job ${job.id}`);
+            var kue = require('kue');
+            var queue = kue.createQueue({
+                redis: process.env.REDIS_URL
               });
-            });
-          });
+    
+              let job = queue.create('myQueue', {
+                from: 'process1',
+                type: 'testMessage',
+                data: {
+                  msg: 'Hello world!',
+                  eventId: eventId
+                }
+              }).save((err) => {
+               if (err) throw err;
+               console.log(`Job ${job.id} saved to the queue.`);
+              });
+    
+              queue.on('job complete', (id, result) => {
+                kue.Job.get(id, (err, job) => {
+                  if (err) throw err;
+                  job.remove((err) => {
+                    if (err) throw err;
+                    console.log(`Removed completed job ${job.id}`);
+                  });
+                });
+              });
+    
+              queue.process('myQueue', function(job, done){
+                processJob(job.data, done);
+              });
+    
+            res.redirect('/event/export-file');
+        });
+        
 
-          queue.process('myQueue', function(job, done){
-            processMessage(job.data, done);
-          });
 
-        res.redirect('/event');
+
 });
 
-function processMessage(data, callback) {
+function processJob(data, callback) {
     switch (data.from) {
       case 'process1':
         switch (data.type) {
           case 'testMessage':
-            handleTestMessage(data.data, callback);
+            handleExportJob(data.data, callback);
             break;
           default:
             callback();
@@ -892,7 +906,7 @@ function processMessage(data, callback) {
     }
   }
 
-function handleTestMessage(data, callback) {
+function handleExportJob(data, callback) {
 
     EventData.find({event:data.eventId}, function(err, eventData){
         if(err) throw err;
@@ -916,17 +930,20 @@ function handleTestMessage(data, callback) {
         Event.find({event:data.eventId}, function(err, event){
             if(err) throw err;
 
-            var ef = new ExportFile();
-            ef.event=event._id;
-            ef.filename=event.eventName + '.xlsx';
-            ef.creationDate=moment().format('YYYY-MM-DD HH:mm:ss');
-            ef.rowCount = rows.length;
-
-            ef.save(function(err, result){
-
+            var query = {event:data.eventId};
+            var currentDate = moment().format('YYYY-MM-DD HH:mm:ss');
+            var update = {status:'Completed', rowCount:rows.length};
+            var options = {new:true};
+        
+            ExportFile.findOneAndUpdate(query, update, options, function(err, eventData){
+                //if(err) throw err;
+                
                 console.log(`Process1 wants me to say: "${data.eventId}"`);
                 callback();
             });
+
+
+
 
         });
     });
@@ -2194,7 +2211,7 @@ router.get('/registration/:id', function (req, res) {
 router.get('/export-file', function(req,res){
     var messages=[];
     
-    ExportFile.find({}, function(err, data){
+    ExportFile.find({event:req.session.eventId}, function(err, data){
         if(err) throw err;
 
         res.render('event/export-file',{messages:messages, files:data});

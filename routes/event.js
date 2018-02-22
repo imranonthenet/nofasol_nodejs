@@ -842,48 +842,53 @@ router.get('/download/:id', function(req,res){
         });
         */
 
-        var ef = new ExportFile();
-        ef.event=eventId;
-        ef.filename='report.xlsx';
-        ef.creationDate=moment().format('YYYY-MM-DD HH:mm:ss');
-        ef.rowCount = 0;
-        ef.status='Processing';
-
-        ef.save(function(err, result){
-
-            var kue = require('kue');
-            var queue = kue.createQueue({
-                redis: process.env.REDIS_URL
-              });
+        ExportFile.remove({event:eventId}, function(err){
+            
+            var ef = new ExportFile();
+            ef.event=eventId;
+            ef.filename='report.xlsx';
+            ef.creationDate=moment().format('YYYY-MM-DD HH:mm:ss');
+            ef.rowCount = 0;
+            ef.status='Processing';
     
-              let job = queue.create('myQueue', {
-                from: 'process1',
-                type: 'testMessage',
-                data: {
-                  msg: 'Hello world!',
-                  eventId: eventId
-                }
-              }).save((err) => {
-               if (err) throw err;
-               console.log(`Job ${job.id} saved to the queue.`);
-              });
+            ef.save(function(err, result){
     
-              queue.on('job complete', (id, result) => {
-                kue.Job.get(id, (err, job) => {
-                  if (err) throw err;
-                  job.remove((err) => {
-                    if (err) throw err;
-                    console.log(`Removed completed job ${job.id}`);
+                var kue = require('kue');
+                var queue = kue.createQueue({
+                    redis: process.env.REDIS_URL
                   });
-                });
-              });
-    
-              queue.process('myQueue', function(job, done){
-                processJob(job.data, done);
-              });
-    
-            res.redirect('/event/export-file');
+        
+                  let job = queue.create('myQueue', {
+                    from: 'process1',
+                    type: 'testMessage',
+                    data: {
+                      msg: 'Hello world!',
+                      eventId: eventId
+                    }
+                  }).save((err) => {
+                   if (err) throw err;
+                   console.log(`Job ${job.id} saved to the queue.`);
+                  });
+        
+                  queue.on('job complete', (id, result) => {
+                    kue.Job.get(id, (err, job) => {
+                      if (err) throw err;
+                      job.remove((err) => {
+                        if (err) throw err;
+                        console.log(`Removed completed job ${job.id}`);
+                      });
+                    });
+                  });
+        
+                  queue.process('myQueue', function(job, done){
+                    processJob(job.data, done);
+                  });
+        
+                res.redirect('/event/export-file');
+            });
         });
+
+
         
 
 
@@ -2210,12 +2215,12 @@ router.get('/registration/:id', function (req, res) {
 
 router.get('/export-file', function(req,res){
     var messages=[];
-    var meta='<meta http-equiv="refresh" content="5">';
+   
     
     ExportFile.find({event:req.session.eventId}, function(err, data){
         if(err) throw err;
 
-        res.render('event/export-file',{messages:messages, files:data, meta:meta});
+        res.render('event/export-file',{messages:messages, files:data, autorefresh:true});
     });
 
 

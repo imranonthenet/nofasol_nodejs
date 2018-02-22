@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html>
   <head>
-    {{meta}}
+    {{#if autorefresh}}
+      <meta http-equiv="refresh" content="5">
+    {{/if}}
 
     <title>{{title}}</title>
     <link rel="stylesheet" href="/library/jquery-ui-1.12.1/jquery-ui.min.css">

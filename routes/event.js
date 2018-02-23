@@ -2420,7 +2420,7 @@ router.get('/export-files', function(req,res){
     var messages=[];
    
     
-    ExportFiles.findOne({event:req.session.eventId}).maxTime(10000).exec(function(err, data){
+    ExportFiles.find({event:req.session.eventId}, function(err, data){
         if(err) throw err;
         var autorefresh=true;
 

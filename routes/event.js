@@ -915,7 +915,173 @@ function processJob(data, callback) {
     }
   }
 
-function handleExportJob(data, callback) {
+function handleExportJob(data,callback){
+
+    const excel = require('node-excel-export');
+    // You can define styles as json object 
+    // More info: https://github.com/protobi/js-xlsx#cell-styles 
+    const styles = {
+        headerDark: {
+        fill: {
+            fgColor: {
+            rgb: 'FF000000'
+            }
+        },
+        font: {
+            color: {
+            rgb: 'FFFFFFFF'
+            },
+            sz: 14,
+            bold: true,
+            underline: true
+        }
+        },
+        cellPink: {
+        fill: {
+            fgColor: {
+            rgb: 'FFFFCCFF'
+            }
+        }
+        },
+        cellGreen: {
+        fill: {
+            fgColor: {
+            rgb: 'FF00FF00'
+            }
+        }
+        }
+    };
+
+    //Array of objects representing heading rows (very top) 
+    const heading = [
+        [{value: 'a1', style: styles.headerDark}, {value: 'b1', style: styles.headerDark}, {value: 'c1', style: styles.headerDark}],
+        ['a2', 'b2', 'c2'] // <-- It can be only values 
+    ];
+
+    //Here you specify the export structure 
+    const specification = {
+        uniqueId: {displayName: 'Unique Id', headerStyle: styles.headerDark, width: 120},
+        barcode: {displayName: 'Barcode', headerStyle: styles.headerDark, width: 120},
+        sno: {displayName: 'SNo', headerStyle: styles.headerDark, width: 120},
+        title: {displayName: 'Title', headerStyle: styles.headerDark, width: 120},
+        firstName: {displayName: 'First Name', headerStyle: styles.headerDark, width: 120},
+        middleName: {displayName: 'Middle Name', headerStyle: styles.headerDark, width: 120},
+        lastName: {displayName: 'Last Name', headerStyle: styles.headerDark, width: 120},
+        fullName: {displayName: 'Full Name', headerStyle: styles.headerDark, width: 120},
+        jobTitle: {displayName: 'Job Title', headerStyle: styles.headerDark, width: 120},
+        department: {displayName: 'Department', headerStyle: styles.headerDark, width: 120},
+        companyName: {displayName: 'Company Name', headerStyle: styles.headerDark, width: 120},
+        mobile1: {displayName: 'Mobile 1', headerStyle: styles.headerDark, width: 120},
+        mobile2: {displayName: 'Mobile 2', headerStyle: styles.headerDark, width: 120},
+        tel1: {displayName: 'Tel 1', headerStyle: styles.headerDark, width: 120},
+        tel2: {displayName: 'Tel 2', headerStyle: styles.headerDark, width: 120},
+        fax: {displayName: 'Fax', headerStyle: styles.headerDark, width: 120},
+        email: {displayName: 'Email', headerStyle: styles.headerDark, width: 120},
+        website: {displayName: 'Website', headerStyle: styles.headerDark, width: 120},
+        address1: {displayName: 'Address 1', headerStyle: styles.headerDark, width: 120},
+        address2: {displayName: 'Address 2', headerStyle: styles.headerDark, width: 120},
+        city: {displayName: 'City', headerStyle: styles.headerDark, width: 120},
+        country: {displayName: 'Country', headerStyle: styles.headerDark, width: 120},
+        poBox: {displayName: 'P.O.Box', headerStyle: styles.headerDark, width: 120},
+        postalCode: {displayName: 'Postal Code', headerStyle: styles.headerDark, width: 120},
+        badgeCategory: {displayName: 'Badge Category', headerStyle: styles.headerDark, width: 120},
+        regType: {displayName: 'Reg Type', headerStyle: styles.headerDark, width: 120},
+        regDate: {displayName: 'Reg Date', headerStyle: styles.headerDark, width: 120},
+        badgePrintDate: {displayName: 'Badge Print Date', headerStyle: styles.headerDark, width: 120},
+        modifiedDate: {displayName: 'Modified Date', headerStyle: styles.headerDark, width: 120},
+        statusFlag: {displayName: 'Status Flag', headerStyle: styles.headerDark, width: 120},
+        backoffice: {displayName: 'Back Office', headerStyle: styles.headerDark, width: 120},
+        comment1: {displayName: 'Comment 1', headerStyle: styles.headerDark, width: 120},
+        comment2: {displayName: 'Comment 2', headerStyle: styles.headerDark, width: 120},
+        comment3: {displayName: 'Comment 3', headerStyle: styles.headerDark, width: 120},
+        comment4: {displayName: 'Comment 4', headerStyle: styles.headerDark, width: 120},
+        comment5: {displayName: 'Comment 5', headerStyle: styles.headerDark, width: 120},
+        comment6: {displayName: 'Comment 6', headerStyle: styles.headerDark, width: 120},
+        comment7: {displayName: 'Comment 7', headerStyle: styles.headerDark, width: 120},
+        comment8: {displayName: 'Comment 8', headerStyle: styles.headerDark, width: 120},
+        comment9: {displayName: 'Comment 9', headerStyle: styles.headerDark, width: 120},
+        comment10: {displayName: 'Comment 10', headerStyle: styles.headerDark, width: 120},
+
+        
+    }
+
+    // The data set should have the following shape (Array of Objects) 
+    // The order of the keys is irrelevant, it is also irrelevant if the 
+    // dataset contains more fields as the report is build based on the 
+    // specification provided above. But you should have all the fields 
+    // that are listed in the report specification 
+
+    EventData.find({event:data.eventId}, function(err, eventData){
+        if(err) throw err;
+
+        const dataset = [
+            {customer_name: 'IBM', status_id: 1, note: 'some note', misc: 'not shown'},
+            {customer_name: 'HP', status_id: 0, note: 'some note'},
+            {customer_name: 'MS', status_id: 0, note: 'some note', misc: 'not shown'}
+        ]
+  
+        // Define an array of merges. 1-1 = A:1 
+        // The merges are independent of the data. 
+        // A merge will overwrite all data _not_ in the top-left cell. 
+        const merges = [
+            { start: { row: 1, column: 1 }, end: { row: 1, column: 10 } },
+            { start: { row: 2, column: 1 }, end: { row: 2, column: 5 } },
+            { start: { row: 2, column: 6 }, end: { row: 2, column: 10 } }
+        ]
+  
+
+        // Create the excel report. 
+        // This function will return Buffer 
+        const report = excel.buildExport(
+            [ // <- Notice that this is an array. Pass multiple sheets to create multi sheet report 
+            {
+                name: 'Report', // <- Specify sheet name (optional) 
+                //heading: heading, // <- Raw heading array (optional) 
+                //merges: merges, // <- Merge cell ranges 
+                specification: specification, // <- Report specification 
+                data: eventData // <-- Report data 
+            }
+            ]
+        );
+  
+        // You can then return this straight 
+        //res.attachment('report.xlsx'); // This is sails.js specific (in general you need to set headers) 
+        //return res.send(report);
+        
+        // OR you can save this buffer to the disk by creating a file.
+        var newpath = path.join(__dirname, '../uploads/') + 'Report.xlsx';
+
+        fs.writeFile(newpath, report, function(err) {
+
+            Event.find({event:data.eventId}, function(err, event){
+                if(err) throw err;
+    
+                var query = {_id:data.exportFileId};
+                var currentDate = moment().format('YYYY-MM-DD HH:mm:ss');
+                var update = {isCompleted:true, rowCount:rows};
+                var options = {new:true};
+            
+                ExportFile.findOneAndUpdate(query, update, options, function(err, eventData){
+                    //if(err) throw err;
+                    
+                    console.log(`Process1 wants me to say: "${data.eventId}"`);
+                    callback();
+                });
+    
+    
+    
+    
+            });
+
+          }); 
+
+    });
+
+
+
+}
+
+function handleExportJob2(data, callback) {
 
     //excel stuff starts
     var xl = require('excel4node');
@@ -953,8 +1119,8 @@ function handleExportJob(data, callback) {
             
 
         });
-        var filename = path.join(__dirname, '../public/uploads') + 'Excel.xlsx';
-        wb.write(filename);
+        var newpath = path.join(__dirname, '../uploads/') + 'Report.xlsx';
+        wb.write(newpath);
         
         //res.xls('data.xlsx', rows);
         Event.find({event:data.eventId}, function(err, event){

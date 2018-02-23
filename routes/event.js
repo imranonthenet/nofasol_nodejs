@@ -1103,7 +1103,7 @@ function prepareExcel(data, callback) {
         if(err) throw err;
 
         //var rows=[];
-      
+        var rows=0;
         eventData.forEach(function(eventData){
 
             var row={};
@@ -1111,11 +1111,11 @@ function prepareExcel(data, callback) {
             for(var i=keys.length-1; i>0; i--){
                 if(keys[i]!='__v' && keys[i]!='_id' && keys[i]!='event'){
                     //row[keys[i]]=eventData[keys[i]];
-                    ws.cell(rows,i).string(eventData[keys[i]]).style(style);
+                    ws.cell(rows + 1, i + 1).string(eventData[keys[i]]).style(style);
                 }
 
             }
-       
+            rows++;
             //rows.push(row);
 
              

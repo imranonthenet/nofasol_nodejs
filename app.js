@@ -25,13 +25,13 @@ var connString = process.env.MONGODB_URI || 'localhost:27017/events';
 var options = {
   "server" : {
     "socketOptions" : {
-      "keepAlive" : 300000,
+      "keepAlive" : 10000,
       "connectTimeoutMS" : 10000
     }
   },
   "replset" : {
     "socketOptions" : {
-      "keepAlive" : 300000,
+      "keepAlive" : 10000,
       "connectTimeoutMS" : 10000
     }
   }

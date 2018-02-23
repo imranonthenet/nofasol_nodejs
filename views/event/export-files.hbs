@@ -26,21 +26,21 @@
                 </tr>
                 </thead>
                 <tbody>
-                    {{#each files}}
+                 
                         <tr>
-                            <td>{{this.filename}}</td>
-                            <td>{{formatDate this.creationDate 'custom2'}}</td>
-                            <td>{{this.rowCount}}</td>
-                            <td>{{#if this.isCompleted}}Completed{{else}}Processing{{/if}}</td>
+                            <td>{{data.filename}}</td>
+                            <td>{{formatDate data.creationDate 'custom2'}}</td>
+                            <td>{{data.rowCount}}</td>
+                            <td>{{#if data.isCompleted}}Completed{{else}}Processing{{/if}}</td>
                             <td>
-                                {{#if this.isCompleted}}
+                                {{#if data.isCompleted}}
                                     <a href="/uploads/Report.xlsx" class="btn btn-primary" >Download</a>
-                                    <a href="/user/delete/{{this._id}}" class="btn btn-danger" >Delete</a>
+                                    <a href="/user/delete/{{data._id}}" class="btn btn-danger" >Delete</a>
                                 {{/if}}
                             </td>
                         </tr>
 
-                    {{/each}}
+                   
                 </tbody>
 
             </table>

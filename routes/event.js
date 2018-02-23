@@ -841,7 +841,7 @@ router.get('/download/:id', function(req,res){
            
         });
         */
-
+        
         var kue = require('kue');
         var queue = kue.createQueue({
             redis: process.env.REDIS_URL
@@ -875,7 +875,7 @@ router.get('/download/:id', function(req,res){
           });
 
         res.redirect('/event/export-files');
-
+         
 
 });
 
@@ -895,7 +895,7 @@ function processJob(data, callback) {
     }
   }
 
-function handleExportJob(data,callback){
+function handleExportJob(data, callback){
 
     ExportFiles.remove({event:data.eventId}, function(err){
         if(err) throw err;
@@ -908,9 +908,11 @@ function handleExportJob(data,callback){
         ef.isCompleted = false;
 
         ef.save(function(err, result){
-            //req.session.exportFileId=result._id;
+            if(err) throw err;
 
-            prepareExcel(data,callback);
+          
+
+            prepareExcel(data, callback);
 
         });
     });
@@ -1068,6 +1070,7 @@ function prepareExcel(data, callback){
                     
                     console.log(`Process1 wants me to say: "${data.eventId}"`);
                     callback();
+                   
                 });
     
     
@@ -2412,14 +2415,18 @@ router.get('/export-files', function(req,res){
         if(err) throw err;
         var autorefresh=true;
 
-        if(data.isCompleted){
+        if(data==null){
+            autorefresh=false;
+        }
+
+        else if(data.isCompleted){
             autorefresh=false;
         }
         else {
             messages.push('This page will auto refresh after 5 seconds with updated Status')
         }
 
-        res.render('event/export-files',{messages:messages, files:data, autorefresh:true});
+        res.render('event/export-files',{messages:messages, data:data, autorefresh:autorefresh});
     });
 
 

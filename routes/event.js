@@ -853,7 +853,7 @@ router.get('/download/:id', function(req,res){
             ef.isCompleted = false;
     
             ef.save(function(err, result){
-                req.session.exportFileId=result._id;
+                //req.session.exportFileId=result._id;
 
 
                 var kue = require('kue');
@@ -867,7 +867,7 @@ router.get('/download/:id', function(req,res){
                     data: {
                       msg: 'Hello world!',
                       eventId: eventId,
-                      exportFileId: result._id
+                      //exportFileId: result._id
                     }
                   }).save((err) => {
                    if (err) throw err;
@@ -1056,9 +1056,9 @@ function handleExportJob(data,callback){
             Event.find({event:data.eventId}, function(err, event){
                 if(err) throw err;
     
-                var query = {_id:data.exportFileId};
+                var query = {event:data.eventId};
                 var currentDate = moment().format('YYYY-MM-DD HH:mm:ss');
-                var update = {isCompleted:true, rowCount:rows};
+                var update = {isCompleted:true, rowCount:eventData.length};
                 var options = {new:true};
             
                 ExportFile.findOneAndUpdate(query, update, options, function(err, eventData){
@@ -1126,7 +1126,7 @@ function handleExportJob2(data, callback) {
         Event.find({event:data.eventId}, function(err, event){
             if(err) throw err;
 
-            var query = {_id:data.exportFileId};
+            var query = {event:data.eventId};
             var currentDate = moment().format('YYYY-MM-DD HH:mm:ss');
             var update = {isCompleted:true, rowCount:rows};
             var options = {new:true};
@@ -2408,7 +2408,7 @@ router.get('/export-file', function(req,res){
     var messages=[];
    
     
-    ExportFile.findOne({_id:req.session.exportFileId}, function(err, data){
+    ExportFile.findOne({event:req.session.eventId}, function(err, data){
         if(err) throw err;
         var autorefresh=true;
 

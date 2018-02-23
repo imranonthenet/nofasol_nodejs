@@ -901,7 +901,7 @@ function handleExportJob(data,callback){
         if(err) throw err;
 
         var ef = new ExportFiles();
-        ef.event=eventId;
+        ef.event=data.eventId;
         ef.filename='report.xlsx';
         ef.creationDate=moment().format('YYYY-MM-DD HH:mm:ss');
         ef.rowCount = 0;

@@ -902,7 +902,7 @@ function handleExportJob(data, callback){
 
         var ef = new ExportFiles();
         ef.event=data.eventId;
-        ef.filename='report.xlsx';
+        ef.filename='Report.xlsx';
         ef.creationDate=moment().format('YYYY-MM-DD HH:mm:ss');
         ef.rowCount = 0;
         ef.isCompleted = false;
@@ -920,7 +920,7 @@ function handleExportJob(data, callback){
 
 }
 
-function prepareExcel(data, callback){
+function prepareExcel2(data, callback){
     const excel = require('node-excel-export');
     // You can define styles as json object 
     // More info: https://github.com/protobi/js-xlsx#cell-styles 
@@ -1084,7 +1084,7 @@ function prepareExcel(data, callback){
 
 }
 
-function handleExportJob2(data, callback) {
+function prepareExcel(data, callback) {
 
     //excel stuff starts
     var xl = require('excel4node');
@@ -1122,7 +1122,7 @@ function handleExportJob2(data, callback) {
             
 
         });
-        var newpath = path.join(__dirname, '../uploads/') + 'Report.xlsx';
+        var newpath = path.join(__dirname, '../public/uploads/') + 'Report.xlsx';
         wb.write(newpath);
         
         //res.xls('data.xlsx', rows);

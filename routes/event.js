@@ -888,7 +888,7 @@ router.get('/download/:id', function(req,res){
                     processJob(job.data, done);
                   });
         
-                res.redirect('/event/export-file');
+                res.redirect('/event/export-files');
             });
         });
 
@@ -2404,7 +2404,7 @@ router.get('/registration/:id', function (req, res) {
 
 });
 
-router.get('/export-file', function(req,res){
+router.get('/export-files', function(req,res){
     var messages=[];
    
     
@@ -2419,7 +2419,7 @@ router.get('/export-file', function(req,res){
             messages.push('This page will auto refresh after 5 seconds with updated Status')
         }
 
-        res.render('event/export-file',{messages:messages, files:data, autorefresh:true});
+        res.render('event/export-files',{messages:messages, files:data, autorefresh:true});
     });
 
 

@@ -2420,7 +2420,7 @@ router.get('/export-files', function(req,res){
     var messages=[];
    
     
-    ExportFiles.findOne({event:req.session.eventId}, function(err, data){
+    ExportFiles.findOne({event:req.session.eventId}).maxTime(10000).exec(function(err, data){
         if(err) throw err;
         var autorefresh=true;
 
@@ -2432,7 +2432,7 @@ router.get('/export-files', function(req,res){
             autorefresh=false;
         }
         else {
-            messages.push('This page will auto refresh after 5 seconds with updated Status');
+            messages.push('This page will auto refresh after every 5 seconds with updated Status');
         }
 
         res.render('event/export-files',{messages:messages,hasErrors:messages.length>0, data:data, autorefresh:autorefresh});

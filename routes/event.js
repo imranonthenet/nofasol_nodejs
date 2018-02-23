@@ -871,7 +871,7 @@ router.get('/download/:id', function(req,res){
           });
 
           queue.process('myQueue', function(job, done){
-            processJob(job.data, done);
+            processJob(job.data,job.id, done);
           });
 
         res.redirect('/event/export-files');
@@ -879,12 +879,12 @@ router.get('/download/:id', function(req,res){
 
 });
 
-function processJob(data, callback) {
+function processJob(data,jobId, callback) {
     switch (data.from) {
       case 'process1':
         switch (data.type) {
           case 'testMessage':
-            handleExportJob(data.data, callback);
+            handleExportJob(data.data,jobId, callback);
             break;
           default:
             callback();
@@ -895,7 +895,7 @@ function processJob(data, callback) {
     }
   }
 
-function handleExportJob(data, callback){
+function handleExportJob(data,jobId, callback){
 
     ExportFiles.remove({event:data.eventId}, function(err){
         if(err) throw err;
@@ -912,7 +912,7 @@ function handleExportJob(data, callback){
 
           
 
-            prepareExcel(data, callback);
+            prepareExcel(data,jobId, callback);
 
         });
     });
@@ -920,7 +920,7 @@ function handleExportJob(data, callback){
 
 }
 
-function prepareExcel(data, callback){
+function prepareExcel(data,jobId, callback){
     const excel = require('node-excel-export');
     // You can define styles as json object 
     // More info: https://github.com/protobi/js-xlsx#cell-styles 
@@ -1053,7 +1053,7 @@ function prepareExcel(data, callback){
         //return res.send(report);
         
         // OR you can save this buffer to the disk by creating a file.
-        var newpath = path.join(__dirname, '../public/uploads/') + 'Report.xlsx';
+        var newpath = path.join(__dirname, '../public/uploads/') + 'Report' + jobId + '.xlsx';
 
         fs.writeFile(newpath, report, function(err) {
 

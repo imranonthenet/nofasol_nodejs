@@ -1,5 +1,3 @@
-import { eventNames } from 'cluster';
-
 var express = require('express');
 var router = express.Router();
 var formidable = require('formidable');
@@ -1128,7 +1126,7 @@ function prepareExcel(data, callback) {
         wb.write(newpath);
         
         //res.xls('data.xlsx', rows);
-
+  
 
             var query = {event:data.eventId};
             var currentDate = moment().format('YYYY-MM-DD HH:mm:ss');

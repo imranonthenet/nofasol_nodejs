@@ -2404,7 +2404,7 @@ router.get('/registration/:id', function (req, res) {
 
 });
 
-router.get('/export-files2', function(req,res){
+router.get('/export-files', function(req,res){
     var messages=[];
    
     

@@ -12,7 +12,7 @@ var Event = require('../models/event');
 var EventData = require('../models/event-data');
 var BadgeCategory = require('../models/badge-category');
 var Sequence = require('../models/sequence');
-var ExportFile = require('../models/export-file');
+var ExportFiles = require('../models/export-files');
 
 router.use(function(req,res,next){
     if(!req.isAuthenticated()){
@@ -842,10 +842,10 @@ router.get('/download/:id', function(req,res){
         });
         */
 
-        ExportFile.remove({event:eventId}, function(err){
+        ExportFiles.remove({event:eventId}, function(err){
             if(err) throw err;
 
-            var ef = new ExportFile();
+            var ef = new ExportFiles();
             ef.event=eventId;
             ef.filename='report.xlsx';
             ef.creationDate=moment().format('YYYY-MM-DD HH:mm:ss');
@@ -1049,7 +1049,7 @@ function handleExportJob(data,callback){
         //return res.send(report);
         
         // OR you can save this buffer to the disk by creating a file.
-        var newpath = path.join(__dirname, '../uploads/') + 'Report.xlsx';
+        var newpath = path.join(__dirname, '../public/uploads/') + 'Report.xlsx';
 
         fs.writeFile(newpath, report, function(err) {
 
@@ -1061,7 +1061,7 @@ function handleExportJob(data,callback){
                 var update = {isCompleted:true, rowCount:eventData.length};
                 var options = {new:true};
             
-                ExportFile.findOneAndUpdate(query, update, options, function(err, eventData){
+                ExportFiles.findOneAndUpdate(query, update, options, function(err, eventData){
                     //if(err) throw err;
                     
                     console.log(`Process1 wants me to say: "${data.eventId}"`);
@@ -1131,7 +1131,7 @@ function handleExportJob2(data, callback) {
             var update = {isCompleted:true, rowCount:rows};
             var options = {new:true};
         
-            ExportFile.findOneAndUpdate(query, update, options, function(err, eventData){
+            ExportFiles.findOneAndUpdate(query, update, options, function(err, eventData){
                 //if(err) throw err;
                 
                 console.log(`Process1 wants me to say: "${data.eventId}"`);
@@ -2408,7 +2408,7 @@ router.get('/export-file', function(req,res){
     var messages=[];
    
     
-    ExportFile.findOne({event:req.session.eventId}, function(err, data){
+    ExportFiles.findOne({event:req.session.eventId}, function(err, data){
         if(err) throw err;
         var autorefresh=true;
 

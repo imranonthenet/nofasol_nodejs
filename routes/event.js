@@ -2423,10 +2423,10 @@ router.get('/export-files', function(req,res){
             autorefresh=false;
         }
         else {
-            messages.push('This page will auto refresh after 5 seconds with updated Status')
+            messages.push('This page will auto refresh after 5 seconds with updated Status');
         }
 
-        res.render('event/export-files',{messages:messages, data:data, autorefresh:autorefresh});
+        res.render('event/export-files',{messages:messages,hasErrors:messages.length>0, data:data, autorefresh:autorefresh});
     });
 
 

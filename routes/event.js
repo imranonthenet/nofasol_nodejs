@@ -1123,22 +1123,37 @@ function prepareExcel(data, callback) {
 
         });
         var newpath = path.join(__dirname, '../public/uploads/') + 'Report.xlsx';
-        wb.write(newpath);
+        //wb.write(newpath);
         
-        //res.xls('data.xlsx', rows);
-  
+        wb.writeToBuffer().then(function (buffer) {
+            // Do something with buffer
 
-            var query = {event:data.eventId};
-            var currentDate = moment().format('YYYY-MM-DD HH:mm:ss');
-            var update = {isCompleted:true, rowCount:eventData.length};
-            var options = {new:true};
+            fs.writeFile(newpath, buffer, function(err) {
+
+                Event.find({event:data.eventId}, function(err, event){
+                    if(err) throw err;
         
-            ExportFiles.findOneAndUpdate(query, update, options, function(err, eventData){
-                //if(err) throw err;
+                    var query = {event:data.eventId};
+                    var currentDate = moment().format('YYYY-MM-DD HH:mm:ss');
+                    var update = {isCompleted:true, rowCount:eventData.length};
+                    var options = {new:true};
                 
-                console.log(`Process1 wants me to say: "${data.eventId}"`);
-                callback();
-            });
+                    ExportFiles.findOneAndUpdate(query, update, options, function(err, eventData){
+                        //if(err) throw err;
+                        
+                        console.log(`Process1 wants me to say: "${data.eventId}"`);
+                        callback();
+                       
+                    });
+        
+        
+        
+        
+                });
+    
+              }); 
+        });
+
 
 
     });

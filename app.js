@@ -22,7 +22,20 @@ var BadgeCategory = require('./models/badge-category');
 var Lookups = require('./models/lookups');
 
 var connString = process.env.MONGODB_URI || 'localhost:27017/events';
-var options = { replset: { socketOptions: { connectTimeoutMS : 10000 }}};
+var options = {
+  "server" : {
+    "socketOptions" : {
+      "keepAlive" : 300000,
+      "connectTimeoutMS" : 30000
+    }
+  },
+  "replset" : {
+    "socketOptions" : {
+      "keepAlive" : 300000,
+      "connectTimeoutMS" : 30000
+    }
+  }
+}
 mongoose.connect(connString, options);
 
 mongoose.connection.on('error', console.error.bind(console, 'MongoDB connection error:'));

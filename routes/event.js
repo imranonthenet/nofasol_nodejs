@@ -1053,7 +1053,7 @@ function prepareExcel(data,jobId, callback){
         //return res.send(report);
         
         // OR you can save this buffer to the disk by creating a file.
-        var newpath = path.join(__dirname, '../public/uploads/') + 'Report' + jobId + '.xlsx';
+        var newpath = path.join(__dirname, 'public','uploads', 'Report.xlsx');
 
         fs.writeFile(newpath, report, function(err) {
 

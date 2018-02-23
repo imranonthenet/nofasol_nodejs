@@ -842,59 +842,39 @@ router.get('/download/:id', function(req,res){
         });
         */
 
-        ExportFiles.remove({event:eventId}, function(err){
-            if(err) throw err;
+        var kue = require('kue');
+        var queue = kue.createQueue({
+            redis: process.env.REDIS_URL
+          });
 
-            var ef = new ExportFiles();
-            ef.event=eventId;
-            ef.filename='report.xlsx';
-            ef.creationDate=moment().format('YYYY-MM-DD HH:mm:ss');
-            ef.rowCount = 0;
-            ef.isCompleted = false;
-    
-            ef.save(function(err, result){
-                //req.session.exportFileId=result._id;
+          let job = queue.create('myQueue', {
+            from: 'process1',
+            type: 'testMessage',
+            data: {
+              msg: 'Hello world!',
+              eventId: eventId,
+              //exportFileId: result._id
+            }
+          }).save((err) => {
+           if (err) throw err;
+           console.log(`Job ${job.id} saved to the queue.`);
+          });
 
-
-                var kue = require('kue');
-                var queue = kue.createQueue({
-                    redis: process.env.REDIS_URL
-                  });
-        
-                  let job = queue.create('myQueue', {
-                    from: 'process1',
-                    type: 'testMessage',
-                    data: {
-                      msg: 'Hello world!',
-                      eventId: eventId,
-                      //exportFileId: result._id
-                    }
-                  }).save((err) => {
-                   if (err) throw err;
-                   console.log(`Job ${job.id} saved to the queue.`);
-                  });
-        
-                  queue.on('job complete', (id, result) => {
-                    kue.Job.get(id, (err, job) => {
-                      if (err) throw err;
-                      job.remove((err) => {
-                        if (err) throw err;
-                        console.log(`Removed completed job ${job.id}`);
-                      });
-                    });
-                  });
-        
-                  queue.process('myQueue', function(job, done){
-                    processJob(job.data, done);
-                  });
-        
-                res.redirect('/event/export-files');
+          queue.on('job complete', (id, result) => {
+            kue.Job.get(id, (err, job) => {
+              if (err) throw err;
+              job.remove((err) => {
+                if (err) throw err;
+                console.log(`Removed completed job ${job.id}`);
+              });
             });
-        });
+          });
 
+          queue.process('myQueue', function(job, done){
+            processJob(job.data, done);
+          });
 
-        
-
+        res.redirect('/event/export-files');
 
 
 });
@@ -917,6 +897,28 @@ function processJob(data, callback) {
 
 function handleExportJob(data,callback){
 
+    ExportFiles.remove({event:eventId}, function(err){
+        if(err) throw err;
+
+        var ef = new ExportFiles();
+        ef.event=eventId;
+        ef.filename='report.xlsx';
+        ef.creationDate=moment().format('YYYY-MM-DD HH:mm:ss');
+        ef.rowCount = 0;
+        ef.isCompleted = false;
+
+        ef.save(function(err, result){
+            //req.session.exportFileId=result._id;
+
+            prepareExcel(data,callback);
+
+        });
+    });
+
+
+}
+
+function prepareExcel(data, callback){
     const excel = require('node-excel-export');
     // You can define styles as json object 
     // More info: https://github.com/protobi/js-xlsx#cell-styles 
@@ -1076,8 +1078,6 @@ function handleExportJob(data,callback){
           }); 
 
     });
-
-
 
 }
 

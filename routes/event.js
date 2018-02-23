@@ -1,3 +1,5 @@
+import { eventNames } from 'cluster';
+
 var express = require('express');
 var router = express.Router();
 var formidable = require('formidable');
@@ -1103,7 +1105,7 @@ function prepareExcel(data, callback) {
         if(err) throw err;
 
         //var rows=[];
-        var rows=0;
+      
         eventData.forEach(function(eventData){
 
             var row={};
@@ -1115,7 +1117,7 @@ function prepareExcel(data, callback) {
                 }
 
             }
-            rows++;
+       
             //rows.push(row);
 
              
@@ -1126,12 +1128,11 @@ function prepareExcel(data, callback) {
         wb.write(newpath);
         
         //res.xls('data.xlsx', rows);
-        Event.find({event:data.eventId}, function(err, event){
-            if(err) throw err;
+
 
             var query = {event:data.eventId};
             var currentDate = moment().format('YYYY-MM-DD HH:mm:ss');
-            var update = {isCompleted:true, rowCount:rows};
+            var update = {isCompleted:true, rowCount:eventData.length};
             var options = {new:true};
         
             ExportFiles.findOneAndUpdate(query, update, options, function(err, eventData){
@@ -1142,9 +1143,6 @@ function prepareExcel(data, callback) {
             });
 
 
-
-
-        });
     });
 
 };

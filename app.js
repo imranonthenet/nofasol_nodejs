@@ -22,7 +22,11 @@ var BadgeCategory = require('./models/badge-category');
 var Lookups = require('./models/lookups');
 
 var connString = process.env.MONGODB_URI || 'localhost:27017/events';
-mongoose.connect(connString);
+var options = { replset: { socketOptions: { connectTimeoutMS : 10000 }}};
+mongoose.connect(connString, options);
+
+mongoose.connection.on('error', console.error.bind(console, 'MongoDB connection error:'));
+
 require('./config/passport');
 
 

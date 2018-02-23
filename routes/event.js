@@ -897,7 +897,7 @@ function processJob(data, callback) {
 
 function handleExportJob(data,callback){
 
-    ExportFiles.remove({event:eventId}, function(err){
+    ExportFiles.remove({event:data.eventId}, function(err){
         if(err) throw err;
 
         var ef = new ExportFiles();

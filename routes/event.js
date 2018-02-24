@@ -1349,8 +1349,6 @@ router.get('/upload/:id', function (req, res) {
 
 router.post('/upload', function(req,res){
 
-    res.redirect('/event/import-files');
-    
     var eventId = req.session.eventId;
 
     var form = new formidable.IncomingForm();
@@ -1404,7 +1402,7 @@ router.post('/upload', function(req,res){
                     processJob(job.data,job.id, done);
                   });
             
-                //res.redirect('/event/import-files');
+                res.redirect('/event/import-files');
 
 
 

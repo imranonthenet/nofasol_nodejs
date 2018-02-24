@@ -1380,7 +1380,7 @@ router.post('/upload', function(req,res){
                     data: {
                       msg: 'Hello world2!',
                       eventId: eventId,
-                      newpath:newpath
+                      filename:files.filetoupload.name
                     }
                   }).save((err) => {
                    if (err) throw err;
@@ -1432,7 +1432,7 @@ function handleExportJob2(data, jobId, callback){
 
         var ef = new ExportFiles();
         ef.event=data.eventId;
-        ef.filename='Import.xlsx';
+        ef.filename=data.filename;
         ef.creationDate=moment().format('YYYY-MM-DD HH:mm:ss');
         ef.rowCount = 0;
         ef.isCompleted = false;
@@ -2526,7 +2526,32 @@ router.get('/export-files', function(req,res){
 
   });
 
-  
+
+  router.get('/import-files', function(req,res){
+    var messages=[];
+   
+    
+    ExportFiles.findOne({event:req.session.eventId}, function(err, data){
+        if(err) throw err;
+        var autorefresh=true;
+
+        if(data==null){
+            autorefresh=false;
+        }
+
+        else if(data.isCompleted){
+            autorefresh=false;
+        }
+        else {
+            messages.push('This page will auto refresh after every 30 seconds with updated Status. Do not refresh manually.');
+        }
+
+        res.render('event/import-files',{messages:messages,hasErrors:messages.length>0, data:data, autorefresh:autorefresh});
+    });
+
+
+
+  });  
 
 
 module.exports = router;

@@ -239,13 +239,9 @@ app.use('/', index);
 app.use(haltOnTimedout);
 
 function haltOnTimedout (req, res, next) {
-  if (!req.timedout) {
-    next();
-  }
-  else {
-    res.render('Please wait');
-  }
+  if (!req.timedout) next()
 }
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

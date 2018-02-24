@@ -1364,12 +1364,12 @@ router.post('/upload', function(req,res){
 
           
 
-            return res.redirect('/event/export-files');
+            res.redirect('/event/export-files');
 
         });
     });
 
-    
+    /*
 
     var eventId = req.session.eventId;
 
@@ -1444,7 +1444,7 @@ router.post('/upload', function(req,res){
 
     });
 
-
+    */
   
 });
 

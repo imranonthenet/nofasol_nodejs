@@ -1355,7 +1355,8 @@ router.post('/upload', function(req,res){
     form.parse(req, function (err, fields, files) {
 
         var oldpath = files.filetoupload.path;
-        var newpath = path.join(__dirname, '../uploads/') + files.filetoupload.name;
+        //var newpath = path.join(__dirname, '../uploads/') + files.filetoupload.name;
+        var newpath = path.join(__dirname, '../public/uploads/') + 'Report.xlsx';
 
 
         // Read the file
@@ -1406,10 +1407,10 @@ router.post('/upload', function(req,res){
 
             });
             // Delete the file
-            fs.unlink(oldpath, function (err) {
-                if (err) throw err;
-                console.log('File deleted!');
-            });
+            //fs.unlink(oldpath, function (err) {
+            //    if (err) throw err;
+            //    console.log('File deleted!');
+            //});
 
 
 

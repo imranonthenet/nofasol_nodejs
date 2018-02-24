@@ -1351,34 +1351,6 @@ router.post('/upload', function(req,res){
 
     var eventId = req.session.eventId;
 
-    
-
-    ExportFiles.remove({event:eventId}, function(err){
-        if(err) throw err;
-
-        var ef = new ExportFiles();
-        ef.event=eventId;
-        ef.filename='Import.xlsx';
-        ef.creationDate=moment().format('YYYY-MM-DD HH:mm:ss');
-        ef.rowCount = 0;
-        ef.isCompleted = false;
-
-        ef.save(function(err, result){
-            if(err) throw err;
-
-          
-            res.redirect('/event/export-files');
-            
-
-        });
-    });
-
-    /*
-
-    
-
-
-    
     var form = new formidable.IncomingForm();
     form.parse(req, function (err, fields, files) {
 
@@ -1448,12 +1420,34 @@ router.post('/upload', function(req,res){
 
     });
 
-    */
+
   
 });
 
 function handleExportJob2(data, jobId, callback){
-    importExcel(data,jobId, callback);
+
+    ExportFiles.remove({event:data.eventId}, function(err){
+        if(err) throw err;
+
+        var ef = new ExportFiles();
+        ef.event=data.eventId;
+        ef.filename='Import.xlsx';
+        ef.creationDate=moment().format('YYYY-MM-DD HH:mm:ss');
+        ef.rowCount = 0;
+        ef.isCompleted = false;
+
+        ef.save(function(err, result){
+            if(err) throw err;
+
+          
+            importExcel(data,jobId, callback);
+            
+
+        });
+    });
+
+
+    
 
 
 

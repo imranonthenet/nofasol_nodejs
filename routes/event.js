@@ -1468,51 +1468,51 @@ function importExcel(data,jobId, callback){
     var eventId = data.eventId;
     Event.findById(eventId, function(err,event){
 
-        dataArray.forEach(function(data){
+        dataArray.forEach(function(item){
             var eventData = new EventData();
             eventData.event = eventId;
 
-            eventData.uniqueId = data[event.uniqueId_columnInExcel];
-            eventData.barcode = data[event.barcode_columnInExcel];
-            eventData.sno = data[event.sno_columnInExcel];
-            eventData.title = data[event.title_columnInExcel];
-            eventData.firstName = data[event.firstName_columnInExcel];
-            eventData.middleName = data[event.middleName_columnInExcel];
-            eventData.lastName = data[event.lastName_columnInExcel];
-            eventData.fullName = data[event.fullName_columnInExcel];
-            eventData.jobTitle = data[event.jobTitle_columnInExcel];
-            eventData.department = data[event.department_columnInExcel];
-            eventData.companyName = data[event.companyName_columnInExcel];
-            eventData.mobile1 = data[event.mobile1_columnInExcel];
-            eventData.mobile2 = data[event.mobile2_columnInExcel];
-            eventData.tel1 = data[event.tel1_columnInExcel];
-            eventData.tel2 = data[event.tel2_columnInExcel];
-            eventData.fax = data[event.fax_columnInExcel];
-            eventData.email = data[event.email_columnInExcel];
-            eventData.website = data[event.website_columnInExcel];
-             eventData.address1 = data[event.address1_columnInExcel];
-            eventData.address2 = data[event.address2_columnInExcel];
-            eventData.city = data[event.city_columnInExcel];
-            eventData.country = data[event.country_columnInExcel];
-            eventData.poBox = data[event.poBox_columnInExcel];
-            eventData.postalCode = data[event.postalCode_columnInExcel];
-            eventData.badgeCategory = data[event.badgeCategory_columnInExcel];
-            eventData.regType = 'Online';//data[event.regType_columnInExcel];
-            eventData.regDate = moment().format('YYYY-MM-DD HH:mm:ss');//data[event.regDate_columnInExcel];
-            eventData.badgePrintDate = data[event.badgePrintDate_columnInExcel];
-            eventData.modifiedDate = data[event.modifiedDate_columnInExcel];
+            eventData.uniqueId = item[event.uniqueId_columnInExcel];
+            eventData.barcode = item[event.barcode_columnInExcel];
+            eventData.sno = item[event.sno_columnInExcel];
+            eventData.title = item[event.title_columnInExcel];
+            eventData.firstName = item[event.firstName_columnInExcel];
+            eventData.middleName = item[event.middleName_columnInExcel];
+            eventData.lastName = item[event.lastName_columnInExcel];
+            eventData.fullName = item[event.fullName_columnInExcel];
+            eventData.jobTitle = item[event.jobTitle_columnInExcel];
+            eventData.department = item[event.department_columnInExcel];
+            eventData.companyName = item[event.companyName_columnInExcel];
+            eventData.mobile1 = item[event.mobile1_columnInExcel];
+            eventData.mobile2 = item[event.mobile2_columnInExcel];
+            eventData.tel1 = item[event.tel1_columnInExcel];
+            eventData.tel2 = item[event.tel2_columnInExcel];
+            eventData.fax = item[event.fax_columnInExcel];
+            eventData.email = item[event.email_columnInExcel];
+            eventData.website = item[event.website_columnInExcel];
+             eventData.address1 = item[event.address1_columnInExcel];
+            eventData.address2 = item[event.address2_columnInExcel];
+            eventData.city = item[event.city_columnInExcel];
+            eventData.country = item[event.country_columnInExcel];
+            eventData.poBox = item[event.poBox_columnInExcel];
+            eventData.postalCode = item[event.postalCode_columnInExcel];
+            eventData.badgeCategory = item[event.badgeCategory_columnInExcel];
+            eventData.regType = 'Online';//item[event.regType_columnInExcel];
+            eventData.regDate = moment().format('YYYY-MM-DD HH:mm:ss');//item[event.regDate_columnInExcel];
+            eventData.badgePrintDate = item[event.badgePrintDate_columnInExcel];
+            eventData.modifiedDate = item[event.modifiedDate_columnInExcel];
             eventData.statusFlag = 'Did Not Attend';//data[event.statusFlag_columnInExcel];
-            eventData.backoffice = data[event.backoffice_columnInExcel];
-            eventData.comment1 = data[event.comment1_columnInExcel];
-            eventData.comment2 = data[event.comment2_columnInExcel];
-            eventData.comment3 = data[event.comment3_columnInExcel];
-            eventData.comment4 = data[event.comment4_columnInExcel];
-            eventData.comment5 = data[event.comment5_columnInExcel];
-            eventData.comment6 = data[event.comment6_columnInExcel];
-            eventData.comment7 = data[event.comment7_columnInExcel];
-            eventData.comment8 = data[event.comment8_columnInExcel];
-            eventData.comment9 = data[event.comment9_columnInExcel];
-            eventData.comment10 = data[event.comment10_columnInExcel];
+            eventData.backoffice = item[event.backoffice_columnInExcel];
+            eventData.comment1 = item[event.comment1_columnInExcel];
+            eventData.comment2 = item[event.comment2_columnInExcel];
+            eventData.comment3 = item[event.comment3_columnInExcel];
+            eventData.comment4 = item[event.comment4_columnInExcel];
+            eventData.comment5 = item[event.comment5_columnInExcel];
+            eventData.comment6 = item[event.comment6_columnInExcel];
+            eventData.comment7 = item[event.comment7_columnInExcel];
+            eventData.comment8 = item[event.comment8_columnInExcel];
+            eventData.comment9 = item[event.comment9_columnInExcel];
+            eventData.comment10 = item[event.comment10_columnInExcel];
 
             eventData.save(function(err, result){
                 if(err)

@@ -1380,7 +1380,8 @@ router.post('/upload', function(req,res){
                     data: {
                       msg: 'Hello world2!',
                       eventId: eventId,
-                      filename:files.filetoupload.name
+                      filename:files.filetoupload.name,
+                      newpath:newpath
                     }
                   }).save((err) => {
                    if (err) throw err;
@@ -1401,7 +1402,7 @@ router.post('/upload', function(req,res){
                     processJob(job.data,job.id, done);
                   });
             
-                res.redirect('/event/export-files');
+                res.redirect('/event/import-files');
 
 
 

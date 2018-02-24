@@ -1349,7 +1349,27 @@ router.get('/upload/:id', function (req, res) {
 
 router.post('/upload', function(req,res){
 
-    res.redirect('/event/export-files');
+    ExportFiles.remove({event:data.eventId}, function(err){
+        if(err) throw err;
+
+        var ef = new ExportFiles();
+        ef.event=data.eventId;
+        ef.filename='Import.xlsx';
+        ef.creationDate=moment().format('YYYY-MM-DD HH:mm:ss');
+        ef.rowCount = 0;
+        ef.isCompleted = false;
+
+        ef.save(function(err, result){
+            if(err) throw err;
+
+          
+
+            res.redirect('/event/export-files');
+
+        });
+    });
+
+    
 
     var eventId = req.session.eventId;
 
@@ -1429,25 +1449,10 @@ router.post('/upload', function(req,res){
 });
 
 function handleExportJob2(data, jobId, callback){
-    ExportFiles.remove({event:data.eventId}, function(err){
-        if(err) throw err;
+    importExcel(data,jobId, callback);
 
-        var ef = new ExportFiles();
-        ef.event=data.eventId;
-        ef.filename='Import.xlsx';
-        ef.creationDate=moment().format('YYYY-MM-DD HH:mm:ss');
-        ef.rowCount = 0;
-        ef.isCompleted = false;
 
-        ef.save(function(err, result){
-            if(err) throw err;
 
-          
-
-            importExcel(data,jobId, callback);
-
-        });
-    });
 }
 
 function importExcel(data,jobId, callback){
@@ -2522,6 +2527,7 @@ router.get('/export-files', function(req,res){
 
   });
 
+  
 
 
 module.exports = router;

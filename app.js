@@ -15,7 +15,7 @@ var MongoStore = require('connect-mongo')(session);
 var cache = require('memory-cache');
 var moment = require('moment');
 var json2xls = require('json2xls');
-var timeout = require('connect-timeout');
+//var timeout = require('connect-timeout');
 
 
 var Country = require('./models/country');
@@ -50,7 +50,7 @@ var userRoutes = require('./routes/user');
 var eventRoutes = require('./routes/event');
 
 var app = express();
-app.use(timeout('15s'));
+//app.use(timeout('15s'));
 
 // view engine setup
 var hbs = exphbs.create({
@@ -232,11 +232,11 @@ app.use(function(req,res,next){
 });
 
 app.use('/user', userRoutes);
-app.use(haltOnTimedout);
+//app.use(haltOnTimedout);
 app.use('/event', eventRoutes);
-app.use(haltOnTimedout);
+//app.use(haltOnTimedout);
 app.use('/', index);
-app.use(haltOnTimedout);
+//app.use(haltOnTimedout);
 
 function haltOnTimedout (req, res, next) {
   if (!req.timedout) next()

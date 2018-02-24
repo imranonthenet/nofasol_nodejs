@@ -1348,6 +1348,9 @@ router.get('/upload/:id', function (req, res) {
 });
 
 router.post('/upload', function(req,res){
+
+    res.redirect('/event/export-files');
+
     var eventId = req.session.eventId;
 
 
@@ -1401,16 +1404,16 @@ router.post('/upload', function(req,res){
                     processJob(job.data,job.id, done);
                   });
             
-                res.redirect('/event/export-files');
+                //res.redirect('/event/export-files');
 
 
-                // Delete the file
-                fs.unlink(oldpath, function (err) {
-                    if (err) throw err;
-                    console.log('File deleted!');
-                });
+
             });
-
+            // Delete the file
+            fs.unlink(oldpath, function (err) {
+                if (err) throw err;
+                console.log('File deleted!');
+            });
 
 
 

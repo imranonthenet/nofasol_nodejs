@@ -1364,7 +1364,7 @@ router.post('/upload', function(req,res){
 
           
 
-            res.redirect('/event/export-files');
+            return res.redirect('/event/export-files');
 
         });
     });

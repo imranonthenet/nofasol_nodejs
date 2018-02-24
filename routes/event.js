@@ -1349,11 +1349,15 @@ router.get('/upload/:id', function (req, res) {
 
 router.post('/upload', function(req,res){
 
-    ExportFiles.remove({event:data.eventId}, function(err){
+    var eventId = req.session.eventId;
+
+    
+
+    ExportFiles.remove({event:eventId}, function(err){
         if(err) throw err;
 
         var ef = new ExportFiles();
-        ef.event=data.eventId;
+        ef.event=eventId;
         ef.filename='Import.xlsx';
         ef.creationDate=moment().format('YYYY-MM-DD HH:mm:ss');
         ef.rowCount = 0;
@@ -1363,15 +1367,15 @@ router.post('/upload', function(req,res){
             if(err) throw err;
 
           
-
             res.redirect('/event/export-files');
+            
 
         });
     });
 
     /*
 
-    var eventId = req.session.eventId;
+    
 
 
     

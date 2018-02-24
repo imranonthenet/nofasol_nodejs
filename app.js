@@ -50,7 +50,7 @@ var userRoutes = require('./routes/user');
 var eventRoutes = require('./routes/event');
 
 var app = express();
-app.use(timeout('15s'));
+app.use(timeout('25s'));
 
 // view engine setup
 var hbs = exphbs.create({

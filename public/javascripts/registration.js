@@ -1,7 +1,7 @@
 $(document).ready(function() {
     var customDataTable = $('#datatable').DataTable( {
         "lengthChange": false,
-        "processing": true,
+        "processing": false,
         "serverSide": true,
         "ajax": {
             "url":"/event/getregistration",

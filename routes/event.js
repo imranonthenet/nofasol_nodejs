@@ -1401,7 +1401,7 @@ router.post('/upload', function(req,res){
                     processJob(job.data,job.id, done);
                   });
             
-                //res.redirect('/event/export-files');
+                res.redirect('/event/export-files');
 
 
 

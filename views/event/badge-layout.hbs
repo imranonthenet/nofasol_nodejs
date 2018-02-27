@@ -66,6 +66,9 @@
                 <option value="28">28</option>
                 <option value="36">36</option>
                 <option value="48">48</option>
+                <option value="60">60</option>
+                <option value="72">72</option>
+                <option value="84">84</option>
             </select>
         </div>
 
@@ -280,7 +283,7 @@ $(document).ready(function(){
     {{#each fields}}
     topIndex = {{@index}};
 
-    var {{this.fieldName}} = new fabric.Textbox('{{this.fieldLabel}}', {
+    var {{this.fieldName}} = new fabric.Textbox('{{toUpperCase this.fieldLabel}}', {
         left: {{this.fieldLeft}},
         top: {{this.fieldTop}},
         width: {{this.fieldWidth}},

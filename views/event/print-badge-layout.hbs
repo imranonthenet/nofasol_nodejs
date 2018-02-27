@@ -53,7 +53,7 @@ $(document).ready(function(){
     {{#each fields}}
     topIndex = {{@index}};
 
-    var {{this.fieldName}} = new fabric.Textbox('{{this.fieldLabel}}', {
+    var {{this.fieldName}} = new fabric.Textbox('{{toUpperCase this.fieldLabel}}', {
         left: {{this.fieldLeft}},
         top: {{this.fieldTop}},
         width: {{this.fieldWidth}},

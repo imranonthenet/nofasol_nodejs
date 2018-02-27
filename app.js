@@ -57,6 +57,22 @@ var hbs = exphbs.create({
   handlebars: Handlebars,
   helpers: {
     
+    toLowerCase: function(value) {
+      if(value) {
+          return new Handlebars.SafeString(value.toLowerCase());
+      } else {
+          return '';
+      }
+    },
+
+    toUpperCase: function(value) {
+      if(value) {
+          return new Handlebars.SafeString(value.toUpperCase());
+      } else {
+          return '';
+      }
+    },
+
     option: function (codes, selectedValue) {
       var results ='';
       for(var i=0; i<codes.length; i++){

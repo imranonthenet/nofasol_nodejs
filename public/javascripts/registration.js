@@ -117,6 +117,18 @@ if it wasn't sets a another 500ms timeout before auto-searching.
        
     } );
 
+    $('#customDataTableAttendedRow').click( function () {
+        var data = customDataTable.row('.selected').data();
+        if(!data){
+            alert('Please select a row');
+            return;
+        }
+        //window.location='/event/print-badge/' + data[0];
+        //window.open('/event/print-badge/' + data[0], '_blank', 'toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=500,width=400,height=400');
+        window.open('/event/attended/' + data[0], '_self', '');
+
+       
+    } );
 
 
 } );

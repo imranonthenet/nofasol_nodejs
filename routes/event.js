@@ -510,6 +510,25 @@ router.get('/register', function (req, res) {
 
 });
 
+
+router.get('/attended/:id', function(req,res){
+    var messages = [];
+    var eventId = req.session.eventId;
+    var eventDataId = req.params.id;
+
+    var query = {_id:eventDataId};
+    var currentDate = moment().format('YYYY-MM-DD HH:mm:ss');
+    var update = {statusFlag:'Attended'};
+    var options = {new:true};
+
+    EventData.findOneAndUpdate(query, update, options, function(err, eventData){
+        if(err) throw err;
+        
+        res.redirect('/registration/' + eventId);
+    });
+
+});
+
 router.get('/print-badge/:id', function(req,res){
     var messages = [];
     var eventId = req.session.eventId;

@@ -10,6 +10,11 @@
     <link rel="stylesheet" href="/library/bootstrap-3.3.7-dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/library/DataTables/DataTables-1.10.16/css/jquery.dataTables.min.css"/>
     <link rel='stylesheet' href='/stylesheets/style.css' />
+
+    {{#each styles}}
+      <link rel='stylesheet' href='{{style}}' />
+    {{/each}}
+
     <script src="https://use.fontawesome.com/422fa3a780.js"></script>
 
 

@@ -718,7 +718,7 @@ router.post('/register', function (req, res) {
         eventData.regType='Onsite';
 
         if(req.body.save){
-            eventData.statusFlag='Did Not Attend';
+            eventData.statusFlag='Attended';
         }
         else if(req.body.printAndSave){ 
             eventData.badgePrintDate = moment().format('YYYY-MM-DD HH:mm:ss');
@@ -1637,6 +1637,20 @@ router.post('/edit', function (req, res) {
 
 
         });//form.parse
+    });
+
+router.get('/dashboard/:id', function (req, res) {
+    
+        var messages = [];
+        var eventId = req.params.id;
+    
+        var styles = [{ style: '/stylesheets/dashboard.css' }];
+
+        Event.findById(eventId, function(err, event){
+            res.render('event/dashboard', { styles:styles,  messages: messages, hasErrors: messages.length > 0, event: event });
+        })
+    
+        
     });
 
 router.get('/delete/:id', function (req, res) {

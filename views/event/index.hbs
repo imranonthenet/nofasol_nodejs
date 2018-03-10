@@ -32,7 +32,7 @@
                             <td>{{formatDate this.fromDate 'custom'}}</td>
                             <td>{{formatDate this.toDate 'custom'}}</td>
                             <td>
-                                <a href="/event/edit/{{this._id}}" class="btn btn-primary" >Edit</a>
+                                <a href="/event/edit/{{this._id}}" class="btn btn-warning" >Edit</a>
                                 {{#if this.setupComplete}}
                                 <a href="/event/upload/{{this._id}}" class="btn btn-success" >Import</a>
                                 <a href="/event/download/{{this._id}}" class="btn btn-success" >Export</a>

@@ -524,7 +524,7 @@ router.get('/attended/:id', function(req,res){
     EventData.findOneAndUpdate(query, update, options, function(err, eventData){
         if(err) throw err;
         
-        res.redirect('/registration/' + eventId);
+        res.redirect('/event/registration/' + eventId);
     });
 
 });

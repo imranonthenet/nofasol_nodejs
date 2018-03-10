@@ -1646,12 +1646,22 @@ router.get('/dashboard/:id', function (req, res) {
     
         var styles = [{ style: '/stylesheets/dashboard.css' }];
 
-        EventData.find({ event: eventId, 
-            statusFlag:'Attended'
-        }).count().exec(function(err, count){
-            res.render('event/dashboard', { styles:styles,  messages: messages, hasErrors: messages.length > 0, count:count });
+        EventData.find({ event: eventId
+        }).count().exec(function(err, countTotal){
+
+            EventData.find({ event: eventId, 
+                statusFlag:'Attended'
+            }).count().exec(function(err, countAttended){
+                res.render('event/dashboard', { styles:styles,  messages: messages, hasErrors: messages.length > 0, countTotal:countTotal, countAttended:countAttended });
+    
+            })
+           
 
         })
+
+
+
+
 
 
     

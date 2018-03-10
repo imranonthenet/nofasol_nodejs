@@ -797,10 +797,11 @@ router.post('/edit-registration', function (req, res) {
             });
 
             eventData.modifiedDate=moment().format('YYYY-MM-DD HH:mm:ss');
-           
+            eventData.statusFlag = 'Attended';
+
             if(req.body.printAndSave){ 
                 eventData.badgePrintDate = moment().format('YYYY-MM-DD HH:mm:ss');
-                eventData.statusFlag = 'Attended';
+                
             }
            
             eventData.save(function(err, result){
@@ -1646,18 +1647,24 @@ router.get('/dashboard/:id', function (req, res) {
     
         var styles = [{ style: '/stylesheets/dashboard.css' }];
 
-        EventData.find({ event: eventId
-        }).count().exec(function(err, countTotal){
-
-            EventData.find({ event: eventId, 
-                statusFlag:'Attended'
-            }).count().exec(function(err, countAttended){
-                res.render('event/dashboard', { styles:styles,  messages: messages, hasErrors: messages.length > 0, countTotal:countTotal, countAttended:countAttended });
+        Event.findById(eventId, function(err, event){
+            EventData.find({ event: eventId
+            }).count().exec(function(err, countTotal){
+    
+                EventData.find({ event: eventId, 
+                    statusFlag:'Attended'
+                }).count().exec(function(err, countAttended){
+                    res.render('event/dashboard', { styles:styles,  messages: messages, hasErrors: messages.length > 0,event:event, countTotal:countTotal, countAttended:countAttended });
+        
+                })
+               
     
             })
-           
+
 
         })
+
+
 
 
 

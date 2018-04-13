@@ -593,7 +593,7 @@ router.get('/print-badge/:id', function(req,res){
             });
 
 
-            if(result.barcode==''){
+            //if(result.barcode==''){
                 Sequence.findOneAndUpdate({name:'barcode'}, {$inc:{value:1}}, {new:true}, function(err, seq){
                     if(!seq){
                         seq = new Sequence ({name:'barcode', value:'19299259221626'});
@@ -611,7 +611,8 @@ router.get('/print-badge/:id', function(req,res){
                             fields:fields, showBarcode:showBarcode, barcodeLeft:barcodeLeft, barcodeTop:barcodeTop, barcode:eventData.barcode});
                     });
                 });
-            }
+            //}
+            /*
             else {
                 var query = {_id:eventDataId};
                 var currentDate = moment().format('YYYY-MM-DD HH:mm:ss');
@@ -625,6 +626,7 @@ router.get('/print-badge/:id', function(req,res){
                         fields:fields, showBarcode:showBarcode, barcodeLeft:barcodeLeft, barcodeTop:barcodeTop, barcode:eventData.barcode});
                 });
             }
+            */
         });
     });
 
@@ -2548,6 +2550,57 @@ router.get('/registration/:id', function (req, res) {
       
 
         res.render('event/registration', { eventDataIdForPrint:eventDataIdForPrint, scripts:scripts, messages: messages, event: event, columns:columns });
+
+    });
+    
+
+
+
+});
+
+router.get('/registration2/:id', function (req, res) {
+    var messages = [];
+    var eventId = req.params.id;
+    req.session.eventId = eventId;
+
+    var scripts = [{ script: '/javascripts/registration2.js' }];
+
+
+
+
+    Event.findById(eventId, function (err, event) {
+        var columns=[];
+        var columnKeys=[];
+
+        Object.keys(event.toJSON()).forEach(function(item){
+            
+
+            if(item.indexOf('_showInSearch')>-1 && event[item]==true ){
+                var key = item.substring(0, item.indexOf('_showInSearch') ) ;
+           
+                columns.unshift(event[key + '_label' ]);
+                columnKeys.unshift(key);
+            }
+        })
+
+        columns.unshift('Key');
+        columnKeys.unshift('_id');
+
+        var rows=[];
+        EventData.find({event:eventId}, function(err, eventData){
+            
+            eventData.forEach(function(r){
+                var row=[];
+                columnKeys.forEach(function(c){
+                    row.push({key:c, value:r[c]});
+                });
+                rows.push(row);
+            });
+
+            res.render('event/registration2', {scripts:scripts, messages: messages, event: event, columns:columns, rows:rows });
+        });
+
+        
 
     });
     

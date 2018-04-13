@@ -72,6 +72,26 @@ module.exports = function Lookups(){
             code:'Member',
             desc:'Member',
         },
+        {
+            code:'Track A',
+            desc:'Track A',
+        },
+        {
+            code:'Track B',
+            desc:'Track B',
+        },        
+        {
+            code:'Pfizer',
+            desc:'Pfizer',
+        },        
+        {
+            code:'Staff',
+            desc:'Staff',
+        },        
+        {
+            code:'Faculty',
+            desc:'Faculty',
+        },        
     ];
 
     this.titles=['Mr.','Ms.','Mrs.','Dr.','Col.','Eng.','Professor','HE','HH'];

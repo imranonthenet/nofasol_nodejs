@@ -593,7 +593,7 @@ router.get('/print-badge/:id', function(req,res){
             });
 
 
-            //if(result.barcode==''){
+            if(result.barcode.length!=14){
                 Sequence.findOneAndUpdate({name:'barcode'}, {$inc:{value:1}}, {new:true}, function(err, seq){
                     if(!seq){
                         seq = new Sequence ({name:'barcode', value:'19299259221626'});
@@ -611,8 +611,8 @@ router.get('/print-badge/:id', function(req,res){
                             fields:fields, showBarcode:showBarcode, barcodeLeft:barcodeLeft, barcodeTop:barcodeTop, barcode:eventData.barcode});
                     });
                 });
-            //}
-            /*
+            }
+            
             else {
                 var query = {_id:eventDataId};
                 var currentDate = moment().format('YYYY-MM-DD HH:mm:ss');
@@ -626,7 +626,7 @@ router.get('/print-badge/:id', function(req,res){
                         fields:fields, showBarcode:showBarcode, barcodeLeft:barcodeLeft, barcodeTop:barcodeTop, barcode:eventData.barcode});
                 });
             }
-            */
+            
         });
     });
 

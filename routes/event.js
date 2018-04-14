@@ -593,7 +593,7 @@ router.get('/print-badge/:id', function(req,res){
             });
 
 
-            if(result.barcode==null || result.barcode.length != 14){
+            if(result.barcode==null){
                 Sequence.findOneAndUpdate({name:'barcode'}, {$inc:{value:1}}, {new:true}, function(err, seq){
                     if(!seq){
                         seq = new Sequence ({name:'barcode', value:'19299259221626'});

@@ -13,6 +13,7 @@ var EventData = require('../models/event-data');
 var BadgeCategory = require('../models/badge-category');
 var Sequence = require('../models/sequence');
 var ExportFiles = require('../models/export-files');
+var BadgeCategoryCode = require('../models/badge-category-code');
 
 router.use(function(req,res,next){
     if(!req.isAuthenticated()){
@@ -311,12 +312,11 @@ router.get('/badge-category-create', function(req,res){
 });
 
 router.post('/badge-category-create', function(req,res){
-    var badgeCategory = new BadgeCategory();
-    badgeCategory.event=req.session.eventId;
-    badgeCategory.desc=req.body.badgeCategory;
-    badgeCategory.code=req.body.badgeCategory;
+    var badgeCategoryCode = new BadgeCategoryCode();
+    badgeCategoryCode.desc=req.body.badgeCategory;
+    badgeCategoryCode.code=req.body.badgeCategory;
 
-    badgeCategory.save(function(err, result){
+    badgeCategoryCode.save(function(err, result){
         if(err) throw err;
 
         res.redirect('/event/badge-categories/' + req.session.eventId);

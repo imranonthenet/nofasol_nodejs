@@ -21,6 +21,7 @@ var json2xls = require('json2xls');
 var Country = require('./models/country');
 var BadgeCategory = require('./models/badge-category');
 var Lookups = require('./models/lookups');
+var BadgeCategoryCode = require('./models/badge-category-code');
 
 var connString = process.env.MONGODB_URI || 'localhost:27017/events';
 var options = {
@@ -92,27 +93,32 @@ var hbs = exphbs.create({
     },
 
     badgeCategoryOption: function (selectedValues) {
-      var lookups = new Lookups();
 
-      var results ='';
-      for(var i=0; i<lookups.badgeCategories.length; i++){
-        var isChecked = '';
-        for(var j=0; j<selectedValues.length; j++){
-          if(selectedValues[j].code == lookups.badgeCategories[i].code)
-            isChecked='checked';
-        }
+      BadgeCategoryCode.find(function(err,badgeCategoryCodes){
+        if(err) throw err;
 
-        var oddEven = i % 2 == 0 ? 'even':'odd';
-
-        results += '<tr class="' + oddEven + '">';
-        results += '<td class="col-xs-3">' + lookups.badgeCategories[i].desc + '</td>';
-        results += '<td class="col-xs-9"><input type="checkbox" class="form-control" name="' + lookups.badgeCategories[i].code + '_badgeCategory" ' + isChecked + '></td>';
-        results += '</tr>';
-
-        //results += '<tr><td><input type="checkbox"  name="' + lookups.badgeCategories[i].code + '_badgeCategory" ' + isChecked + '> &nbsp;' + lookups.badgeCategories[i].desc + '</td></tr>\n';
+        var results ='';
+        for(var i=0; i<badgeCategoryCodes.length; i++){
+          var isChecked = '';
+          for(var j=0; j<selectedValues.length; j++){
+            if(selectedValues[j].code == badgeCategoryCodes[i].code)
+              isChecked='checked';
+          }
   
-      }
-      return new Handlebars.SafeString(results);
+          var oddEven = i % 2 == 0 ? 'even':'odd';
+  
+          results += '<tr class="' + oddEven + '">';
+          results += '<td class="col-xs-3">' + badgeCategoryCodes[i].desc + '</td>';
+          results += '<td class="col-xs-9"><input type="checkbox" class="form-control" name="' + badgeCategoryCodes[i].code + '_badgeCategory" ' + isChecked + '></td>';
+          results += '</tr>';
+  
+          //results += '<tr><td><input type="checkbox"  name="' + lookups.badgeCategories[i].code + '_badgeCategory" ' + isChecked + '> &nbsp;' + lookups.badgeCategories[i].desc + '</td></tr>\n';
+    
+        }
+        return new Handlebars.SafeString(results);
+      });
+
+
     },
 
     formField: function(fieldName, fieldLabel, fieldType, fieldValue, fieldMandatory, badgeCategories){

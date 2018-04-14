@@ -92,32 +92,30 @@ var hbs = exphbs.create({
       return new Handlebars.SafeString(results);
     },
 
-    badgeCategoryOption: function (selectedValues) {
+    badgeCategoryOption: function (selectedValues, badgeCategorycodes) {
+      
 
-      BadgeCategoryCode.find(function(err,badgeCategoryCodes){
-        if(err) throw err;
 
-        var results ='';
-        for(var i=0; i<badgeCategoryCodes.length; i++){
-          var isChecked = '';
-          for(var j=0; j<selectedValues.length; j++){
-            if(selectedValues[j].code == badgeCategoryCodes[i].code)
-              isChecked='checked';
-          }
-  
-          var oddEven = i % 2 == 0 ? 'even':'odd';
-  
-          results += '<tr class="' + oddEven + '">';
-          results += '<td class="col-xs-3">' + badgeCategoryCodes[i].desc + '</td>';
-          results += '<td class="col-xs-9"><input type="checkbox" class="form-control" name="' + badgeCategoryCodes[i].code + '_badgeCategory" ' + isChecked + '></td>';
-          results += '</tr>';
-  
-          //results += '<tr><td><input type="checkbox"  name="' + lookups.badgeCategories[i].code + '_badgeCategory" ' + isChecked + '> &nbsp;' + lookups.badgeCategories[i].desc + '</td></tr>\n';
-    
+      var results ='';
+      for(var i=0; i<badgeCategorycodes.length; i++){
+        var isChecked = '';
+        for(var j=0; j<selectedValues.length; j++){
+          if(selectedValues[j].code == badgeCategorycodes[i].code)
+            isChecked='checked';
         }
-        return new Handlebars.SafeString(results);
-      });
 
+        var oddEven = i % 2 == 0 ? 'even':'odd';
+
+        results += '<tr class="' + oddEven + '">';
+        results += '<td class="col-xs-3">' + badgeCategorycodes[i].desc + '</td>';
+        results += '<td class="col-xs-9"><input type="checkbox" class="form-control" name="' + badgeCategorycodes[i].code + '_badgeCategory" ' + isChecked + '></td>';
+        results += '</tr>';
+
+        //results += '<tr><td><input type="checkbox"  name="' + lookups.badgeCategories[i].code + '_badgeCategory" ' + isChecked + '> &nbsp;' + lookups.badgeCategories[i].desc + '</td></tr>\n';
+  
+      }
+      return new Handlebars.SafeString(results);
+     
 
     },
 

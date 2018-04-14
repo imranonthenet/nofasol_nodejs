@@ -23,13 +23,20 @@ router.use(function(req,res,next){
 })
 
 router.get('/badge-categories/:id', function(req,res){
-    var messages = [];
+    var messages = req.flash('error');
     var eventId = req.params.id;
     req.session.eventId = eventId;
 
     BadgeCategory.find({event:eventId}, function(err, badgecategories){
-        res.render('event/badge-categories', {messages:messages, hasErrors:messages.length>0, badgecategories:badgecategories});
+
+        BadgeCategoryCode.find({}, function(err, badgecategorycodes){
+            res.render('event/badge-categories', {messages:messages, hasErrors:messages.length>0, badgecategories:badgecategories, badgecategorycodes:badgecategorycodes});
+        });
+
+        
     });
+
+
 
 });
 
@@ -53,6 +60,11 @@ router.post('/badge-categories', function(req,res){
           
       }
 
+    if(selectedItems.length==0){
+        req.flash('error', 'Please select atleast 1 badge category');
+        return res.redirect('/event/badge-categories/' + req.session.eventId )
+
+    }
         
     BadgeCategory.remove({event:eventId}, function(err){
         var done=0;
@@ -304,6 +316,15 @@ router.post('/badge-layout', function(req,res){
     });
 });
 
+router.get('/badge-categories-list', function(req,res){
+    var messages = [];
+
+    BadgeCategoryCode.find({}, function(err, badgecategorycodes){
+        res.render('event/badge-categories-list', {messages:messages, hasErrors:messages.length>0, badgecategorycodes:badgecategorycodes});
+    });
+
+
+});
 
 router.get('/badge-category-create', function(req,res){
     var messages=[];
@@ -319,7 +340,8 @@ router.post('/badge-category-create', function(req,res){
     badgeCategoryCode.save(function(err, result){
         if(err) throw err;
 
-        res.redirect('/event/badge-categories/' + req.session.eventId);
+        //res.redirect('/event/badge-categories/' + req.session.eventId);
+        res.redirect('/event/badge-categories-list');
     })
 })
 
@@ -328,7 +350,7 @@ router.get('/badge-category-delete/:id', function(req,res){
 
     var badgeCategoryId = req.params.id;
 
-    BadgeCategory.findById(badgeCategoryId, function(err, badgeCategory){
+    BadgeCategoryCode.findById(badgeCategoryId, function(err, badgeCategory){
         res.render('event/badge-category-delete', {messages:messages, hasErrors:messages.length>0, badgeCategory:badgeCategory} );
     });
 
@@ -339,12 +361,12 @@ router.post('/badge-category-delete', function(req,res){
     
         var badgeCategoryId = req.body.badgeCategoryId;
     
-        BadgeCategory.findByIdAndRemove(badgeCategoryId, function(err, result){
+        BadgeCategoryCode.findByIdAndRemove(badgeCategoryId, function(err, result){
             if(err) throw err;
 
             console.log(`deleted category ${result.desc}`);
             
-            res.redirect('/event/badge-categories/' + req.session.eventId);
+            res.redirect('/event/badge-categories-list');
         })
 
     
@@ -356,7 +378,7 @@ router.get('/badge-category-edit/:id', function(req,res){
 
     var badgeCategoryId = req.params.id;
 
-    BadgeCategory.findById(badgeCategoryId, function(err, badgeCategory){
+    BadgeCategoryCode.findById(badgeCategoryId, function(err, badgeCategory){
         res.render('event/badge-category-edit', {messages:messages, hasErrors:messages.length>0, badgeCategory:badgeCategory} );
     });
 
@@ -367,14 +389,14 @@ router.post('/badge-category-edit', function(req,res){
 
     var badgeCategoryId = req.body.badgeCategoryId;
 
-    BadgeCategory.findById(badgeCategoryId, function(err, badgeCategory){
+    BadgeCategoryCode.findById(badgeCategoryId, function(err, badgeCategory){
         badgeCategory.desc=req.body.badgeCategory;
         badgeCategory.code=req.body.badgeCategory;
 
         badgeCategory.save(function(err, result){
             if(err) throw err;
     
-            res.redirect('/event/badge-categories/' + req.session.eventId);
+            res.redirect('/event/badge-categories-list');
         })
     });
 

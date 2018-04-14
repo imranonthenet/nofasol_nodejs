@@ -35,11 +35,9 @@
             </div>
         {{/if}}
 
-        <a href="/event/badge-category-create" class="btn btn-primary">Create Badge Category</a>
-        <br>
-        
+
         <form action="/event/badge-categories" method="POST">
-                        <table class="points_table">
+            <table class="points_table">
                 <thead>
                 <tr>
                     <th class="col-xs-3">Field Name</th>
@@ -48,7 +46,7 @@
                 </thead>
                 <tbody class="points_table_scrollbar">
 
-                        {{badgeCategoryOption badgecategories}}
+                        {{badgeCategoryOption badgecategories badgecategorycodes}}
 
                 </tbody>
 

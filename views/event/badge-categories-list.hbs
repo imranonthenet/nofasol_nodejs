@@ -14,22 +14,20 @@
             </div>
         {{/if}}
 
-        <a href="/event/badge-category-create" class="btn btn-primary">Create Badge Category</a>
+        <a href="/event/badge-category-create" class="btn btn-success">Create Badge Category</a>
 
-            
-            
-            <table class="table">
+            <table class="points_table">
                 <thead>
                 <tr>
-                    <th>Badge Category</th>
-                    <th>Actions</th>
+                    <th class="col-xs-3">Badge Category</th>
+                    <th class="col-xs-9">Actions</th>
                 </tr>
                 </thead>
-                <tbody>
+                <tbody class="points_table_scrollbar">
                     {{#each badgecategorycodes}}
-                        <tr>
-                            <td>{{this.desc}}</td>
-                            <td>
+                        <tr class="even">
+                            <td class="col-xs-3">{{this.desc}}</td>
+                            <td class="col-xs-9">
                                 <a href="/event/badge-category-edit/{{this._id}}" class="btn btn-primary" >Edit</a>
                                 <a href="/event/badge-category-delete/{{this._id}}" class="btn btn-danger" >Delete</a>
                             </td>

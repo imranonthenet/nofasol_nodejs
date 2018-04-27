@@ -48,6 +48,7 @@ var schema = new Schema({
     comment8: {type:String},
     comment9: {type:String},
     comment10: {type:String},
+    username: {type:String}
 })
 
 module.exports = mongoose.model('EventData', schema)

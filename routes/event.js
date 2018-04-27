@@ -540,7 +540,7 @@ router.get('/attended/:id', function(req,res){
 
     var query = {_id:eventDataId};
     var currentDate = moment().format('YYYY-MM-DD HH:mm:ss');
-    var update = {statusFlag:'Attended'};
+    var update = {statusFlag:'Attended', username: req.user.email};
     var options = {new:true};
 
     EventData.findOneAndUpdate(query, update, options, function(err, eventData){
@@ -623,7 +623,7 @@ router.get('/print-badge/:id', function(req,res){
     
                     var query = {_id:eventDataId};
                     var currentDate = moment().format('YYYY-MM-DD HH:mm:ss');
-                    var update = {badgePrintDate:currentDate, statusFlag:'Attended', barcode:seq.value};
+                    var update = {badgePrintDate:currentDate, statusFlag:'Attended', barcode:seq.value, username: req.user.email};
                     var options = {new:true};
                 
                     EventData.findOneAndUpdate(query, update, options, function(err, eventData){
@@ -638,7 +638,7 @@ router.get('/print-badge/:id', function(req,res){
             else {
                 var query = {_id:eventDataId};
                 var currentDate = moment().format('YYYY-MM-DD HH:mm:ss');
-                var update = {badgePrintDate:currentDate, statusFlag:'Attended'};
+                var update = {badgePrintDate:currentDate, statusFlag:'Attended', username: req.user.email};
                 var options = {new:true};
             
                 EventData.findOneAndUpdate(query, update, options, function(err, eventData){
@@ -749,6 +749,8 @@ router.post('/register', function (req, res) {
             eventData.statusFlag = 'Attended';
         }
 
+        eventData.username = req.user.email;
+
         eventData.save(function(err, result){
             if(err) throw err;
 
@@ -827,7 +829,9 @@ router.post('/edit-registration', function (req, res) {
                 eventData.badgePrintDate = moment().format('YYYY-MM-DD HH:mm:ss');
                 
             }
-           
+            eventData.username = req.user.email;
+
+
             eventData.save(function(err, result){
                 if(err) throw err;
     
@@ -1558,6 +1562,8 @@ function importExcel(data,jobId, callback){
             eventData.comment8 = item[event.comment8_columnInExcel];
             eventData.comment9 = item[event.comment9_columnInExcel];
             eventData.comment10 = item[event.comment10_columnInExcel];
+
+            
 
             eventData.save(function(err, result){
                 if(err)

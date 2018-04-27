@@ -1056,7 +1056,7 @@ function prepareExcel(data,jobId, callback){
         comment8: {displayName: 'Comment 8', headerStyle: styles.headerDark, width: 120},
         comment9: {displayName: 'Comment 9', headerStyle: styles.headerDark, width: 120},
         comment10: {displayName: 'Comment 10', headerStyle: styles.headerDark, width: 120},
-
+        username: {displayName: 'Username', headerStyle: styles.headerDark, width: 120},
         
     }
 

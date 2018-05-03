@@ -270,10 +270,11 @@ var submitForm = function(){
 
 var reset = function(){
     for(var i=0; i<fields.length; i++){
-        canvas.item(i).top = i * 100;
-        canvas.item(i).left = 100;
-        canvas.renderAll();
+        canvas.item(i).set('top', i * 20);
+        canvas.item(i).set('left',10);
+        
     }
+    canvas.renderAll();
 }
 
 $(document).ready(function(){

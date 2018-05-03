@@ -100,6 +100,7 @@
         <a href="/event/badge-categories/{{session.eventId}}" style="width:100px" class="btn btn-primary">Previous</a>&nbsp;&nbsp; 
         <input type="button" onclick="testPrint()" value="Test Print" style="width: 100px" class="btn btn-info ">&nbsp;&nbsp;       
         <input type="button" onclick="finish()" value="Finish" style="width: 100px" class="btn btn-success">
+        <input type="button" onclick="reset()" value="Reset" style="width: 100px" class="btn btn-warning">
 
     </div>
     <div class="col-md-8">
@@ -266,6 +267,13 @@ var submitForm = function(){
 
     $('#form1').submit();
 };
+
+var reset = function(){
+    for(var i=0; i<fields.length; i++){
+        canvas.item(i).top = i * 20;
+        canvas.item(i).left = 10;
+    }
+}
 
 $(document).ready(function(){
 

@@ -272,6 +272,7 @@ var reset = function(){
     for(var i=0; i<fields.length; i++){
         canvas.item(i).top = i * 100;
         canvas.item(i).left = 100;
+        canvas.renderAll();
     }
 }
 

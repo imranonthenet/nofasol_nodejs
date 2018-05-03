@@ -99,8 +99,8 @@
 
         <a href="/event/badge-categories/{{session.eventId}}" style="width:100px" class="btn btn-primary">Previous</a>&nbsp;&nbsp; 
         <input type="button" onclick="testPrint()" value="Test Print" style="width: 100px" class="btn btn-info ">&nbsp;&nbsp;       
-        <input type="button" onclick="finish()" value="Finish" style="width: 100px" class="btn btn-success"><br>
-        <input type="button" onclick="reset()" value="Reset" style="width: 100px" class="btn btn-warning">
+        <input type="button" onclick="finish()" value="Finish" style="width: 100px" class="btn btn-success"><br><br>
+        <input type="button" onclick="resetLayout()" value="Reset" style="width: 100px" class="btn btn-warning">
 
     </div>
     <div class="col-md-8">
@@ -268,11 +268,22 @@ var submitForm = function(){
     $('#form1').submit();
 };
 
-var reset = function(){
+var resetLayout = function(){
+    
     for(var i=0; i<fields.length; i++){
-        canvas.item(i).set('top', i * 20);
+        canvas.item(i).set('top', (i+1) * 20);
         canvas.item(i).set('left',10);
-        
+        if(fields[i]!='barcode'){
+            canvas.item(i).width=100;
+            canvas.item(i).fontFamily='Calibri';
+            canvas.item(i).fontSize=11;
+            canvas.item(i).fontWeight='normal';
+            canvas.item(i).fontStyle='normal';
+            canvas.item(i).textAlign='left';
+            canvas.item(i).angle=0;
+
+        }
+
     }
     canvas.renderAll();
 }

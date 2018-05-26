@@ -49,6 +49,7 @@ require('./config/passport');
 var index = require('./routes/index');
 var userRoutes = require('./routes/user');
 var eventRoutes = require('./routes/event');
+var apiRoutes = require('./routes/api');
 
 var app = express();
 //app.use(timeout('15s'));
@@ -257,6 +258,8 @@ app.use('/event', eventRoutes);
 //app.use(haltOnTimedout);
 app.use('/', index);
 //app.use(haltOnTimedout);
+app.use('/api', apiRoutes);
+
 
 function haltOnTimedout (req, res, next) {
   if (!req.timedout) next()

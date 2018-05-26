@@ -40,6 +40,12 @@ router.get('/badge-categories/:id', function(req,res){
 
 });
 
+router.post('/insert-barcode', (req,res)=>{
+    console.log('inserted barcode');
+    console.log(req.body.barcode);
+    
+});
+
 router.post('/badge-categories', function(req,res){
     var messages = [];
 

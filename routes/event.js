@@ -2578,7 +2578,7 @@ router.get('/registration/:id', function (req, res) {
             delete req.session.eventDataIdForPrint;
         }
       
-
+        req.session.eventLogo = event.eventLogo;
         res.render('event/registration', { eventDataIdForPrint:eventDataIdForPrint, scripts:scripts, messages: messages, event: event, columns:columns });
 
     });

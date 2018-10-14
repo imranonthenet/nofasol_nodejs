@@ -2379,6 +2379,8 @@ router.post('/event-fields', function (req, res) {
 
 router.get('/', function (req, res) {
     var messages = [];
+    req.session.eventLogo=null;
+    req.session.eventId=null;
 
     if(req.user.role=='user')
         return res.redirect('/event/registration/' + req.user.event);

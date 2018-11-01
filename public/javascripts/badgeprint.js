@@ -2,7 +2,7 @@ $(document).ready(function(){
     JsBarcode("#barcode", "{{ eventData.barcode }} ", {
       format: "CODE128",
       width: 1,
-      height:40,
+      height:80,
       margin: 5,
       textMargin: 0,
       fontSize: 20,

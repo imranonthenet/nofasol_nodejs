@@ -1,6 +1,6 @@
 $(document).ready(function(){
     JsBarcode("#barcode", "{{ eventData.barcode }} ", {
-      format: "ITF",
+      format: "CODE128",
       width: 1,
       height:40,
       margin: 5,

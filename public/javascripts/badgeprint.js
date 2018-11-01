@@ -5,7 +5,7 @@ $(document).ready(function(){
       height:40,
       margin: 5,
       textMargin: 0,
-      fontSize: 10,
+      fontSize: 20,
       displayValue: true
     });
 

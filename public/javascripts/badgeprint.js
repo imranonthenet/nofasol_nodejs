@@ -1,11 +1,11 @@
 $(document).ready(function(){
     JsBarcode("#barcode", "{{ eventData.barcode }} ", {
-      format: "CODE128",
+      format: "ITF",
       width: 1,
-      height:80,
+      height:40,
       margin: 5,
       textMargin: 0,
-      fontSize: 20,
+      fontSize: 10,
       displayValue: true
     });
 

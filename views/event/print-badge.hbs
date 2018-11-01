@@ -37,11 +37,11 @@ var canvas = new fabric.Canvas('badgeCanvas');
     {{#if showBarcode}}
       JsBarcode("#barcode", "{{barcode}}", {
       format: "CODE128",
-      width: 1,
-      height:40,
+      width: 2,
+      height:80,
       margin: 5,
       textMargin: 0,
-      fontSize: 20,
+      fontSize: 10,
       displayValue: true
       });
     {{/if}}

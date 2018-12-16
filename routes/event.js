@@ -2449,7 +2449,7 @@ router.get('/getregistration', function(req,res){
                         {email: { $regex: '.*' + search + '.*', $options:'i' }},
                     ] })
                     */
-                    $or:searchColumns
+                    $and:searchColumns
                  })
                 .skip(startIndex)
                 .limit(pageSize)
@@ -2530,7 +2530,7 @@ router.get('/getregistration', function(req,res){
 
 
                         EventData.find({ event: eventId, 
-                            $or:searchColumns
+                            $and:searchColumns
                         }).count().exec(function(err, count){
                         var result= {
                             "draw": draw,

@@ -2511,7 +2511,7 @@ router.get('/getregistration', function(req,res){
                                         var key = item.substring(0, item.indexOf('_includeInSearch') );
                                             console.log(`searchArray=${searchArray[i]}, datakey=${data[key]}`);
 
-                                            var re = new RegExp('(^|\s)' + searchArray[i] + '(\s|$)','gi');
+                                            var re = new RegExp('(?:^|\s)' + searchArray[i] + '(?=\s|$)','gi');
 
                                             //if(data[key] && searchArray[i] &&  data[key].toUpperCase().indexOf(searchArray[i].toUpperCase())>-1){
                                             if(data[key] && searchArray[i] &&  re.test(data[key]) ){

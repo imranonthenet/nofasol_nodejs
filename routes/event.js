@@ -2536,7 +2536,7 @@ router.get('/getregistration', function(req,res){
                         var result= {
                             "draw": draw,
                             "recordsTotal": count,
-                            "recordsFiltered": count,
+                            "recordsFiltered": rows.length,
                             "data": rows,
                             };
 

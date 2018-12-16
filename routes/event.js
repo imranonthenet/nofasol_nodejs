@@ -2452,7 +2452,7 @@ router.get('/getregistration', function(req,res){
                     $or:searchColumns
                  })
                 .skip(startIndex)
-                .limit(pageSize)
+                .limit(50000)
                 //.populate('event')
                 //.populate('country').populate('badgeCategory')
                 .exec(function (err, eventData) {

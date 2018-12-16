@@ -2452,7 +2452,7 @@ router.get('/getregistration', function(req,res){
                     $or:searchColumns
                  })
                 .skip(startIndex)
-                .limit(1000)
+                .limit(pageSize)
                 //.populate('event')
                 //.populate('country').populate('badgeCategory')
                 .exec(function (err, eventData) {
@@ -2529,7 +2529,7 @@ router.get('/getregistration', function(req,res){
 
 
 
-
+                        /*
                         EventData.find({ event: eventId, 
                             $or:searchColumns
                         }).count().exec(function(err, count){
@@ -2540,11 +2540,18 @@ router.get('/getregistration', function(req,res){
                             "data": rows,
                             };
 
-                            //console.log(result);
                             res.json(result);
 
                         })
+                        */
+                       var result= {
+                        "draw": draw,
+                        "recordsTotal": rows.length,
+                        "recordsFiltered": rows.length,
+                        "data": rows,
+                        };
 
+                        res.json(result);
                         
                    
     

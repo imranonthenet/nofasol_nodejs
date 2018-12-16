@@ -2452,7 +2452,7 @@ router.get('/getregistration', function(req,res){
                     $or:searchColumns
                  })
                 .skip(startIndex)
-                .limit(pageSize)
+                .limit(100)
                 //.populate('event')
                 //.populate('country').populate('badgeCategory')
                 .exec(function (err, eventData) {
@@ -2536,7 +2536,7 @@ router.get('/getregistration', function(req,res){
                         var result= {
                             "draw": draw,
                             "recordsTotal": count,
-                            "recordsFiltered": rows.length,
+                            "recordsFiltered": count,
                             "data": rows,
                             };
 

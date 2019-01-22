@@ -2513,8 +2513,8 @@ router.get('/getregistration', function(req,res){
 
                                             var re = new RegExp('(?:^|\\s)' + searchArray[i] + '(?=\\s|$)','gi');
 
-                                            //if(data[key] && searchArray[i] &&  data[key].toUpperCase().indexOf(searchArray[i].toUpperCase())>-1){
-                                            if(data[key] && searchArray[i] &&  re.test(data[key]) ){
+                                            if(data[key] && searchArray[i] &&  data[key].toUpperCase().indexOf(searchArray[i].toUpperCase())>-1){
+                                            //if(data[key] && searchArray[i] &&  re.test(data[key]) ){
                                                 includeRow=true;
                                             }
                                         
